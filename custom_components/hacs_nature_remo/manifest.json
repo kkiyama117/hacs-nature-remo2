@@ -1,0 +1,10 @@
+{
+  "domain": "hacs_nature_remo",
+  "name": "hacs-nature-remo",
+  "documentation": "https://github.com/kkiyama117/hacs-nature-remo",
+  "issue_tracker": "https://github.com/kkiyama117/hacs-nature-remo/issues",
+  "dependencies": [],
+  "config_flow": true,
+  "codeowners": ["@kkiyama117"],
+  "requirements": []
+}

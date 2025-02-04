@@ -1,5 +1,7 @@
 {
-    "name": "Nature Remo",
-    "content_in_root": false,
-    "render_readme": true
-  }
+  "name": "hacs-nature-remo",
+  "hacs": "1.6.0",
+  "domains": ["binary_sensor", "sensor", "switch"],
+  "iot_class": "Cloud Polling",
+  "homeassistant": "0.118.0"
+}
