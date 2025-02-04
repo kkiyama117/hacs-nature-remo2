@@ -1,6 +1,6 @@
 {
   "domain": "hacs_nature_remo",
-  "name": "hacs-nature-remo2",
+  "name": "Nature Remo integration",
   "documentation": "https://github.com/kkiyama117/hacs-nature-remo2",
   "issue_tracker": "https://github.com/kkiyama117/hacs-nature-remo2/issues",
   "dependencies": [],
