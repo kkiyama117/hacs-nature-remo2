@@ -23,7 +23,7 @@ PLATFORMS = [BINARY_SENSOR, SENSOR, SWITCH]
 
 # Configuration and options
 CONF_ENABLED = "enabled"
-CONF_USERNAME = "kkiyama117"
+CONF_USERNAME = "username"
 CONF_PASSWORD = "password"
 
 # Defaults
