@@ -8,7 +8,7 @@ from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.typing import ConfigType
 
 # The domain of your component. Should be equal to the name of your component.
-DOMAIN = "expose_service_async"
+DOMAIN = "hacs-nature-remo"
 _LOGGER = logging.getLogger(__name__)
 
 # Use empty_config_schema because the component does not have any config options
