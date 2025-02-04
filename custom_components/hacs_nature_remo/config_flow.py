@@ -64,6 +64,7 @@ class HacsNatureRemoFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         try:
             session = async_create_clientsession(self.hass)
             client = HacsNatureRemoApiClient(conf_api_token, session)
+            # TODO: How to check connection
             await client.get_user()
             return True
         except Exception:  # pylint: disable=broad-except

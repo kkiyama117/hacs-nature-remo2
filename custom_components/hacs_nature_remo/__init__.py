@@ -14,13 +14,13 @@ from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 from homeassistant.helpers.update_coordinator import UpdateFailed
 import voluptuous as vol
+import logging
 
 from .api import HacsNatureRemoApiClient
-from .const import *
-
-SCAN_INTERVAL = timedelta(seconds=30)
+from .const import LOGGER, DOMAIN, CONF_API_TOKEN, STARTUP_MESSAGE, PLATFORMS, DEFAULT_SCAN_INTERVAL
 
 _LOGGER: logging.Logger = LOGGER
+SCAN_INTERVAL = DEFAULT_SCAN_INTERVAL
 
 CONFIG_SCHEMA = vol.Schema({
     DOMAIN: vol.Required({
@@ -81,7 +81,9 @@ class HacsNatureRemoDataUpdateCoordinator(DataUpdateCoordinator):
     async def _async_update_data(self):
         """Update data via library."""
         try:
-            return await self.api.get_user()
+            # return await self.api.get_user()
+            result = await self.api.get_user()
+            pass
         except Exception as exception:
             raise UpdateFailed() from exception
 

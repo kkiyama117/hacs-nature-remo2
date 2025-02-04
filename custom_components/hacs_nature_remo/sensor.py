@@ -1,4 +1,6 @@
 """Sensor platform for hacs-nature-remo."""
+from jinja2.filters import do_default
+
 from .const import DEFAULT_NAME
 from .const import DOMAIN
 from .const import ICON

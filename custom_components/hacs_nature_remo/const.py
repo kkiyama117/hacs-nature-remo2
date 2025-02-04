@@ -1,7 +1,7 @@
 """Constants for hacs-nature-remo."""
 # Should be equal to the name of your component.
-from datetime import timedelta
 import logging
+from datetime import timedelta
 
 from homeassistant.components.climate import HVACMode
 from homeassistant.components.climate.const import (
@@ -16,6 +16,7 @@ DOMAIN: str = "hacs_nature_remo"
 DOMAIN_DATA = f"{DOMAIN}_data"
 VERSION = "0.0.1"
 DEFAULT_UPDATE_INTERVAL = timedelta(seconds=60)
+DEFAULT_SCAN_INTERVAL = timedelta(seconds=30)
 
 ATTRIBUTION = "Data provided by http://jsonplaceholder.typicode.com/"
 ISSUE_URL = "https://github.com/kkiyama117/hacs-nature-remo2/issues"
