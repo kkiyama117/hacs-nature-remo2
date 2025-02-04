@@ -1,0 +1,13 @@
+[project]
+name = "hacs-nature-remo"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+]
+
+[dependency-groups]
+dev = [
+    "homeassistant>=2023.7.3",
+]
