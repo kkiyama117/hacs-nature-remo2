@@ -10,4 +10,5 @@ dependencies = [
 [dependency-groups]
 dev = [
     "homeassistant>=2023.7.3",
+    "nature-remo-fork-only-for-hacs-nature-remo>=0.3.3",
 ]

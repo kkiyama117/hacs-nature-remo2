@@ -5,6 +5,10 @@
   "issue_tracker": "https://github.com/kkiyama117/hacs-nature-remo2/issues",
   "dependencies": [],
   "config_flow": true,
-  "codeowners": ["@kkiyama117"],
-  "requirements": []
+  "codeowners": [
+    "@kkiyama117"
+  ],
+  "requirements": [
+    "nature-remo-fork-only-for-hacs-nature-remo"
+  ]
 }

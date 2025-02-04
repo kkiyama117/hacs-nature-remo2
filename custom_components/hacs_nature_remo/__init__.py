@@ -4,6 +4,7 @@ Custom integration to integrate hacs-nature-remo with Home Assistant.
 For more details about this integration, please refer to
 https://github.com/kkiyama117/hacs-nature-remo
 """
+from typing import Any, Dict
 import asyncio
 import logging
 from datetime import timedelta
@@ -17,15 +18,11 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 from homeassistant.helpers.update_coordinator import UpdateFailed
 
 from .api import HacsNatureRemoApiClient
-from .const import CONF_PASSWORD
-from .const import CONF_USERNAME
-from .const import DOMAIN
-from .const import PLATFORMS
-from .const import STARTUP_MESSAGE
+from .const import *
 
 SCAN_INTERVAL = timedelta(seconds=30)
 
-_LOGGER: logging.Logger = logging.getLogger(__package__)
+_LOGGER: logging.Logger = LOGGER
 
 
 async def async_setup(hass: HomeAssistant, config: Config):
@@ -56,7 +53,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     for platform in PLATFORMS:
         if entry.options.get(platform, True):
             coordinator.platforms.append(platform)
-            hass.async_add_job(
+            await hass.async_add_job(
                 hass.config_entries.async_forward_entry_setup(entry, platform)
             )
 

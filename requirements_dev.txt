@@ -1,1 +1,2 @@
 homeassistant
+nature-remo-fork-only-for-hacs-nature-remo
