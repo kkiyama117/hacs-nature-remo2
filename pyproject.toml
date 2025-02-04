@@ -3,12 +3,12 @@ name = "hacs-nature-remo"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.13"
 dependencies = [
 ]
 
 [dependency-groups]
 dev = [
-    "homeassistant>=2023.7.3",
+    "homeassistant>=2025.1.4",
     "nature-remo-fork-only-for-hacs-nature-remo>=0.3.3",
 ]

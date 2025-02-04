@@ -1,2 +1,2 @@
-homeassistant
+homeassistant>=2025.1.4
 nature-remo-fork-only-for-hacs-nature-remo

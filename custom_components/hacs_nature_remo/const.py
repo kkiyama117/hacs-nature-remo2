@@ -2,13 +2,9 @@
 # Should be equal to the name of your component.
 from datetime import timedelta
 import logging
+
 from homeassistant.components.climate.const import (
-    HVAC_MODE_AUTO,
-    HVAC_MODE_COOL,
-    HVAC_MODE_DRY,
-    HVAC_MODE_FAN_ONLY,
-    HVAC_MODE_HEAT,
-    HVAC_MODE_OFF,
+    HVAC_MODES, HVACMode
 )
 
 LOGGER: logging.Logger = logging.getLogger(__package__)
@@ -31,8 +27,8 @@ BINARY_SENSOR_DEVICE_CLASS = "connectivity"
 
 # Platforms
 SWITCH = "switch"
-CLIMATE= "climate"
-LIGHT= "light"
+CLIMATE = "climate"
+LIGHT = "light"
 SENSOR = "sensor"
 BINARY_SENSOR = "binary_sensor"
 PLATFORMS = [BINARY_SENSOR, SENSOR, SWITCH, CLIMATE, LIGHT]
@@ -41,7 +37,7 @@ PLATFORMS = [BINARY_SENSOR, SENSOR, SWITCH, CLIMATE, LIGHT]
 CONF_ENABLED = "enabled"
 # CONF_USERNAME = "username"
 # CONF_PASSWORD = "password"
-CONF_API_TOKEN= "api_token"
+CONF_API_TOKEN = "api_token"
 
 # Defaults
 DEFAULT_NAME = DOMAIN
@@ -60,7 +56,6 @@ If you have any issues with this you need to open an issue here:
 NATURE_REMO_API_BASE_URL = "https://api.nature.global"
 NATURE_REMO_API_TIMEOUT_SEC = 10
 
-
 KEY_API = "api"
 KEY_CONFIG = "api"
 KEY_COORDINATOR = "coordinator"
@@ -68,23 +63,22 @@ KEY_APPLIANCES = "appliances"
 KEY_DEVICES = "devices"
 
 # For climate
-STR_POWER_OFF = "power-off"
+# TODO: Add more HVAC modes
 MODE_HA_TO_REMO = {
-    HVAC_MODE_AUTO: "auto",
-    HVAC_MODE_FAN_ONLY: "blow",
-    HVAC_MODE_COOL: "cool",
-    HVAC_MODE_DRY: "dry",
-    HVAC_MODE_HEAT: "warm",
-    HVAC_MODE_OFF: STR_POWER_OFF,
+    HVAC_MODES.AUTO: "auto",
+    HVAC_MODES.FAN_ONLY: "blow",
+    HVAC_MODES.COOL: "cool",
+    HVAC_MODES.DRY: "dry",
+    HVAC_MODES.HEAT: "warm",
+    HVAC_MODES.OFF: "power-off",
 }
 
 MODE_REMO_TO_HA = {
-    "auto": HVAC_MODE_AUTO,
-    "blow": HVAC_MODE_FAN_ONLY,
-    "cool": HVAC_MODE_COOL,
-    "dry": HVAC_MODE_DRY,
-    "warm": HVAC_MODE_HEAT,
-    STR_POWER_OFF: HVAC_MODE_OFF,
+    "auto": HVAC_MODES.AUTO,
+    "blow": HVAC_MODES.FAN_ONLY,
+    "cool": HVAC_MODES.COOL,
+    "dry": HVAC_MODES.DRY,
+    "warm": HVAC_MODES.HEAT,
+    "power-off": HVAC_MODES.OFF,
 }
-
 AIRCON_MODES_REMO = MODE_REMO_TO_HA.keys()
