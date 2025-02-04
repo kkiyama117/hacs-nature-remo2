@@ -1,5 +1,5 @@
 {
-  "name": "hacs-nature-remo",
+  "name": "Nature Remo integration",
   "hacs": "1.6.0",
   "domains": ["binary_sensor", "sensor", "switch"],
   "iot_class": "Cloud Polling",
