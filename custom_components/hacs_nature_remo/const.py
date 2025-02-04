@@ -3,6 +3,7 @@
 from datetime import timedelta
 import logging
 
+from homeassistant.components.climate import HVACMode
 from homeassistant.components.climate.const import (
     HVAC_MODES, HVACMode
 )
@@ -65,20 +66,20 @@ KEY_DEVICES = "devices"
 # For climate
 # TODO: Add more HVAC modes
 MODE_HA_TO_REMO = {
-    HVAC_MODES.AUTO: "auto",
-    HVAC_MODES.FAN_ONLY: "blow",
-    HVAC_MODES.COOL: "cool",
-    HVAC_MODES.DRY: "dry",
-    HVAC_MODES.HEAT: "warm",
-    HVAC_MODES.OFF: "power-off",
+    HVACMode.AUTO: "auto",
+    HVACMode.FAN_ONLY: "blow",
+    HVACMode.COOL: "cool",
+    HVACMode.DRY: "dry",
+    HVACMode.HEAT: "warm",
+    HVACMode.OFF: "power-off",
 }
 
 MODE_REMO_TO_HA = {
-    "auto": HVAC_MODES.AUTO,
-    "blow": HVAC_MODES.FAN_ONLY,
-    "cool": HVAC_MODES.COOL,
-    "dry": HVAC_MODES.DRY,
-    "warm": HVAC_MODES.HEAT,
-    "power-off": HVAC_MODES.OFF,
+    "auto": HVACMode.AUTO,
+    "blow": HVACMode.FAN_ONLY,
+    "cool": HVACMode.COOL,
+    "dry": HVACMode.DRY,
+    "warm": HVACMode.HEAT,
+    "power-off": HVACMode.OFF,
 }
 AIRCON_MODES_REMO = MODE_REMO_TO_HA.keys()
