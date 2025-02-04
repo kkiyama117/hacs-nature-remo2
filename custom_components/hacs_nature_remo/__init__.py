@@ -2,12 +2,9 @@
 Custom integration to integrate hacs-nature-remo with Home Assistant.
 
 For more details about this integration, please refer to
-https://github.com/kkiyama117/hacs-nature-remo
+https://github.com/kkiyama117/hacs-nature-remo2
 """
-from typing import Any, Dict
 import asyncio
-import logging
-from datetime import timedelta
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import Config
@@ -16,6 +13,7 @@ from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 from homeassistant.helpers.update_coordinator import UpdateFailed
+import voluptuous as vol
 
 from .api import HacsNatureRemoApiClient
 from .const import *
@@ -24,9 +22,15 @@ SCAN_INTERVAL = timedelta(seconds=30)
 
 _LOGGER: logging.Logger = LOGGER
 
+CONFIG_SCHEMA = vol.Schema({
+    DOMAIN: vol.Required({
+        vol.Required(CONF_API_TOKEN, default="Please_set_nature_remo_API"): str
+    })
+}, extra=vol.ALLOW_EXTRA)
 
-async def async_setup(hass: HomeAssistant, config: Config):
-    """Set up this integration using YAML is not supported."""
+
+async def async_setup(_hass: HomeAssistant, _config: Config) -> bool:
+    """Set up this integration using YAML is not supported?"""
     return True
 
 
@@ -36,11 +40,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
         hass.data.setdefault(DOMAIN, {})
         _LOGGER.info(STARTUP_MESSAGE)
 
-    username = entry.data.get(CONF_USERNAME)
-    password = entry.data.get(CONF_PASSWORD)
+    api_token = entry.data.get(CONF_API_TOKEN)
 
     session = async_get_clientsession(hass)
-    client = HacsNatureRemoApiClient(username, password, session)
+    client = HacsNatureRemoApiClient(api_token, session)
 
     coordinator = HacsNatureRemoDataUpdateCoordinator(hass, client=client)
     await coordinator.async_refresh()
@@ -65,9 +68,9 @@ class HacsNatureRemoDataUpdateCoordinator(DataUpdateCoordinator):
     """Class to manage fetching data from the API."""
 
     def __init__(
-        self,
-        hass: HomeAssistant,
-        client: HacsNatureRemoApiClient,
+            self,
+            hass: HomeAssistant,
+            client: HacsNatureRemoApiClient,
     ) -> None:
         """Initialize."""
         self.api = client
@@ -78,7 +81,7 @@ class HacsNatureRemoDataUpdateCoordinator(DataUpdateCoordinator):
     async def _async_update_data(self):
         """Update data via library."""
         try:
-            return await self.api.async_get_data()
+            return await self.api.get_user()
         except Exception as exception:
             raise UpdateFailed() from exception
 

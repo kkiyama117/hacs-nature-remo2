@@ -1,61 +1,29 @@
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from enum import Enum, auto
-from typing import Any, Coroutine, Mapping, Optional
+from typing import Optional
 
+"""Sample API Client."""
+import asyncio
+import logging
+import socket
+
+import aiohttp
+import async_timeout
 from remo import NatureRemoError
 from remo.models import *
+from ..const import NATURE_REMO_API_BASE_URL, NATURE_REMO_API_TIMEOUT_SEC
 
-BASE_URL = "https://api.nature.global"
+BASE_URL = NATURE_REMO_API_BASE_URL
 __version__ = ""
 __url__ = ""
 
-
-class HTTPMethod(Enum):
-    GET = auto()
-    POST = auto()
-
-
-class Request(ABC):
-    pass
-
-
-class Response(ABC):
-    @property
-    @abstractmethod
-    def headers(self) -> Mapping:
-        pass
-
-    @property
-    @abstractmethod
-    def status_code(self) -> any:
-        pass
-
-    @property
-    @abstractmethod
-    def reason(self) -> str | None:
-        pass
-
-    @abstractmethod
-    async def json(self):
-        pass
-
-    @property
-    @abstractmethod
-    def ok(self):
-        pass
-
-
-class HTTPWrapper(ABC):
-    @abstractmethod
-    async def get(self, url, headers=None) -> Response:
-        pass
-
-    @abstractmethod
-    async def post(self, url, headers=None, data=None) -> Response:
-        pass
+_LOGGER: logging.Logger = logging.getLogger(__package__)
+HEADERS = {"Content-type": "application/json; charset=UTF-8"}
+LOCAL_HEADERS = {
+    "Accept": "application/json",
+    "X-Requested-With": f"nature-remo/{__version__} ({__url__})",
+}
 
 
 def enable_debug_mode():
@@ -67,14 +35,6 @@ def enable_debug_mode():
     logging.getLogger().setLevel(logging.DEBUG)
 
 
-async def build_error_message(resp: Response) -> str:
-    error = await resp.json()
-    return (
-            f"HTTP Status Code: {resp.status_code}, "
-            + f'Nature Remo Code: {error["code"]}, Message: {error["message"]}'
-    )
-
-
 @dataclass
 class RateLimit:
     checked_at: Optional[datetime] = None
@@ -83,69 +43,40 @@ class RateLimit:
     reset: Optional[datetime] = None
 
 
-class NatureRemoAPIVer1:
-    """Client for the Nature Remo API."""
-
-    def __init__(self, inner: HTTPWrapper, access_token: str, debug: bool = False):
+class HacsNatureRemoApiClient:
+    def __init__(
+            self,
+            access_token: str,
+            session: aiohttp.ClientSession,
+            nature_remo_api_version: str = "1",
+            debug: bool = False
+    ) -> None:
         if debug:
             enable_debug_mode()
-        self._inner = inner
-        self._endpoint_base = "/1"
+        # http session
+        self._session = session
         self.access_token = access_token
-        self.base_url = BASE_URL
+        self.url = f"{BASE_URL}/{nature_remo_api_version}"
         self.rate_limit = RateLimit()
-
-    def __request(self, endpoint: str, method: HTTPMethod, data: dict = None
-                  ) -> Coroutine[Any, Any, Response]:
-        headers = {
+        self.headers = {
             "Accept": "application/json",
             "Authorization": f"Bearer {self.access_token}",
             "User-Agent": f"nature-remo/{__version__} ({__url__})",
         }
 
-        url = f"{self.base_url}{endpoint}"
-
-        try:
-            if method == HTTPMethod.GET:
-                return self._inner.get(url, headers=headers)
-            else:
-                return self._inner.post(url, headers=headers, data=data)
-        except OSError as e:
-            raise NatureRemoError(e)
-
-    async def __get_json(self, resp: Response) -> Any:
-        self.__set_rate_limit(resp)
-        if resp.ok:
-            return await resp.json()
-        error_message = await build_error_message(resp)
-        raise NatureRemoError(error_message)
-
-    def __set_rate_limit(self, resp: Response):
-        if "Date" in resp.headers:
-            self.rate_limit.checked_at = datetime.strptime(
-                resp.headers["Date"], "%a, %d %b %Y %H:%M:%S GMT"
-            )
-        if "X-Rate-Limit-Limit" in resp.headers:
-            self.rate_limit.limit = int(resp.headers["X-Rate-Limit-Limit"])
-        if "X-Rate-Limit-Remaining" in resp.headers:
-            self.rate_limit.remaining = int(
-                resp.headers["X-Rate-Limit-Remaining"]
-            )
-        if "X-Rate-Limit-Reset" in resp.headers:
-            self.rate_limit.reset = datetime.utcfromtimestamp(
-                int(resp.headers["X-Rate-Limit-Reset"])
-            )
-
+    # USER =============================================================================================================
     async def get_user(self) -> User:
         """Fetch the authenticated user's information.
 
         Returns:
             A User object.
         """
-        endpoint = f"{self._endpoint_base}/users/me"
-        resp = await self.__request(endpoint, HTTPMethod.GET)
-        json = await self.__get_json(resp)
-        return UserSchema().load(json)
+        endpoint = f"{self.url}/users/me"
+        try:
+            response = await self.api_wrapper_json("get", endpoint)
+            return UserSchema().load(response)
+        except Exception as e:
+            _LOGGER.error(f"Error: {e}")
 
     async def update_user(self, nickname: str) -> User:
         """Update authenticated user's information.
@@ -156,23 +87,26 @@ class NatureRemoAPIVer1:
         Returns:
             A User object.
         """
-        endpoint = f"{self._endpoint_base}/users/me"
-        resp = await self.__request(
-            endpoint, HTTPMethod.POST, {"nickname": nickname}
-        )
-        json = await self.__get_json(resp)
-        return UserSchema().load(json)
+        endpoint = f"{self.url}/users/me"
+        try:
+            response = await self.api_wrapper_json("post", endpoint, data={"nickname": nickname})
+            return UserSchema().load(response)
+        except Exception as e:
+            _LOGGER.error(f"Error: {e}")
 
+    # DEVICES ==========================================================================================================
     async def get_devices(self) -> List[Device]:
         """Fetch the list of Remo devices the user has access to.
 
         Returns:
             A List of Device objects.
         """
-        endpoint = f"{self._endpoint_base}/devices"
-        resp = await self.__request(endpoint, HTTPMethod.GET)
-        json = await self.__get_json(resp)
-        return DeviceSchema(many=True).load(json)
+        endpoint = f"{self.url}/devices"
+        try:
+            response = await self.api_wrapper_json("get", endpoint)
+            return DeviceSchema(many=True).load(response)
+        except Exception as e:
+            _LOGGER.error(f"Error: {e}")
 
     async def update_device(self, device: str, name: str):
         """Update Remo.
@@ -181,10 +115,11 @@ class NatureRemoAPIVer1:
             device: Device ID.
             name: Device name.
         """
-        endpoint = f"{self._endpoint_base}/devices/{device}"
-        resp = await self.__request(endpoint, HTTPMethod.POST, {"name": name})
-        if not resp.ok:
-            raise NatureRemoError(await build_error_message(resp))
+        endpoint = f"{self.url}/devices/{device}"
+        try:
+            await self.api_wrapper_json("post", endpoint, data={"name": name})
+        except Exception as e:
+            _LOGGER.error(f"Error: {e}")
 
     async def delete_device(self, device: str):
         """Delete Remo.
@@ -192,11 +127,13 @@ class NatureRemoAPIVer1:
         Args:
             device: Device ID.
         """
-        endpoint = f"{self._endpoint_base}/devices/{device}/delete"
-        resp = await self.__request(endpoint, HTTPMethod.POST)
-        if not resp.ok:
-            raise NatureRemoError(await build_error_message(resp))
+        endpoint = f"{self.url}/devices/{device}/delete"
+        try:
+            await self.api_wrapper_json("post", endpoint)
+        except Exception as e:
+            _LOGGER.error(f"Error: {e}")
 
+    # OFFSETS ==========================================================================================================
     async def update_temperature_offset(self, device: str, offset: int):
         """Update temperature offset.
 
@@ -204,23 +141,26 @@ class NatureRemoAPIVer1:
             device: Device ID.
             offset: Temperature offset value added to the measured temperature.
         """
-        endpoint = f"{self._endpoint_base}/devices/{device}/temperature_offset"
-        resp = await self.__request(endpoint, HTTPMethod.POST, {"offset": offset})
-        if not resp.ok:
-            raise NatureRemoError(await build_error_message(resp))
+        endpoint = f"{self.url}/devices/{device}/temperature_offset"
+        try:
+            await self.api_wrapper_json("post", endpoint, data={"offset": offset})
+        except Exception as e:
+            _LOGGER.error(f"Error: {e}")
 
     async def update_humidity_offset(self, device: str, offset: int):
         """Update humidity offset.
 
         Args:
             device: Device ID.
-            offset: Humidity offset value added to the measured humidity.
+            offset: Temperature offset value added to the measured humidity
         """
-        endpoint = f"{self._endpoint_base}/devices/{device}/humidity_offset"
-        resp = await self.__request(endpoint, HTTPMethod.POST, {"offset": offset})
-        if not resp.ok:
-            raise NatureRemoError(await build_error_message(resp))
+        endpoint = f"{self.url}/devices/{device}/humidity_offset"
+        try:
+            await self.api_wrapper_json("post", endpoint, data={"offset": offset})
+        except Exception as e:
+            _LOGGER.error(f"Error: {e}")
 
+    # APPLIANCES =======================================================================================================
     async def detect_appliance(self, message: str) -> List[ApplianceModelAndParams]:
         """Find the air conditioner best matching the provided infrared signal.
 
@@ -228,10 +168,12 @@ class NatureRemoAPIVer1:
             message: JSON serialized object describing infrared signals.
               Includes "data", "freq" and "format" keys.
         """
-        endpoint = f"{self._endpoint_base}/detectappliance"
-        resp = await self.__request(endpoint, HTTPMethod.POST, {"message": message})
-        json = await self.__get_json(resp)
-        return ApplianceModelAndParamsSchema(many=True).load(json)
+        endpoint = f"{self.url}/detectappliance"
+        try:
+            resp = await self.api_wrapper_json("post", endpoint, data={"message": message})
+            return ApplianceModelAndParamsSchema(many=True).load(resp)
+        except Exception as e:
+            _LOGGER.error(f"Error: {e}")
 
     async def get_appliances(self) -> List[Appliance]:
         """Fetch the list of appliances.
@@ -239,10 +181,12 @@ class NatureRemoAPIVer1:
         Returns:
             A list of Appliance objects.
         """
-        endpoint = f"{self._endpoint_base}/appliances"
-        resp = await self.__request(endpoint, HTTPMethod.GET)
-        json = await self.__get_json(resp)
-        return ApplianceSchema(many=True).load(json)
+        endpoint = f"{self.url}/appliances"
+        try:
+            resp = await self.api_wrapper_json("get", endpoint, )
+            return ApplianceSchema(many=True).load(resp)
+        except Exception as e:
+            _LOGGER.error(f"Error: {e}")
 
     async def create_appliance(
             self,
@@ -262,39 +206,30 @@ class NatureRemoAPIVer1:
               is included in IRDB.
             model_type: Type of model.
         """
-        endpoint = f"{self._endpoint_base}/appliances"
+        endpoint = f"{self.url}/appliances"
         data = {"device": device, "nickname": nickname, "image": image}
         if model:
             data["model"] = model
         if model_type:
             data["model_type"] = model_type
-        resp = await self.__request(endpoint, HTTPMethod.POST, data)
-        json = await self.__get_json(resp)
-        return ApplianceSchema().load(json)
+        try:
+            resp = await self.api_wrapper_json("post", endpoint, data=data)
+            return ApplianceSchema().load(resp)
+        except Exception as e:
+            _LOGGER.error(f"Error: {e}")
 
-    async def update_appliance_orders(self, appliances: str):
+    async def update_appliance_orders(self, appliances: str) -> Appliance:
         """Reorder appliances.
 
         Args:
             appliances: List of all appliances' IDs comma separated.
         """
-        endpoint = f"{self._endpoint_base}/appliance_orders"
-        resp = await self.__request(
-            endpoint, HTTPMethod.POST, {"appliances": appliances}
-        )
-        if not resp.ok:
-            raise NatureRemoError(await build_error_message(resp))
-
-    async def delete_appliance(self, appliance: str):
-        """Delete appliance.
-
-        Args:
-            appliance: Appliance ID.
-        """
-        endpoint = f"{self._endpoint_base}/appliances/{appliance}/delete"
-        resp = await self.__request(endpoint, HTTPMethod.POST)
-        if not resp.ok:
-            raise NatureRemoError(await build_error_message(resp))
+        endpoint = f"{self.url}/appliance_orders"
+        try:
+            resp = await self.api_wrapper_json("post", endpoint, data={"appliances": appliances})
+            return ApplianceSchema().load(resp)
+        except Exception as e:
+            _LOGGER.error(f"Error: {e}")
 
     async def update_appliance(
             self, appliance: str, nickname: str, image: str
@@ -306,13 +241,27 @@ class NatureRemoAPIVer1:
             nickname: Appliance name.
             image: Basename of the image file included in the app.
         """
-        endpoint = f"{self._endpoint_base}/appliances/{appliance}"
-        resp = await self.__request(
-            endpoint, HTTPMethod.POST, {"nickname": nickname, "image": image}
-        )
-        json = await self.__get_json(resp)
-        return ApplianceSchema().load(json)
+        endpoint = f"{self.url}/appliances/{appliance}"
+        try:
+            resp = await self.api_wrapper_json("post", endpoint,
+                                               data={"nickname": nickname, "image": image})
+            return ApplianceSchema().load(resp)
+        except Exception as e:
+            _LOGGER.error(f"Error: {e}")
 
+    async def delete_appliance(self, appliance: str):
+        """Delete appliance.
+
+        Args:
+            appliance: Appliance ID.
+        """
+        endpoint = f"{self.url}/appliances/{appliance}/delete"
+        try:
+            await self.api_wrapper_json("post", endpoint)
+        except Exception as e:
+            _LOGGER.error(f"Error: {e}")
+
+    # Aircon Settings ==================================================================================================
     async def update_aircon_settings(
             self,
             appliance: str,
@@ -332,7 +281,7 @@ class NatureRemoAPIVer1:
             air_direction: AC air direction.
             button: Button.
         """
-        endpoint = f"{self._endpoint_base}/appliances/{appliance}/aircon_settings"
+        endpoint = f"{self.url}/appliances/{appliance}/aircon_settings"
         data = {}
         if operation_mode:
             data["operation_mode"] = operation_mode
@@ -344,10 +293,12 @@ class NatureRemoAPIVer1:
             data["air_direction"] = air_direction
         if button:
             data["button"] = button
-        resp = await self.__request(endpoint, HTTPMethod.POST, data)
-        if not resp.ok:
-            raise NatureRemoError(await build_error_message(resp))
+        try:
+            await self.api_wrapper_json("post", endpoint, data=data)
+        except Exception as e:
+            _LOGGER.error(f"Error: {e}")
 
+    # TV ===============================================================================================================
     async def send_tv_infrared_signal(self, appliance: str, button: str):
         """Send tv infrared signal.
 
@@ -355,11 +306,13 @@ class NatureRemoAPIVer1:
             appliance: Appliance ID.
             button: Button name.
         """
-        endpoint = f"{self._endpoint_base}/appliances/{appliance}/tv"
-        resp = await self.__request(endpoint, HTTPMethod.POST, {"button": button})
-        if not resp.ok:
-            raise NatureRemoError(await build_error_message(resp))
+        endpoint = f"{self.url}/appliances/{appliance}/tv"
+        try:
+            await self.api_wrapper_json("post", endpoint, data={"button": button})
+        except Exception as e:
+            _LOGGER.error(f"Error: {e}")
 
+    # Light ============================================================================================================
     async def send_light_infrared_signal(self, appliance: str, button: str):
         """Send light infrared signal.
 
@@ -367,21 +320,25 @@ class NatureRemoAPIVer1:
             appliance: Appliance ID.
             button: Button name.
         """
-        endpoint = f"{self._endpoint_base}/appliances/{appliance}/light"
-        resp = await self.__request(endpoint, HTTPMethod.POST, {"button": button})
-        if not resp.ok:
-            raise NatureRemoError(await build_error_message(resp))
+        endpoint = f"{self.url}/appliances/{appliance}/light"
+        try:
+            await self.api_wrapper_json("post", endpoint, data={"button": button})
+        except Exception as e:
+            _LOGGER.error(f"Error: {e}")
 
+    # SIGNALS ==========================================================================================================
     async def get_signals(self, appliance: str) -> List[Signal]:
         """Fetch signals registered under this appliance.
 
         Args:
             appliance: Appliance ID.
         """
-        endpoint = f"{self._endpoint_base}/appliances/{appliance}/signals"
-        resp = await self.__request(endpoint, HTTPMethod.GET)
-        json = await self.__get_json(resp)
-        return SignalSchema(many=True).load(json)
+        endpoint = f"{self.url}/appliances/{appliance}/signals"
+        try:
+            response = await self.api_wrapper_json("get", endpoint)
+            return SignalSchema(many=True).load(response)
+        except Exception as e:
+            _LOGGER.error(f"Error: {e}")
 
     async def create_signal(
             self, appliance: str, name: str, message: str, image: str
@@ -395,14 +352,15 @@ class NatureRemoAPIVer1:
               Includes "data", "freq" and "format" keys.
             image: Basename of the image file included in the app.
         """
-        endpoint = f"{self._endpoint_base}/appliances/{appliance}/signals"
-        resp = await self.__request(
-            endpoint,
-            HTTPMethod.POST,
-            {"name": name, "message": message, "image": image},
-        )
-        json = await self.__get_json(resp)
-        return SignalSchema().load(json)
+        endpoint = f"{self.url}/appliances/{appliance}/signals"
+        try:
+
+            response = await self.api_wrapper_json(
+                "post", endpoint, data={"name": name, "message": message, "image": image},
+            )
+            return SignalSchema().load(response)
+        except Exception as e:
+            _LOGGER.error(f"Error: {e}")
 
     async def update_signal_orders(self, appliance: str, signals: str):
         """Reorder signals under this appliance.
@@ -411,10 +369,13 @@ class NatureRemoAPIVer1:
             appliance: Appliance ID.
             signals: List of all signals' IDs comma separated.
         """
-        endpoint = f"{self._endpoint_base}/appliances/{appliance}/signal_orders"
-        resp = await self.__request(endpoint, HTTPMethod.POST, {"signals": signals})
-        if not resp.ok:
-            raise NatureRemoError(await build_error_message(resp))
+        endpoint = f"{self.url}/appliances/{appliance}/signal_orders"
+        try:
+            await self.api_wrapper_json(
+                "post", endpoint, data={"signals": signals},
+            )
+        except Exception as e:
+            _LOGGER.error(f"Error: {e}")
 
     async def update_signal(self, signal: str, name: str, image: str):
         """Update infrared signal.
@@ -424,12 +385,13 @@ class NatureRemoAPIVer1:
             name: Signal name.
             image: Basename of the image file included in the app.
         """
-        endpoint = f"{self._endpoint_base}/signals/{signal}"
-        resp = await self.__request(
-            endpoint, HTTPMethod.POST, {"name": name, "image": image}
-        )
-        if not resp.ok:
-            raise NatureRemoError(await build_error_message(resp))
+        endpoint = f"{self.url}/signals/{signal}"
+        try:
+            await self.api_wrapper_json(
+                "post", endpoint, data={"name": name, "image": image}
+            )
+        except Exception as e:
+            _LOGGER.error(f"Error: {e}")
 
     async def delete_signal(self, signal: str):
         """Delete infrared signal.
@@ -437,10 +399,11 @@ class NatureRemoAPIVer1:
         Args:
             signal: Signal ID.
         """
-        endpoint = f"{self._endpoint_base}/signals/{signal}/delete"
-        resp = await self.__request(endpoint, HTTPMethod.POST)
-        if not resp.ok:
-            raise NatureRemoError(await build_error_message(resp))
+        endpoint = f"{self.url}/signals/{signal}/delete"
+        try:
+            await self.api_wrapper_json("post", endpoint)
+        except Exception as e:
+            _LOGGER.error(f"Error: {e}")
 
     async def send_signal(self, signal: str):
         """Send infrared signal.
@@ -448,63 +411,92 @@ class NatureRemoAPIVer1:
         Args:
             signal: Signal ID.
         """
-        endpoint = f"{self._endpoint_base}/signals/{signal}/send"
-        resp = await self.__request(endpoint, HTTPMethod.POST)
-        if not resp.ok:
-            raise NatureRemoError(await build_error_message(resp))
-
-
-class NatureRemoLocalAPIVer1:
-    """Client for the Nature Remo Local API."""
-
-    def __init__(self, inner: HTTPWrapper, addr: str, debug: bool = False):
-        if debug:
-            enable_debug_mode()
-        self.addr = addr
-        self._inner = inner
-
-    def __request(
-            self, endpoint: str, method: HTTPMethod, data: str = None
-    ) -> Coroutine[Any, Any, Response]:
-        headers = {
-            "Accept": "application/json",
-            "X-Requested-With": f"nature-remo/{__version__} ({__url__})",
-        }
-        url = f"http://{self.addr}{endpoint}"
-
+        endpoint = f"{self.url}/signals/{signal}/send"
         try:
-            if method == HTTPMethod.GET:
-                return self._inner.get(url, headers=headers)
-            else:
-                return self._inner.post(url, headers=headers, data=data)
-        except OSError as e:
-            raise NatureRemoError(e)
+            await self.api_wrapper_json("post", endpoint)
+        except Exception as e:
+            _LOGGER.error(f"Error: {e}")
 
-    @staticmethod
-    def __get_json(resp: Response) -> Coroutine[Any, Any, Any]:
-        if resp.ok:
-            return resp.json()
-        raise NatureRemoError(f"{resp.status_code} {resp.reason}")
+    # ------------------------------------------------------------------------------------------------------------------
+    async def api_wrapper_json(self, method: str, url: str, data: dict = None, headers: dict = None) -> dict | None:
+        try:
+            api_response = await self.api_wrapper(method, url, data, headers, is_raise_error=True)
+            return api_response
+        except Exception as e:
+            _LOGGER.error(f"Json Error: {e}")
+            raise NatureRemoError()
 
-    async def get_ir_signal(self) -> IRSignal:
-        """Fetch the newest received IR signal.
+    async def api_wrapper(
+            self, method: str, url: str, data: dict = None, headers: dict = None,
+            is_raise_error: bool = False
+    ) -> dict:
+        """Get information from the API."""
+        if headers is None:
+            headers = self.headers
+        else:
+            headers = headers
+        if data is None:
+            data = {}
+        else:
+            data = data
+        try:
+            async with async_timeout.timeout(NATURE_REMO_API_TIMEOUT_SEC):
+                if method == "get":
+                    response = await self._session.get(url, headers=headers)
+                elif method == "put":
+                    response = await self._session.put(url, headers=headers, json=data)
+                elif method == "patch":
+                    response = await self._session.patch(url, headers=headers, json=data)
+                elif method == "post":
+                    response = await self._session.post(url, headers=headers, json=data)
+                self.__set_api_rate_limit(response)
+                return await response.json()
 
-        Returns:
-            An IRSignal object.
-        """
-        endpoint = "/messages"
-        resp = await self.__request(endpoint, HTTPMethod.GET)
-        json = await self.__get_json(resp)
-        return IRSignalSchema().load(json)
+        except asyncio.TimeoutError as exception:
+            _LOGGER.error(
+                "Timeout error fetching information from %s - %s",
+                url,
+                exception,
+            )
+            if is_raise_error:
+                raise exception
 
-    async def send_ir_signal(self, message: str):
-        """Emit IR signals provided by request body.
+        except (KeyError, TypeError) as exception:
+            _LOGGER.error(
+                "Error parsing information from %s - %s",
+                url,
+                exception,
+            )
+            if is_raise_error:
+                raise exception
 
-        Args:
-            message: JSON serialized object describing infrared signals.
-              Includes "data", "freq" and "format" keys.
-        """
-        endpoint = "/messages"
-        resp = await self.__request(endpoint, HTTPMethod.POST, message)
-        if not resp.ok:
-            raise NatureRemoError(f"{resp.status_code} {resp.reason}")
+        except (aiohttp.ClientError, socket.gaierror) as exception:
+            _LOGGER.error(
+                "Error fetching information from %s - %s",
+                url,
+                exception,
+            )
+            if is_raise_error:
+                raise exception
+
+        except Exception as exception:  # pylint: disable=broad-except
+            _LOGGER.error("Something really wrong happened! - %s", exception)
+            if is_raise_error:
+                raise exception
+
+    def __set_api_rate_limit(self, response: aiohttp.ClientResponse) -> None:
+        """Set the rate limit information from the API."""
+        if "Date" in response.headers:
+            self.rate_limit.checked_at = datetime.strptime(
+                response.headers["Date"], "%a, %d %b %Y %H:%M:%S GMT"
+            )
+        if "X-Rate-Limit-Limit" in response.headers:
+            self.rate_limit.limit = int(response.headers["X-Rate-Limit-Limit"])
+        if "X-Rate-Limit-Remaining" in response.headers:
+            self.rate_limit.remaining = int(
+                response.headers["X-Rate-Limit-Remaining"]
+            )
+        if "X-Rate-Limit-Reset" in response.headers:
+            self.rate_limit.reset = datetime.utcfromtimestamp(
+                int(response.headers["X-Rate-Limit-Reset"])
+            )

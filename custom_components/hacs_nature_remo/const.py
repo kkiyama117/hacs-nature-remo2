@@ -21,9 +21,7 @@ VERSION = "0.0.1"
 DEFAULT_UPDATE_INTERVAL = timedelta(seconds=60)
 
 ATTRIBUTION = "Data provided by http://jsonplaceholder.typicode.com/"
-ISSUE_URL = "https://github.com/kkiyama117/hacs-nature-remo/issues"
-
-PLATFORMS: any = {"sensor", "climate", "light", "switch"}
+ISSUE_URL = "https://github.com/kkiyama117/hacs-nature-remo2/issues"
 
 # Icons
 ICON = "mdi:format-quote-close"
@@ -32,15 +30,18 @@ ICON = "mdi:format-quote-close"
 BINARY_SENSOR_DEVICE_CLASS = "connectivity"
 
 # Platforms
-BINARY_SENSOR = "binary_sensor"
-SENSOR = "sensor"
 SWITCH = "switch"
-PLATFORMS = [BINARY_SENSOR, SENSOR, SWITCH]
+CLIMATE= "climate"
+LIGHT= "light"
+SENSOR = "sensor"
+BINARY_SENSOR = "binary_sensor"
+PLATFORMS = [BINARY_SENSOR, SENSOR, SWITCH, CLIMATE, LIGHT]
 
 # Configuration and options
 CONF_ENABLED = "enabled"
-CONF_USERNAME = "username"
-CONF_PASSWORD = "password"
+# CONF_USERNAME = "username"
+# CONF_PASSWORD = "password"
+CONF_API_TOKEN= "api_token"
 
 # Defaults
 DEFAULT_NAME = DOMAIN
@@ -54,6 +55,11 @@ If you have any issues with this you need to open an issue here:
 {ISSUE_URL}
 -------------------------------------------------------------------
 """
+
+# Nature Remo API
+NATURE_REMO_API_BASE_URL = "https://api.nature.global"
+NATURE_REMO_API_TIMEOUT_SEC = 10
+
 
 KEY_API = "api"
 KEY_CONFIG = "api"
