@@ -16,16 +16,12 @@ async def async_setup_entry(hass, entry, async_add_devices):
     coordinator: HacsNatureRemoDataUpdateCoordinator = hass.data[DOMAIN][entry.entry_id]
     _data: PluginDataDict = coordinator.data
     devices: Dict[str, remo.Device] = _data.get(KEY_DEVICES)
-    appliances: Dict[str, remo.Device] = _data.get(KEY_APPLIANCES)
-    LOGGER.debug(coordinator.data)
-    LOGGER.debug("NEMO_O")
-    LOGGER.debug(appliances)
-    LOGGER.debug(devices)
+    appliances: Dict[str, remo.Appliance] = _data.get(KEY_APPLIANCES)
     entities: list[Entity] = []
-    entities += [NatureRemoE(coordinator, key) for (key, appliance) in appliances if
+    entities += [NatureRemoE(coordinator, key) for key, appliance in appliances.items() if
                  appliance.type == "EL_SMART_METER"]
-    for (device_id, device) in devices:
-        for (sensor_key, _event) in device.newest_events:
+    for device_id, device in devices.items():
+        for (sensor_key, _event) in device.newest_events.items():
             if sensor_key == "te":
                 entities.append(HacsNatureRemoTemperatureSensor(coordinator, device_id))
             elif sensor_key == "hu":
@@ -48,7 +44,7 @@ class NatureRemoE(HacsNatureRemoApplianceEntity, SensorEntity):
     async def async_update(self) -> None:
         await super().async_update()
         super()._update_appliance_data()
-        if hasattr(self.appliance,"smart_meter"):
+        if hasattr(self.appliance, "smart_meter"):
             smart_meter = self.appliance.smart_meter
             echonetlite_properties = smart_meter["echonetlite_properties"]
             measured_instantaneous = next(

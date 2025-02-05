@@ -5,7 +5,7 @@ For more details about this integration, please refer to
 https://github.com/kkiyama117/hacs-nature-remo2
 """
 import asyncio
-from typing import List, TypedDict, Dict
+from typing import List, TypedDict
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core_config import Config
@@ -32,9 +32,9 @@ CONFIG_SCHEMA = vol.Schema({
 }, extra=vol.ALLOW_EXTRA)
 
 PluginDataDict = TypedDict("PluginDataDict", {
-    KEY_USER: Dict[str, remo.Appliance],
-    KEY_APPLIANCES: Dict[str, remo.Appliance],
-    KEY_DEVICES: Dict[str, remo.Device]
+    KEY_USER: dict[str, remo.Appliance],
+    KEY_APPLIANCES: dict[str, remo.Appliance],
+    KEY_DEVICES: dict[str, remo.Device]
 })
 
 
@@ -91,10 +91,10 @@ class HacsNatureRemoDataUpdateCoordinator(DataUpdateCoordinator):
             user: remo.User = await self.api.get_user()
             # other devices and sensors
             appliances: List[remo.Appliance] = await self.api.get_appliances()
-            appliances_dict: Dict[str, remo.Appliance] = {data.id: data for data in appliances}
+            appliances_dict: dict[str, remo.Appliance] = {data.id: data for data in appliances}
             # controller itself
             devices: List[remo.Device] = await self.api.get_devices()
-            devices_dict: Dict[str, remo.Device] = {data.id: data for data in devices}
+            devices_dict: dict[str, remo.Device] = {data.id: data for data in devices}
             result:PluginDataDict={
                 KEY_USER: user,
                 KEY_APPLIANCES: appliances_dict,

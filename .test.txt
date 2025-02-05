@@ -1,0 +1,14 @@
+2025-02-05 20:19:10.646 DEBUG (MainThread) [custom_components.hacs_nature_remo] {
+'user': User(id='e1839a9e-a409-475b-88a3-41e993064290', ni
+2025-02-05 20:19:10.647 DEBUG (MainThread) [custom_components.hacs_nature_remo] NEMO_O
+2025-02-05 20:19:10.647 DEBUG (MainThread) [custom_components.hacs_nature_remo] {
+'c75a8fe3-109d-4d13-ae69-60ae9fd1c014': Appliance(id='c75a
+2025-02-05 20:19:10.647 DEBUG (MainThread) [custom_components.hacs_nature_remo] {'d4c6f775-ce23-41ab-b733-28da99479e3d': Device(id='d4c6f77
+2025-02-05 20:19:10.647 ERROR (MainThread) [homeassistant.components.sensor] Error while setting up hacs_nature_remo platform for sensor
+Traceback (most recent call last):
+  File "/usr/src/homeassistant/homeassistant/helpers/entity_platform.py", line 366, in _async_setup_platform
+    await asyncio.shield(awaitable)
+  File "/config/custom_components/hacs_nature_remo/sensor.py", line 25, in async_setup_entry
+    entities += [NatureRemoE(coordinator, key) for (key, appliance) in appliances if
+                                                   ^^^^^^^^^^^^^^^^
+ValueError: too many values to unpack (expected 2)
