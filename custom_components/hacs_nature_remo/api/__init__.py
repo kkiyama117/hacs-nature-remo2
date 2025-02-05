@@ -497,6 +497,6 @@ class HacsNatureRemoApiClient:
                 response.headers["X-Rate-Limit-Remaining"]
             )
         if "X-Rate-Limit-Reset" in response.headers:
-            self.rate_limit.reset = datetime.utcfromtimestamp(
+            self.rate_limit.reset = datetime.fromtimestamp(
                 int(response.headers["X-Rate-Limit-Reset"])
             )
