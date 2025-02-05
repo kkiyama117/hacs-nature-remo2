@@ -1,13 +1,11 @@
 """Sensor platform for hacs-nature-remo."""
-from typing import Dict
-
 import remo
 from homeassistant.components.sensor import SensorEntity, SensorDeviceClass, SensorStateClass
 from homeassistant.const import UnitOfTemperature, LIGHT_LUX, PERCENTAGE, UnitOfPower
 from homeassistant.helpers.entity import Entity
 
-from . import HacsNatureRemoDataUpdateCoordinator, PluginDataDict, KEY_APPLIANCES
-from .const import DOMAIN, KEY_DEVICES, LOGGER
+from . import HacsNatureRemoDataUpdateCoordinator, PluginDataDict
+from .const import DOMAIN, KEY_DEVICES, LOGGER, KEY_APPLIANCES
 from .entity import HacsNatureRemoDeviceEntity, HacsNatureRemoApplianceEntity
 
 
@@ -15,8 +13,8 @@ async def async_setup_entry(hass, entry, async_add_devices):
     """Setup sensor platform."""
     coordinator: HacsNatureRemoDataUpdateCoordinator = hass.data[DOMAIN][entry.entry_id]
     _data: PluginDataDict = coordinator.data
-    devices: Dict[str, remo.Device] = _data.get(KEY_DEVICES)
-    appliances: Dict[str, remo.Appliance] = _data.get(KEY_APPLIANCES)
+    devices: dict[str, remo.Device] = _data.get(KEY_DEVICES)
+    appliances: dict[str, remo.Appliance] = _data.get(KEY_APPLIANCES)
     entities: list[Entity] = []
     entities += [NatureRemoE(coordinator, key) for key, appliance in appliances.items() if
                  appliance.type == "EL_SMART_METER"]

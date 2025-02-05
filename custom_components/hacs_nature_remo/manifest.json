@@ -4,8 +4,9 @@
   "documentation": "https://github.com/kkiyama117/hacs-nature-remo2",
   "issue_tracker": "https://github.com/kkiyama117/hacs-nature-remo2/issues",
   "dependencies": [],
-  "version": "0.0.1",
+  "version": "0.1.1",
   "config_flow": true,
+  "single_config_entry": true,
   "codeowners": [
     "@kkiyama117"
   ],
