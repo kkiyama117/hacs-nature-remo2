@@ -55,8 +55,6 @@ class NatureRemoE(HacsNatureRemoApplianceEntity, SensorEntity):
         self._attr_native_value = None
 
 
-
-
 class HacsNatureRemoTemperatureSensor(HacsNatureRemoDeviceEntity, SensorEntity):
     """Implementation of a Nature Remo sensor."""
     _attr_native_unit_of_measurement = UnitOfTemperature.CELSIUS

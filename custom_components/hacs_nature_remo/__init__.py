@@ -12,7 +12,7 @@ from homeassistant.core_config import Config
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
+from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, _DataT
 from homeassistant.helpers.update_coordinator import UpdateFailed
 import voluptuous as vol
 import logging
@@ -79,6 +79,9 @@ class HacsNatureRemoDataUpdateCoordinator(DataUpdateCoordinator):
         self.data: PluginDataDict = None  # type: ignore[assignment]
         super().__init__(hass, _LOGGER, name=DOMAIN, update_interval=SCAN_INTERVAL)
 
+    async def _async_update_data(self) -> _DataT:
+        return await self.update_method()
+
     async def update_method(self) -> PluginDataDict:
         """called by `self._async_update_data`
 
@@ -93,11 +96,12 @@ class HacsNatureRemoDataUpdateCoordinator(DataUpdateCoordinator):
             # controller itself
             devices: List[remo.Device] = await self.api.get_devices()
             devices_dict: Dict[str, remo.Device] = {data.id: data for data in devices}
-            return {
+            result:PluginDataDict={
                 KEY_USER: user,
                 KEY_APPLIANCES: appliances_dict,
                 KEY_DEVICES: devices_dict
             }
+            return result
         except Exception as exception:
             raise UpdateFailed() from exception
 
