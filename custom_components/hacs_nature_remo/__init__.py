@@ -79,10 +79,7 @@ class HacsNatureRemoDataUpdateCoordinator(DataUpdateCoordinator):
         self.data: PluginDataDict = None  # type: ignore[assignment]
         super().__init__(hass, _LOGGER, name=DOMAIN, update_interval=SCAN_INTERVAL)
 
-    async def _async_update_data(self) -> _DataT:
-        return await self.update_method()
-
-    async def update_method(self) -> PluginDataDict:
+    async def _async_update_data(self) -> PluginDataDict:
         """called by `self._async_update_data`
 
         Update data via library."""
