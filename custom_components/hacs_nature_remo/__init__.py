@@ -81,9 +81,7 @@ class HacsNatureRemoDataUpdateCoordinator(DataUpdateCoordinator):
         super().__init__(hass, _LOGGER, name=DOMAIN, update_interval=DEFAULT_SCAN_INTERVAL)
 
     async def _async_update_data(self) -> PluginDataDict:
-        """called by `self._async_update_data`
-
-        Update data via library."""
+        """Update data via library."""
         try:
             # return await self.api.get_user()
             LOGGER.debug("Try to fetch appliance and device list from API")
@@ -99,6 +97,7 @@ class HacsNatureRemoDataUpdateCoordinator(DataUpdateCoordinator):
                 KEY_APPLIANCES: appliances_dict,
                 KEY_DEVICES: devices_dict
             }
+            LOGGER.debug(f"Finish fetching data from remote API: {result}")
             return result
         except Exception as exception:
             raise UpdateFailed() from exception
