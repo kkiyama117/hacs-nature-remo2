@@ -27,6 +27,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
                 entities.append(HacsNatureRemoHumiditySensor(coordinator, device_id))
             elif sensor_key == "il":
                 entities.append(HacsNatureRemoIlluminanceSensor(coordinator, device_id))
+    LOGGER.debug(f"entities setup (count: {len(entities)})")
     async_add_devices(
         entities
     )
@@ -64,6 +65,7 @@ class HacsNatureRemoTemperatureSensor(HacsNatureRemoDeviceEntity, SensorEntity):
     def __init__(self, coordinator: HacsNatureRemoDataUpdateCoordinator, idx: str):
         HacsNatureRemoDeviceEntity.__init__(self, coordinator, idx)
         self._attr_name = f"Nature Remo Temperature: {self.idx}"
+        LOGGER.debug(f"device initialize: {self._attr_name}")
         self._attr_unique_id = f"{self.device.id}-te"
 
     @callback
@@ -71,6 +73,7 @@ class HacsNatureRemoTemperatureSensor(HacsNatureRemoDeviceEntity, SensorEntity):
         """Handle updated data from the coordinator."""
         self._update_device_data()
         self._attr_native_value: float = self.device.newest_events.get("te").val
+        LOGGER.debug(f"{self._attr_unique_id}: updated to {self._attr_native_value}")
         self.async_write_ha_state()
 
 
@@ -83,6 +86,7 @@ class HacsNatureRemoHumiditySensor(HacsNatureRemoDeviceEntity, SensorEntity):
     def __init__(self, coordinator: HacsNatureRemoDataUpdateCoordinator, idx: str):
         HacsNatureRemoDeviceEntity.__init__(self, coordinator, idx)
         self._attr_name = f"Nature Remo Humidity: {self.idx}"
+        LOGGER.debug(f"device initialize: {self._attr_name}")
         self._attr_unique_id = f"{self.device.id}-hu"
 
     @callback
@@ -90,6 +94,7 @@ class HacsNatureRemoHumiditySensor(HacsNatureRemoDeviceEntity, SensorEntity):
         """Handle updated data from the coordinator."""
         self._update_device_data()
         self._attr_native_value: float = self.device.newest_events.get("hu").val
+        LOGGER.debug(f"{self._attr_unique_id}: updated to {self._attr_native_value}")
         self.async_write_ha_state()
 
     # async def async_update(self) -> None:
@@ -110,6 +115,7 @@ class HacsNatureRemoIlluminanceSensor(HacsNatureRemoDeviceEntity, SensorEntity):
     def __init__(self, coordinator: HacsNatureRemoDataUpdateCoordinator, idx: str):
         HacsNatureRemoDeviceEntity.__init__(self, coordinator, idx)
         self._attr_name = f"Nature Remo Illuminance: {self.idx}"
+        LOGGER.debug(f"device initialize: {self._attr_name}")
         self._attr_unique_id = f"{self.idx}-il"
 
     @callback
@@ -117,4 +123,5 @@ class HacsNatureRemoIlluminanceSensor(HacsNatureRemoDeviceEntity, SensorEntity):
         """Handle updated data from the coordinator."""
         self._update_device_data()
         self._attr_native_value: float = self.device.newest_events.get("il").val
+        LOGGER.debug(f"{self._attr_unique_id}: updated to {self._attr_native_value}")
         self.async_write_ha_state()

@@ -4,7 +4,7 @@ from homeassistant.helpers.device_registry import DeviceInfo, DeviceEntryType
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from . import HacsNatureRemoDataUpdateCoordinator, KEY_APPLIANCES
-from .const import DEFAULT_MANUFACTURER, ICON, KEY_DEVICES, DOMAIN
+from .const import DEFAULT_MANUFACTURER, ICON, KEY_DEVICES, DOMAIN, LOGGER
 
 
 class HacsNatureRemoEntity(CoordinatorEntity):
@@ -28,10 +28,8 @@ class HacsNatureRemoDeviceEntity(CoordinatorEntity):
             sw_version=self.device.firmware_version,
         )
 
-    def update(self):
-        self._update_device_data()
-
     def _update_device_data(self):
+        LOGGER.debug(f"device data update({self.idx})")
         self.device = self.coordinator.data.get(KEY_DEVICES).get(self.idx)
 
     @property
@@ -57,19 +55,11 @@ class HacsNatureRemoApplianceEntity(CoordinatorEntity):
             sw_version=self.device.firmware_version,
         )
 
-    def update(self):
-        self._update_appliance_data()
-
     def _update_appliance_data(self):
+        LOGGER.debug(f"appliance data update({self.idx})")
         self.appliance = self.coordinator.data.get(KEY_APPLIANCES).get(self.idx)
 
     @property
     def icon(self):
         """Return the icon of the sensor."""
         return ICON
-
-    @property
-    def device_info(self) -> DeviceInfo | None:
-        return DeviceInfo(
-
-        )
