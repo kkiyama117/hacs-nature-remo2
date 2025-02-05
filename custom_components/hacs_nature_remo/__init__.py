@@ -12,7 +12,7 @@ from homeassistant.core_config import Config
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, _DataT
+from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 from homeassistant.helpers.update_coordinator import UpdateFailed
 import voluptuous as vol
 import logging
@@ -23,7 +23,6 @@ from .const import LOGGER, DOMAIN, CONF_API_TOKEN, STARTUP_MESSAGE, PLATFORMS, D
     KEY_DEVICES, KEY_USER, SENSOR
 
 _LOGGER: logging.Logger = LOGGER
-SCAN_INTERVAL = DEFAULT_SCAN_INTERVAL
 
 CONFIG_SCHEMA = vol.Schema({
     DOMAIN: vol.Required({
@@ -79,7 +78,7 @@ class HacsNatureRemoDataUpdateCoordinator(DataUpdateCoordinator):
         self.platforms = []
         # None if not initialized, but not None if initialized
         self.data: PluginDataDict = None  # type: ignore[assignment]
-        super().__init__(hass, _LOGGER, name=DOMAIN, update_interval=SCAN_INTERVAL)
+        super().__init__(hass, _LOGGER, name=DOMAIN, update_interval=DEFAULT_SCAN_INTERVAL)
 
     async def _async_update_data(self) -> PluginDataDict:
         """called by `self._async_update_data`

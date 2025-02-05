@@ -17,7 +17,8 @@ DOMAIN_DATA = f"{DOMAIN}_data"
 DEFAULT_MANUFACTURER = "Nature Remo"
 
 VERSION = "0.1.0"
-DEFAULT_UPDATE_INTERVAL = timedelta(seconds=60)
+# DEFAULT_UPDATE_INTERVAL = timedelta(seconds=60)
+# TODO: fetch action
 DEFAULT_SCAN_INTERVAL = timedelta(seconds=30)
 
 ATTRIBUTION = "Data provided by Nature Remo"

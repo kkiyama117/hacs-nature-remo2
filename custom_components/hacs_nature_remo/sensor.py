@@ -2,6 +2,7 @@
 import remo
 from homeassistant.components.sensor import SensorEntity, SensorDeviceClass, SensorStateClass
 from homeassistant.const import UnitOfTemperature, LIGHT_LUX, PERCENTAGE, UnitOfPower
+from homeassistant.core import callback
 from homeassistant.helpers.entity import Entity
 
 from . import HacsNatureRemoDataUpdateCoordinator, PluginDataDict
@@ -39,9 +40,10 @@ class NatureRemoE(HacsNatureRemoApplianceEntity, SensorEntity):
     def __init__(self, coordinator: HacsNatureRemoDataUpdateCoordinator, appliance_id: str):
         super().__init__(coordinator, appliance_id)
 
-    async def async_update(self) -> None:
-        await super().async_update()
-        super()._update_appliance_data()
+    @callback
+    def _handle_coordinator_update(self) -> None:
+        """Handle updated data from the coordinator."""
+        self._update_appliance_data()
         if hasattr(self.appliance, "smart_meter"):
             smart_meter = self.appliance.smart_meter
             echonetlite_properties = smart_meter["echonetlite_properties"]
@@ -50,7 +52,7 @@ class NatureRemoE(HacsNatureRemoApplianceEntity, SensorEntity):
             )
             LOGGER.debug("Current state: %sW", measured_instantaneous)
             self._attr_native_value = measured_instantaneous
-        self._attr_native_value = None
+        self.async_write_ha_state()
 
 
 class HacsNatureRemoTemperatureSensor(HacsNatureRemoDeviceEntity, SensorEntity):
@@ -59,19 +61,17 @@ class HacsNatureRemoTemperatureSensor(HacsNatureRemoDeviceEntity, SensorEntity):
     _attr_device_class = SensorDeviceClass.TEMPERATURE
     _attr_state_class = SensorStateClass.MEASUREMENT
 
-    def __init__(self, coordinator: HacsNatureRemoDataUpdateCoordinator, device_id: str):
-        HacsNatureRemoDeviceEntity.__init__(self, coordinator, idx=device_id)
-        self._attr_name = f"Nature Remo Temperature: {self.device_id}"
+    def __init__(self, coordinator: HacsNatureRemoDataUpdateCoordinator, idx: str):
+        HacsNatureRemoDeviceEntity.__init__(self, coordinator, idx)
+        self._attr_name = f"Nature Remo Temperature: {self.idx}"
         self._attr_unique_id = f"{self.device.id}-te"
 
-    async def async_update(self) -> None:
-        """Fetch new state data for the sensor.
-
-        This is the only method that should fetch new data for Home Assistant.
-        """
-        await super().async_update()
-        super()._update_device_data()
+    @callback
+    def _handle_coordinator_update(self) -> None:
+        """Handle updated data from the coordinator."""
+        self._update_device_data()
         self._attr_native_value: float = self.device.newest_events.get("te").val
+        self.async_write_ha_state()
 
 
 class HacsNatureRemoHumiditySensor(HacsNatureRemoDeviceEntity, SensorEntity):
@@ -80,19 +80,25 @@ class HacsNatureRemoHumiditySensor(HacsNatureRemoDeviceEntity, SensorEntity):
     _attr_state_class = SensorStateClass.MEASUREMENT
     _attr_unit_of_measurement = PERCENTAGE
 
-    def __init__(self, coordinator: HacsNatureRemoDataUpdateCoordinator, device_id: str):
-        HacsNatureRemoDeviceEntity.__init__(self, coordinator, idx=device_id)
-        self._attr_name = f"Nature Remo Humidity: {self.device_id}"
+    def __init__(self, coordinator: HacsNatureRemoDataUpdateCoordinator, idx: str):
+        HacsNatureRemoDeviceEntity.__init__(self, coordinator, idx)
+        self._attr_name = f"Nature Remo Humidity: {self.idx}"
         self._attr_unique_id = f"{self.device.id}-hu"
 
-    async def async_update(self) -> None:
-        """Fetch new state data for the sensor.
-
-        This is the only method that should fetch new data for Home Assistant.
-        """
-        await super().async_update()
-        super()._update_device_data()
+    @callback
+    def _handle_coordinator_update(self) -> None:
+        """Handle updated data from the coordinator."""
+        self._update_device_data()
         self._attr_native_value: float = self.device.newest_events.get("hu").val
+        self.async_write_ha_state()
+
+    # async def async_update(self) -> None:
+    #     """Fetch new state data for the sensor.
+    #
+    #     This is the only method that should fetch new data for Home Assistant.
+    #     """
+    #     await super().async_update()
+    #     self._attr_native_value: float = self.device.newest_events.get("hu").val
 
 
 class HacsNatureRemoIlluminanceSensor(HacsNatureRemoDeviceEntity, SensorEntity):
@@ -101,16 +107,14 @@ class HacsNatureRemoIlluminanceSensor(HacsNatureRemoDeviceEntity, SensorEntity):
     _attr_state_class = SensorStateClass.MEASUREMENT
     _attr_unit_of_measurement = LIGHT_LUX
 
-    def __init__(self, coordinator: HacsNatureRemoDataUpdateCoordinator, device_id: str):
-        HacsNatureRemoDeviceEntity.__init__(self, coordinator, idx=device_id)
-        self._attr_name = f"Nature Remo Illuminance: {self.device_id}"
-        self._attr_unique_id = f"{self.device_id}-il"
+    def __init__(self, coordinator: HacsNatureRemoDataUpdateCoordinator, idx: str):
+        HacsNatureRemoDeviceEntity.__init__(self, coordinator, idx)
+        self._attr_name = f"Nature Remo Illuminance: {self.idx}"
+        self._attr_unique_id = f"{self.idx}-il"
 
-    async def async_update(self) -> None:
-        """Fetch new state data for the sensor.
-
-        This is the only method that should fetch new data for Home Assistant.
-        """
-        await super().async_update()
-        super()._update_device_data()
+    @callback
+    def _handle_coordinator_update(self) -> None:
+        """Handle updated data from the coordinator."""
+        self._update_device_data()
         self._attr_native_value: float = self.device.newest_events.get("il").val
+        self.async_write_ha_state()
