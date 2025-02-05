@@ -57,7 +57,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     for platform in PLATFORMS:
         if entry.options.get(platform, True):
             coordinator.platforms.append(platform)
-            await hass.async_add_job(
+            await hass.async_create_background_task(
                 hass.config_entries.async_forward_entry_setup(entry, platform)
             )
     entry.add_update_listener(async_reload_entry)
@@ -123,7 +123,7 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
 async def _common_setup_flow(hass: HomeAssistant, api_token: str | None) -> HacsNatureRemoDataUpdateCoordinator:
     session = async_get_clientsession(hass)
-    if api_token is None or len(api_token) is 0:
+    if api_token is None or len(api_token) == 0:
         raise RuntimeError("Error: Nature Remo API token is not set!")
     client = HacsNatureRemoApiClient(api_token, session)
     # Fetch and Update Data by coordinator, and refresh

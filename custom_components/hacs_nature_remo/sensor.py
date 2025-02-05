@@ -17,6 +17,10 @@ async def async_setup_entry(hass, entry, async_add_devices):
     _data: PluginDataDict = coordinator.data
     devices: Dict[str, remo.Device] = _data.get(KEY_DEVICES)
     appliances: Dict[str, remo.Device] = _data.get(KEY_APPLIANCES)
+    LOGGER.debug(coordinator.data)
+    LOGGER.debug("NEMO_O")
+    LOGGER.debug(appliances)
+    LOGGER.debug(devices)
     entities: list[Entity] = []
     entities += [NatureRemoE(coordinator, key) for (key, appliance) in appliances if
                  appliance.type == "EL_SMART_METER"]
