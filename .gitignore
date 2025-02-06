@@ -5,3 +5,6 @@ pythonenv*
 venv
 .venv
 uv.lock
+
+.vscode
+.idea

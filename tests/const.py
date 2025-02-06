@@ -1,9 +1,6 @@
 """Constants for hacs-nature-remo tests."""
 from custom_components.hacs_nature_remo.const import (
-    CONF_PASSWORD,
-)
-from custom_components.hacs_nature_remo.const import (
-    CONF_USERNAME,
+    CONF_API_TOKEN,
 )
 
-MOCK_CONFIG = {CONF_USERNAME: "test_username", CONF_PASSWORD: "test_password"}
+MOCK_CONFIG = {CONF_API_TOKEN: "test_password"}
