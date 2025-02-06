@@ -7,6 +7,7 @@ from homeassistant.components.climate import HVACMode
 from homeassistant.components.climate.const import (
     HVAC_MODES, HVACMode
 )
+from homeassistant.components.matter import SUPPORTED_PLATFORMS
 
 LOGGER: logging.Logger = logging.getLogger(__package__)
 

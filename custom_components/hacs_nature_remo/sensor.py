@@ -12,15 +12,18 @@ from .entity import HacsNatureRemoDeviceEntity, HacsNatureRemoApplianceEntity
 
 async def async_setup_entry(hass, entry, async_add_devices):
     """Setup sensor platform."""
+    LOGGER.debug("Setting up sensor platform")
+    # Use config entry
     coordinator: HacsNatureRemoDataUpdateCoordinator = hass.data[DOMAIN][entry.entry_id]
     _data: PluginDataDict = coordinator.data
     devices: dict[str, remo.Device] = _data.get(KEY_DEVICES)
     appliances: dict[str, remo.Appliance] = _data.get(KEY_APPLIANCES)
-    entities: list[Entity] = []
-    entities += [NatureRemoE(coordinator, key) for key, appliance in appliances.items() if
+    entities:list[Entity] = [NatureRemoE(coordinator, key) for key, appliance in appliances.items() if
                  appliance.type == "EL_SMART_METER"]
     for device_id, device in devices.items():
-        for (sensor_key, _event) in device.newest_events.items():
+        if device_id in [appliance.device.id for appliance in appliances.values()]:
+            continue
+        for sensor_key in device.newest_events.keys():
             if sensor_key == "te":
                 entities.append(HacsNatureRemoTemperatureSensor(coordinator, device_id))
             elif sensor_key == "hu":
@@ -40,6 +43,7 @@ class NatureRemoE(HacsNatureRemoApplianceEntity, SensorEntity):
 
     def __init__(self, coordinator: HacsNatureRemoDataUpdateCoordinator, appliance_id: str):
         super().__init__(coordinator, appliance_id)
+        self._attr_name = self._base_name.strip() + " Power"
 
     @callback
     def _handle_coordinator_update(self) -> None:
@@ -64,7 +68,7 @@ class HacsNatureRemoTemperatureSensor(HacsNatureRemoDeviceEntity, SensorEntity):
 
     def __init__(self, coordinator: HacsNatureRemoDataUpdateCoordinator, idx: str):
         HacsNatureRemoDeviceEntity.__init__(self, coordinator, idx)
-        self._attr_name = f"Nature Remo Temperature: {self.idx}"
+        self._attr_name = self._base_name.strip() + " Temperature"
         LOGGER.debug(f"device initialize: {self._attr_name}")
         self._attr_unique_id = f"{self.device.id}-te"
 
@@ -85,7 +89,7 @@ class HacsNatureRemoHumiditySensor(HacsNatureRemoDeviceEntity, SensorEntity):
 
     def __init__(self, coordinator: HacsNatureRemoDataUpdateCoordinator, idx: str):
         HacsNatureRemoDeviceEntity.__init__(self, coordinator, idx)
-        self._attr_name = f"Nature Remo Humidity: {self.idx}"
+        self._attr_name = self._base_name.strip() + " Humidity"
         LOGGER.debug(f"device initialize: {self._attr_name}")
         self._attr_unique_id = f"{self.device.id}-hu"
 
@@ -114,9 +118,10 @@ class HacsNatureRemoIlluminanceSensor(HacsNatureRemoDeviceEntity, SensorEntity):
 
     def __init__(self, coordinator: HacsNatureRemoDataUpdateCoordinator, idx: str):
         HacsNatureRemoDeviceEntity.__init__(self, coordinator, idx)
-        self._attr_name = f"Nature Remo Illuminance: {self.idx}"
+        self._attr_name = f"Nature Remo Illuminance: {self._attr_unique_id}"
+        self._attr_name = self._base_name.strip() + " Illuminance"
         LOGGER.debug(f"device initialize: {self._attr_name}")
-        self._attr_unique_id = f"{self.idx}-il"
+        self._attr_unique_id = f"{self._attr_unique_id}-il"
 
     @callback
     def _handle_coordinator_update(self) -> None:
