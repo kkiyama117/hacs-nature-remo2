@@ -44,7 +44,7 @@ class NatureRemoE(HacsNatureRemoApplianceEntity, SensorEntity):
     @callback
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
-        self._update_appliance_data()
+        self._update_data()
         if hasattr(self.appliance, "smart_meter"):
             smart_meter = self.appliance.smart_meter
             echonetlite_properties = smart_meter["echonetlite_properties"]
@@ -71,7 +71,7 @@ class HacsNatureRemoTemperatureSensor(HacsNatureRemoDeviceEntity, SensorEntity):
     @callback
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
-        self._update_device_data()
+        self._update_data()
         self._attr_native_value: float = self.device.newest_events.get("te").val
         LOGGER.debug(f"{self._attr_unique_id}: updated to {self._attr_native_value}")
         self.async_write_ha_state()
@@ -92,7 +92,7 @@ class HacsNatureRemoHumiditySensor(HacsNatureRemoDeviceEntity, SensorEntity):
     @callback
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
-        self._update_device_data()
+        self._update_data()
         self._attr_native_value: float = self.device.newest_events.get("hu").val
         LOGGER.debug(f"{self._attr_unique_id}: updated to {self._attr_native_value}")
         self.async_write_ha_state()
@@ -121,7 +121,7 @@ class HacsNatureRemoIlluminanceSensor(HacsNatureRemoDeviceEntity, SensorEntity):
     @callback
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
-        self._update_device_data()
+        self._update_data()
         self._attr_native_value: float = self.device.newest_events.get("il").val
         LOGGER.debug(f"{self._attr_unique_id}: updated to {self._attr_native_value}")
         self.async_write_ha_state()
