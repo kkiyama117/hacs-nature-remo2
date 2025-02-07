@@ -1,3 +1,4 @@
+"""Some utility functions"""
 from typing import Any, Iterable, TypeVar
 
 T = TypeVar('T')

@@ -12,7 +12,7 @@ import aiohttp
 import async_timeout
 from remo import NatureRemoError
 from remo.models import *
-from ..const import NATURE_REMO_API_BASE_URL, NATURE_REMO_API_TIMEOUT_SEC
+from custom_components.hacs_nature_remo.domain.const import NATURE_REMO_API_BASE_URL, NATURE_REMO_API_TIMEOUT_SEC
 
 BASE_URL = NATURE_REMO_API_BASE_URL
 __version__ = ""

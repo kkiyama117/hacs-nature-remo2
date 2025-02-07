@@ -4,8 +4,10 @@ Custom integration to integrate hacs-nature-remo with Home Assistant.
 For more details about this integration, please refer to
 https://github.com/kkiyama117/hacs-nature-remo2
 """
+import logging
 import asyncio
-from typing import List, TypedDict
+from typing import TypedDict
+import voluptuous as vol
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core_config import Config
@@ -14,15 +16,12 @@ from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 from homeassistant.helpers.update_coordinator import UpdateFailed
-import voluptuous as vol
-import logging
 import remo
 
+from .domain import LOGGER
 from .api import HacsNatureRemoApiClient
-from .const import LOGGER, DOMAIN, CONF_API_TOKEN, STARTUP_MESSAGE, PLATFORMS, DEFAULT_SCAN_INTERVAL, KEY_APPLIANCES, \
-    KEY_DEVICES, KEY_USER, SENSOR
-
-_LOGGER: logging.Logger = LOGGER
+from .domain.const import (DOMAIN,CONF_API_TOKEN,KEY_USER,KEY_APPLIANCES,KEY_DEVICES,STARTUP_MESSAGE,PLATFORMS,
+                           DEFAULT_SCAN_INTERVAL)
 
 CONFIG_SCHEMA = vol.Schema({
     DOMAIN: vol.Required({
@@ -47,7 +46,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     """Set up this integration using UI."""
     if hass.data.get(DOMAIN) is None:
         hass.data.setdefault(DOMAIN, {})
-        _LOGGER.info(STARTUP_MESSAGE)
+        LOGGER.info(STARTUP_MESSAGE)
     # get API token from conf
     api_token = entry.data.get(CONF_API_TOKEN)
     coordinator: HacsNatureRemoDataUpdateCoordinator = await _common_setup_flow(hass, api_token)
@@ -78,7 +77,7 @@ class HacsNatureRemoDataUpdateCoordinator(DataUpdateCoordinator):
         self.platforms = []
         # None if not initialized, but not None if initialized
         self.data: PluginDataDict = None  # type: ignore[assignment]
-        super().__init__(hass, _LOGGER, name=DOMAIN, update_interval=DEFAULT_SCAN_INTERVAL)
+        super().__init__(hass, LOGGER, name=DOMAIN, update_interval=DEFAULT_SCAN_INTERVAL)
 
     async def _async_update_data(self) -> PluginDataDict:
         """Update data via library."""
@@ -87,10 +86,10 @@ class HacsNatureRemoDataUpdateCoordinator(DataUpdateCoordinator):
             LOGGER.debug("Try to fetch appliance and device list from API")
             user: remo.User = await self.api.get_user()
             # other devices and sensors
-            appliances: List[remo.Appliance] = await self.api.get_appliances()
+            appliances: list[remo.Appliance] = await self.api.get_appliances()
             appliances_dict: dict[str, remo.Appliance] = {data.id: data for data in appliances}
             # controller itself
-            devices: List[remo.Device] = await self.api.get_devices()
+            devices: list[remo.Device] = await self.api.get_devices()
             devices_dict: dict[str, remo.Device] = {data.id: data for data in devices}
             result:PluginDataDict={
                 KEY_USER: user,

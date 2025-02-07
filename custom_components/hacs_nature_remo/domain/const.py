@@ -1,15 +1,7 @@
 """Constants for hacs-nature-remo."""
 # Should be equal to the name of your component.
-import logging
 from datetime import timedelta
 
-from homeassistant.components.climate import HVACMode
-from homeassistant.components.climate.const import (
-    HVAC_MODES, HVACMode
-)
-from homeassistant.components.matter import SUPPORTED_PLATFORMS
-
-LOGGER: logging.Logger = logging.getLogger(__package__)
 
 # Base component constants
 NAME = "Nature Remo integration"
@@ -29,16 +21,16 @@ ISSUE_URL = "https://github.com/kkiyama117/hacs-nature-remo2/issues"
 ICON = "mdi:format-quote-close"
 
 # Device classes
-#BINARY_SENSOR_DEVICE_CLASS = "connectivity"
+# BINARY_SENSOR_DEVICE_CLASS = "connectivity"
 
 # Platforms
 SWITCH = "switch"
 CLIMATE = "climate"
 LIGHT = "light"
 SENSOR = "sensor"
-#BINARY_SENSOR = "binary_sensor"
+# BINARY_SENSOR = "binary_sensor"
 # PLATFORMS = [SENSOR, SWITCH, LIGHT]
-PLATFORMS = [SENSOR]
+PLATFORMS = [SENSOR, CLIMATE]
 
 # Configuration and options
 CONF_ENABLED = "enabled"
@@ -67,24 +59,3 @@ KEY_COORDINATOR = "coordinator"
 KEY_USER = "user"
 KEY_APPLIANCES = "appliances"
 KEY_DEVICES = "devices"
-
-# For climate
-# TODO: Add more HVAC modes and Refactor
-MODE_HA_TO_REMO = {
-    HVACMode.AUTO: "auto",
-    HVACMode.FAN_ONLY: "blow",
-    HVACMode.COOL: "cool",
-    HVACMode.DRY: "dry",
-    HVACMode.HEAT: "warm",
-    HVACMode.OFF: "power-off",
-}
-
-MODE_REMO_TO_HA = {
-    "auto": HVACMode.AUTO,
-    "blow": HVACMode.FAN_ONLY,
-    "cool": HVACMode.COOL,
-    "dry": HVACMode.DRY,
-    "warm": HVACMode.HEAT,
-    "power-off": HVACMode.OFF,
-}
-AIRCON_MODES_REMO = MODE_REMO_TO_HA.keys()

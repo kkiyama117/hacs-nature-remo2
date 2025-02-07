@@ -2,19 +2,19 @@
 from unittest.mock import patch
 
 import pytest
-from custom_components.hacs_nature_remo.const import (
+from custom_components.hacs_nature_remo.domain.const import (
     BINARY_SENSOR,
 )
-from custom_components.hacs_nature_remo.const import (
+from custom_components.hacs_nature_remo.domain.const import (
     DOMAIN,
 )
-from custom_components.hacs_nature_remo.const import (
+from custom_components.hacs_nature_remo.domain.const import (
     PLATFORMS,
 )
-from custom_components.hacs_nature_remo.const import (
+from custom_components.hacs_nature_remo.domain.const import (
     SENSOR,
 )
-from custom_components.hacs_nature_remo.const import (
+from custom_components.hacs_nature_remo.domain.const import (
     SWITCH,
 )
 from homeassistant import config_entries

@@ -5,13 +5,13 @@ from unittest.mock import patch
 from custom_components.hacs_nature_remo import (
     async_setup_entry,
 )
-from custom_components.hacs_nature_remo.const import (
+from custom_components.hacs_nature_remo.domain.const import (
     DEFAULT_NAME,
 )
-from custom_components.hacs_nature_remo.const import (
+from custom_components.hacs_nature_remo.domain.const import (
     DOMAIN,
 )
-from custom_components.hacs_nature_remo.const import (
+from custom_components.hacs_nature_remo.domain.const import (
     SWITCH,
 )
 from homeassistant.components.switch import SERVICE_TURN_OFF

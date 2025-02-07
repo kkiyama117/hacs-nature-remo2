@@ -1,10 +1,10 @@
 """HacsNatureRemoEntity class"""
 import remo
-from homeassistant.helpers.device_registry import DeviceInfo, DeviceEntryType
+from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from . import HacsNatureRemoDataUpdateCoordinator, KEY_APPLIANCES
-from .const import DEFAULT_MANUFACTURER, ICON, KEY_DEVICES, DOMAIN, LOGGER
+from custom_components.hacs_nature_remo.domain.const import DEFAULT_MANUFACTURER, ICON, KEY_DEVICES, DOMAIN, LOGGER
 
 
 class HacsNatureRemoEntity(CoordinatorEntity):

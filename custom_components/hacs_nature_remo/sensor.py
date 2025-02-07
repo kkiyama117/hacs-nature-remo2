@@ -6,7 +6,8 @@ from homeassistant.core import callback
 from homeassistant.helpers.entity import Entity
 
 from . import HacsNatureRemoDataUpdateCoordinator, PluginDataDict
-from .const import DOMAIN, KEY_DEVICES, LOGGER, KEY_APPLIANCES
+from . import LOGGER
+from custom_components.hacs_nature_remo import DOMAIN, KEY_DEVICES, KEY_APPLIANCES
 from .entity import HacsNatureRemoDeviceEntity, HacsNatureRemoApplianceEntity
 
 

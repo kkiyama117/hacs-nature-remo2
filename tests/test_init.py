@@ -12,7 +12,7 @@ from custom_components.hacs_nature_remo import (
 from custom_components.hacs_nature_remo import (
     HacsNatureRemoDataUpdateCoordinator,
 )
-from custom_components.hacs_nature_remo.const import (
+from custom_components.hacs_nature_remo.domain.const import (
     DOMAIN,
 )
 from homeassistant.exceptions import ConfigEntryNotReady
