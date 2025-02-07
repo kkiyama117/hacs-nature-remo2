@@ -1,0 +1,63 @@
+"""Switch platform for Cookiecutter Home Assistant Custom Component Instance."""
+import remo
+from homeassistant.components.switch import SwitchEntity
+
+from . import LOGGER, HacsNatureRemoDataUpdateCoordinator, PluginDataDict
+from .domain.const import DOMAIN, DEFAULT_NAME, ICON, SWITCH, KEY_APPLIANCES
+from .entity import HacsNatureRemoApplianceEntity
+
+
+async def async_setup_entry(hass, entry, async_add_devices):
+    """Setup sensor platform."""
+    LOGGER.debug("Setting up IR platform")
+    coordinator: HacsNatureRemoDataUpdateCoordinator = hass.data[DOMAIN][entry.entry_id]
+    _data: PluginDataDict = coordinator.data
+    appliances: dict[str, remo.Appliance] = _data.get(KEY_APPLIANCES)
+    async_add_devices([
+        NatureRemoIR(coordinator, appliance_key)
+        for appliance_key, app in appliances.items() if app.type == "IR"
+    ])
+
+
+class NatureRemoIR(HacsNatureRemoApplianceEntity, SwitchEntity):
+    """Switch Entity for Nature Remo IR"""
+    _attr_assumed_state = True
+
+    def __init__(self, coordinator: HacsNatureRemoDataUpdateCoordinator, idx: str) -> None:
+        super().__init__(self, coordinator, idx)
+        self._attr_name = f"{self._base_name.strip()} {SWITCH}"
+        self._signals: list[remo.Signal] = self.appliance.signals
+        # TODO: Get data from API
+        self._attr_is_on = False
+
+
+    async def _async_turn_switch(self, is_on: bool):
+        LOGGER.debug(f"{self.unique_id}: set state {is_on}")
+        _names = [
+            "ico_on"
+            "ico_io"
+        ] if is_on else [
+            "ico_off"
+            "ico_io"
+        ]
+        try:
+            images = [x.image for x in self._signals]
+            for name in _names:
+                if name in images:
+                    # Post Signal to API and write ha state
+                    signal = self._signals[images.index(name)].id
+                    response = await self.coordinator.raw_api().send_signal(signal)
+                    break
+            self._attr_is_on = is_on
+            self.async_write_ha_state()
+        except Exception as e:
+            LOGGER.error(f"Cannot find {is_on} signal: {e}")
+        await self.coordinator.async_request_refresh()
+
+    async def async_turn_on(self, **kwargs):  # pylint: disable=unused-argument
+        """Turn on the switch."""
+        await self._async_turn_switch(True)
+
+    async def async_turn_off(self, **kwargs):  # pylint: disable=unused-argument
+        """Turn on the switch."""
+        await self._async_turn_switch(False)

@@ -4,7 +4,6 @@ Custom integration to integrate hacs-nature-remo with Home Assistant.
 For more details about this integration, please refer to
 https://github.com/kkiyama117/hacs-nature-remo2
 """
-import logging
 import asyncio
 from typing import TypedDict
 import voluptuous as vol
@@ -14,13 +13,13 @@ from homeassistant.core_config import Config
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
-from homeassistant.helpers.update_coordinator import UpdateFailed
 import remo
+
+from .coordinators import HacsNatureRemoDataUpdateCoordinator
 
 from .domain import LOGGER
 from .api import HacsNatureRemoApiClient
-from .domain.const import (DOMAIN,CONF_API_TOKEN,KEY_USER,KEY_APPLIANCES,KEY_DEVICES,STARTUP_MESSAGE,PLATFORMS,
+from .domain.const import (DOMAIN, CONF_API_TOKEN, KEY_USER, KEY_APPLIANCES, KEY_DEVICES, STARTUP_MESSAGE, PLATFORMS,
                            DEFAULT_SCAN_INTERVAL)
 
 CONFIG_SCHEMA = vol.Schema({
@@ -30,7 +29,7 @@ CONFIG_SCHEMA = vol.Schema({
 }, extra=vol.ALLOW_EXTRA)
 
 PluginDataDict = TypedDict("PluginDataDict", {
-    KEY_USER: dict[str, remo.Appliance],
+    KEY_USER: dict[str, remo.User],
     KEY_APPLIANCES: dict[str, remo.Appliance],
     KEY_DEVICES: dict[str, remo.Device]
 })
@@ -62,44 +61,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
             )
     entry.add_update_listener(async_reload_entry)
     return True
-
-
-class HacsNatureRemoDataUpdateCoordinator(DataUpdateCoordinator):
-    """Class to manage fetching data from the API."""
-
-    def __init__(
-            self,
-            hass: HomeAssistant,
-            client: HacsNatureRemoApiClient,
-    ) -> None:
-        """Initialize."""
-        self.api = client
-        self.platforms = []
-        # None if not initialized, but not None if initialized
-        self.data: PluginDataDict = None  # type: ignore[assignment]
-        super().__init__(hass, LOGGER, name=DOMAIN, update_interval=DEFAULT_SCAN_INTERVAL)
-
-    async def _async_update_data(self) -> PluginDataDict:
-        """Update data via library."""
-        try:
-            # return await self.api.get_user()
-            LOGGER.debug("Try to fetch appliance and device list from API")
-            user: remo.User = await self.api.get_user()
-            # other devices and sensors
-            appliances: list[remo.Appliance] = await self.api.get_appliances()
-            appliances_dict: dict[str, remo.Appliance] = {data.id: data for data in appliances}
-            # controller itself
-            devices: list[remo.Device] = await self.api.get_devices()
-            devices_dict: dict[str, remo.Device] = {data.id: data for data in devices}
-            result:PluginDataDict={
-                KEY_USER: user,
-                KEY_APPLIANCES: appliances_dict,
-                KEY_DEVICES: devices_dict
-            }
-            LOGGER.debug(f"Finish fetching data from remote API: {result}")
-            return result
-        except Exception as exception:
-            raise UpdateFailed() from exception
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:

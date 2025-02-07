@@ -2,7 +2,6 @@
 # Should be equal to the name of your component.
 from datetime import timedelta
 
-
 # Base component constants
 NAME = "Nature Remo integration"
 DOMAIN: str = "hacs_nature_remo"
@@ -30,7 +29,7 @@ LIGHT = "light"
 SENSOR = "sensor"
 # BINARY_SENSOR = "binary_sensor"
 # PLATFORMS = [SENSOR, SWITCH, LIGHT]
-PLATFORMS = [SENSOR, CLIMATE]
+PLATFORMS = [SENSOR, SWITCH, CLIMATE]
 
 # Configuration and options
 CONF_ENABLED = "enabled"

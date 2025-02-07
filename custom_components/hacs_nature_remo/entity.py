@@ -3,8 +3,8 @@ import remo
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from . import HacsNatureRemoDataUpdateCoordinator, KEY_APPLIANCES
-from custom_components.hacs_nature_remo.domain.const import DEFAULT_MANUFACTURER, ICON, KEY_DEVICES, DOMAIN, LOGGER
+from . import HacsNatureRemoDataUpdateCoordinator, KEY_APPLIANCES, LOGGER
+from .domain.const import DEFAULT_MANUFACTURER, ICON, KEY_DEVICES, DOMAIN
 
 
 class HacsNatureRemoEntity(CoordinatorEntity):
@@ -13,11 +13,12 @@ class HacsNatureRemoEntity(CoordinatorEntity):
 
     def __init__(self, coordinator: HacsNatureRemoDataUpdateCoordinator, idx: str):
         super().__init__(coordinator, context=idx)
+        LOGGER.debug(f"Nature Remo Entity Initialize: {idx}")
         self._attr_unique_id = idx
-        self._update_data()
+        self._fetch_data_from_coordinator()
         # Update
         self.device: remo.Device | None = None
-        self._base_name= f"Nature Remo {self.device.name}"
+        self._base_name = f"Nature Remo {self.device.name}"
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, self.unique_id)},
             name=self.device.name,
@@ -26,7 +27,7 @@ class HacsNatureRemoEntity(CoordinatorEntity):
             sw_version=self.device.firmware_version,
         )
 
-    async def _update_data(self):
+    async def _fetch_data_from_coordinator(self):
         pass
 
     @property
@@ -40,7 +41,8 @@ class HacsNatureRemoDeviceEntity(HacsNatureRemoEntity):
         super().__init__(coordinator, idx)
         self._attr_name = f"Nature Remo {self.device.name}"
 
-    def _update_data(self):
+    def _fetch_data_from_coordinator(self):
+        """Get data from `get_devices` API by default"""
         LOGGER.debug(f"device data update({self._attr_unique_id})")
         self.device = self.coordinator.data.get(KEY_DEVICES).get(self._attr_unique_id)
 
@@ -50,7 +52,8 @@ class HacsNatureRemoApplianceEntity(HacsNatureRemoEntity):
         super().__init__(coordinator, idx)
         # self._attr_should_poll = False
 
-    def _update_data(self):
+    def _fetch_data_from_coordinator(self):
+        """Get data from `get_appliances` API by default"""
         LOGGER.debug(f"appliance data update({self._attr_unique_id})")
-        self.appliance = self.coordinator.data.get(KEY_APPLIANCES).get(self._attr_unique_id)
+        self.appliance:remo.Appliance = self.coordinator.data.get(KEY_APPLIANCES).get(self._attr_unique_id)
         self.device: remo.DeviceCore = self.appliance.device

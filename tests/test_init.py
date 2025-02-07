@@ -1,16 +1,13 @@
 """Test hacs-nature-remo setup process."""
 import pytest
 from custom_components.hacs_nature_remo import (
-    async_reload_entry,
+    async_reload_entry, HacsNatureRemoDataUpdateCoordinator,
 )
 from custom_components.hacs_nature_remo import (
     async_setup_entry,
 )
 from custom_components.hacs_nature_remo import (
     async_unload_entry,
-)
-from custom_components.hacs_nature_remo import (
-    HacsNatureRemoDataUpdateCoordinator,
 )
 from custom_components.hacs_nature_remo.domain.const import (
     DOMAIN,

@@ -416,6 +416,7 @@ class HacsNatureRemoApiClient:
             await self.api_wrapper_json("post", endpoint)
         except Exception as e:
             _LOGGER.error(f"Error: {e}")
+            raise e
 
     # ------------------------------------------------------------------------------------------------------------------
     async def api_wrapper_json(self, method: str, url: str, data: dict = None, headers: dict = None) -> dict | None:
