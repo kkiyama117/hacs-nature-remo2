@@ -1,9 +1,11 @@
 import remo
+from homeassistant.components.climate import HVACMode
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from custom_components.hacs_nature_remo import HacsNatureRemoApiClient, PluginDataDict, LOGGER, DOMAIN, \
-    DEFAULT_SCAN_INTERVAL, KEY_USER, KEY_APPLIANCES, KEY_DEVICES
+    DEFAULT_SCAN_INTERVAL
+from .domain.config_schema import KEY_USER, KEY_APPLIANCES, KEY_DEVICES, KEY_CLIMATE_CONFIGS
 
 
 class HacsNatureRemoDataUpdateCoordinator(DataUpdateCoordinator):
@@ -40,7 +42,7 @@ class HacsNatureRemoDataUpdateCoordinator(DataUpdateCoordinator):
             result: PluginDataDict = {
                 KEY_USER: user,
                 KEY_APPLIANCES: appliances_dict,
-                KEY_DEVICES: devices_dict
+                KEY_DEVICES: devices_dict,
             }
             LOGGER.debug(f"Finish fetching data from remote API: {result}")
             return result

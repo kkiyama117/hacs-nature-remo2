@@ -5,7 +5,8 @@ from homeassistant.core import callback
 from homeassistant.helpers.aiohttp_client import async_create_clientsession
 
 from .api import HacsNatureRemoApiClient
-from .domain.const import CONF_API_TOKEN,DOMAIN
+from .domain.const import CONF_API_TOKEN, DOMAIN, PLATFORMS, CONF_DEFAULT_TEMP_COOL_KEY, CONF_DEFAULT_TEMP_HEAT_KEY
+from .domain.config_schema import CONFIG_SCHEMA
 
 
 class HacsNatureRemoFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
@@ -31,7 +32,9 @@ class HacsNatureRemoFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             valid = await self._test_credentials(
                 user_input[CONF_API_TOKEN]
             )
-            if valid:
+            valid2 = await self._test_other_configs(user_input)
+            if valid and valid2:
+                # Create CONFIG_ENTRY named as token value
                 return self.async_create_entry(
                     title=user_input[CONF_API_TOKEN], data=user_input
                 )
@@ -51,9 +54,7 @@ class HacsNatureRemoFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         """Show the configuration form to edit location data."""
         return self.async_show_form(
             step_id="user",
-            data_schema=vol.Schema(
-                {vol.Required(CONF_API_TOKEN): str}
-            ),
+            data_schema=CONFIG_SCHEMA,
             errors=self._errors,
         )
 
@@ -64,6 +65,18 @@ class HacsNatureRemoFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             client = HacsNatureRemoApiClient(conf_api_token, session)
             # TODO: How to check connection
             await client.get_user()
+            return True
+        except Exception:  # pylint: disable=broad-except
+            pass
+        return False
+
+    @staticmethod
+    async def _test_other_configs(self, config_entry): # pylint: disable=no-self-use
+        """Return true if credentials is valid."""
+        try:
+            cool_default_temp= config_entry.get(CONF_DEFAULT_TEMP_COOL_KEY)
+            heat_default_temp= config_entry.get(CONF_DEFAULT_TEMP_HEAT_KEY)
+            #TODO: check config
             return True
         except Exception:  # pylint: disable=broad-except
             pass

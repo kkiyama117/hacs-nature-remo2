@@ -5,8 +5,6 @@ For more details about this integration, please refer to
 https://github.com/kkiyama117/hacs-nature-remo2
 """
 import asyncio
-from typing import TypedDict
-import voluptuous as vol
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core_config import Config
@@ -19,20 +17,11 @@ from .coordinators import HacsNatureRemoDataUpdateCoordinator
 
 from .domain import LOGGER
 from .api import HacsNatureRemoApiClient
-from .domain.const import (DOMAIN, CONF_API_TOKEN, KEY_USER, KEY_APPLIANCES, KEY_DEVICES, STARTUP_MESSAGE, PLATFORMS,
-                           DEFAULT_SCAN_INTERVAL)
-
-CONFIG_SCHEMA = vol.Schema({
-    DOMAIN: vol.Required({
-        vol.Required(CONF_API_TOKEN, default="Please_set_nature_remo_API"): str
-    })
-}, extra=vol.ALLOW_EXTRA)
-
-PluginDataDict = TypedDict("PluginDataDict", {
-    KEY_USER: dict[str, remo.User],
-    KEY_APPLIANCES: dict[str, remo.Appliance],
-    KEY_DEVICES: dict[str, remo.Device]
-})
+from .domain.config_schema import PluginDataDict, CONF_API_TOKEN_KEY
+from .domain.const import (DOMAIN,
+                           STARTUP_MESSAGE, PLATFORMS,
+                           DEFAULT_SCAN_INTERVAL,
+                           )
 
 
 async def async_setup(hass: HomeAssistant, config: Config) -> bool:
@@ -46,8 +35,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     if hass.data.get(DOMAIN) is None:
         hass.data.setdefault(DOMAIN, {})
         LOGGER.info(STARTUP_MESSAGE)
-    # get API token from conf
-    api_token = entry.data.get(CONF_API_TOKEN)
+    # get API token from user config
+    conf_data = entry.data
+    api_token = conf_data.get(CONF_API_TOKEN_KEY)
     coordinator: HacsNatureRemoDataUpdateCoordinator = await _common_setup_flow(hass, api_token)
     hass.data[DOMAIN][entry.entry_id]: PluginDataDict = coordinator
 

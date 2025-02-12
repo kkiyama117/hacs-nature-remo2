@@ -8,7 +8,7 @@ from .entity import HacsNatureRemoApplianceEntity
 
 
 async def async_setup_entry(hass, entry, async_add_devices):
-    """Setup sensor platform."""
+    """Setup switch platform."""
     LOGGER.debug("Setting up IR platform")
     coordinator: HacsNatureRemoDataUpdateCoordinator = hass.data[DOMAIN][entry.entry_id]
     _data: PluginDataDict = coordinator.data
@@ -27,8 +27,6 @@ class NatureRemoIR(HacsNatureRemoApplianceEntity, SwitchEntity):
         super().__init__(self, coordinator, idx)
         self._attr_name = f"{self._base_name.strip()} {SWITCH}"
         self._signals: list[remo.Signal] = self.appliance.signals
-        # TODO: Get data from API
-        self._attr_is_on = False
 
 
     async def _async_turn_switch(self, is_on: bool):
@@ -46,7 +44,7 @@ class NatureRemoIR(HacsNatureRemoApplianceEntity, SwitchEntity):
                 if name in images:
                     # Post Signal to API and write ha state
                     signal = self._signals[images.index(name)].id
-                    response = await self.coordinator.raw_api().send_signal(signal)
+                    await self.coordinator.raw_api().send_signal(signal)
                     break
             self._attr_is_on = is_on
             self.async_write_ha_state()

@@ -1,23 +1,35 @@
-from homeassistant.components.climate import HVACMode, ClimateEntity, ClimateEntityFeature
+from typing import Literal, TypeAlias, TypedDict
 
-# TODO: Add more HVAC modes and Refactor
+from homeassistant.components.climate import (HVACMode, HVAC_MODES,
+                                              ClimateEntity, ClimateEntityFeature)
+from homeassistant.const import UnitOfTemperature
+
+CLIMATE_MODE_NATURE_REMO_AUTO = "auto"
+CLIMATE_MODE_NATURE_REMO_FAN_ONLY = "blow"
+CLIMATE_MODE_HA_COOL = "cool"
+CLIMATE_MODE_HA_DRY = "dry"
+CLIMATE_MODE_HA_HEAT = "warn"
+CLIMATE_MODE_HA_OFF = "power-off"
+
+# TODO: Use strings above
+type CLIMATE_MODE_NATURE_REMO = Literal[
+    "auto", "blow", "cool", "dry", "warn", "power-off"
+]
+
+AIRCON_MODE_KEYS = [CLIMATE_MODE_NATURE_REMO_AUTO, CLIMATE_MODE_NATURE_REMO_FAN_ONLY, CLIMATE_MODE_HA_COOL, CLIMATE_MODE_HA_DRY,
+                    CLIMATE_MODE_HA_HEAT, CLIMATE_MODE_HA_OFF]
+
 CLIMATE_MODE_HA_TO_REMO = {
-    HVACMode.AUTO: "auto",
-    HVACMode.FAN_ONLY: "blow",
-    HVACMode.COOL: "cool",
-    HVACMode.DRY: "dry",
-    HVACMode.HEAT: "warm",
-    HVACMode.OFF: "power-off",
+    HVACMode.AUTO: CLIMATE_MODE_NATURE_REMO_AUTO,
+    HVACMode.FAN_ONLY: CLIMATE_MODE_NATURE_REMO_FAN_ONLY,
+    HVACMode.COOL: CLIMATE_MODE_HA_COOL,
+    HVACMode.DRY: CLIMATE_MODE_HA_DRY,
+    HVACMode.HEAT: CLIMATE_MODE_HA_HEAT,
+    HVACMode.OFF: CLIMATE_MODE_HA_OFF,
 }
 
-CLIMATE_MODE_REMO_TO_HA = {
-    "auto": HVACMode.AUTO,
-    "blow": HVACMode.FAN_ONLY,
-    "cool": HVACMode.COOL,
-    "dry": HVACMode.DRY,
-    "warm": HVACMode.HEAT,
-    "power-off": HVACMode.OFF,
-}
+CLIMATE_DEFAULT_TEMPERATURE_UNIT = UnitOfTemperature.CELSIUS
+CLIMATE_MODE_REMO_TO_HA = {value: key for key, value in CLIMATE_MODE_HA_TO_REMO.items()}
 
 CLIMATE_SUPPORT_FLAGS = (
         ClimateEntityFeature.TARGET_TEMPERATURE | ClimateEntityFeature.FAN_MODE | ClimateEntityFeature.SWING_MODE

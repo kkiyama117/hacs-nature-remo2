@@ -33,7 +33,6 @@ PLATFORMS = [SENSOR, SWITCH, CLIMATE]
 
 # Configuration and options
 CONF_ENABLED = "enabled"
-CONF_API_TOKEN = "api_token"
 
 # Defaults
 DEFAULT_NAME = DOMAIN
@@ -55,6 +54,3 @@ NATURE_REMO_API_TIMEOUT_SEC = 10
 KEY_API = "api"
 KEY_CONFIG = "api"
 KEY_COORDINATOR = "coordinator"
-KEY_USER = "user"
-KEY_APPLIANCES = "appliances"
-KEY_DEVICES = "devices"
