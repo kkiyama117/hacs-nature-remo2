@@ -1,4 +1,5 @@
 """Test hacs-nature-remo switch."""
+
 from unittest.mock import call
 from unittest.mock import patch
 

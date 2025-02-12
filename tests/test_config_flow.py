@@ -1,10 +1,8 @@
 """Test hacs-nature-remo config flow."""
+
 from unittest.mock import patch
 
 import pytest
-from custom_components.hacs_nature_remo.domain.const import (
-    BINARY_SENSOR,
-)
 from custom_components.hacs_nature_remo.domain.const import (
     DOMAIN,
 )
@@ -30,9 +28,15 @@ from .const import MOCK_CONFIG
 @pytest.fixture(autouse=True)
 def bypass_setup_fixture():
     """Prevent setup."""
-    with patch("custom_components.hacs_nature_remo.async_setup", return_value=True,), patch(
-        "custom_components.hacs_nature_remo.async_setup_entry",
-        return_value=True,
+    with (
+        patch(
+            "custom_components.hacs_nature_remo.async_setup",
+            return_value=True,
+        ),
+        patch(
+            "custom_components.hacs_nature_remo.async_setup_entry",
+            return_value=True,
+        ),
     ):
         yield
 
@@ -114,4 +118,4 @@ async def test_options_flow(hass):
     assert result["title"] == "test_username"
 
     # Verify that the options were updated
-    assert entry.options == {BINARY_SENSOR: True, SENSOR: False, SWITCH: True}
+    assert entry.options == {SENSOR: False, SWITCH: True}

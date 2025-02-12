@@ -1,13 +1,19 @@
 """Sensor platform for hacs-nature-remo."""
+
 import remo
-from homeassistant.components.sensor import SensorEntity, SensorDeviceClass, SensorStateClass
+from homeassistant.components.sensor import (
+    SensorEntity,
+    SensorDeviceClass,
+    SensorStateClass,
+)
 from homeassistant.const import UnitOfTemperature, LIGHT_LUX, PERCENTAGE, UnitOfPower
 from homeassistant.core import callback
 from homeassistant.helpers.entity import Entity
 
-from . import HacsNatureRemoDataUpdateCoordinator, PluginDataDict
 from . import LOGGER
-from custom_components.hacs_nature_remo import DOMAIN, KEY_DEVICES, KEY_APPLIANCES
+from  .domain.const import DOMAIN
+from .coordinators import HacsNatureRemoDataUpdateCoordinator
+from .domain.config_schema import KEY_DEVICES, KEY_APPLIANCES, PluginDataDict
 from .entity import HacsNatureRemoDeviceEntity, HacsNatureRemoApplianceEntity
 
 
@@ -19,8 +25,11 @@ async def async_setup_entry(hass, entry, async_add_devices):
     _data: PluginDataDict = coordinator.data
     devices: dict[str, remo.Device] = _data.get(KEY_DEVICES)
     appliances: dict[str, remo.Appliance] = _data.get(KEY_APPLIANCES)
-    entities:list[Entity] = [NatureRemoE(coordinator, key) for key, appliance in appliances.items() if
-                 appliance.type == "EL_SMART_METER"]
+    entities: list[Entity] = [
+        NatureRemoE(coordinator, key)
+        for key, appliance in appliances.items()
+        if appliance.type == "EL_SMART_METER"
+    ]
     for device_id, device in devices.items():
         if device_id in [appliance.device.id for appliance in appliances.values()]:
             continue
@@ -32,17 +41,18 @@ async def async_setup_entry(hass, entry, async_add_devices):
             elif sensor_key == "il":
                 entities.append(HacsNatureRemoIlluminanceSensor(coordinator, device_id))
     LOGGER.debug(f"entities setup (count: {len(entities)})")
-    async_add_devices(
-        entities
-    )
+    async_add_devices(entities)
 
 
 class NatureRemoE(HacsNatureRemoApplianceEntity, SensorEntity):
     """Implementation of a Nature Remo E sensor."""
+
     _attr_unit_of_measurement = UnitOfPower.WATT
     _attr_device_class = SensorDeviceClass.POWER
 
-    def __init__(self, coordinator: HacsNatureRemoDataUpdateCoordinator, appliance_id: str):
+    def __init__(
+        self, coordinator: HacsNatureRemoDataUpdateCoordinator, appliance_id: str
+    ):
         super().__init__(coordinator, appliance_id)
         self._attr_name = f"{self._base_name.strip()} Power"
 
@@ -63,6 +73,7 @@ class NatureRemoE(HacsNatureRemoApplianceEntity, SensorEntity):
 
 class HacsNatureRemoTemperatureSensor(HacsNatureRemoDeviceEntity, SensorEntity):
     """Implementation of a Nature Remo sensor."""
+
     _attr_native_unit_of_measurement = UnitOfTemperature.CELSIUS
     _attr_device_class = SensorDeviceClass.TEMPERATURE
     _attr_state_class = SensorStateClass.MEASUREMENT
@@ -84,6 +95,7 @@ class HacsNatureRemoTemperatureSensor(HacsNatureRemoDeviceEntity, SensorEntity):
 
 class HacsNatureRemoHumiditySensor(HacsNatureRemoDeviceEntity, SensorEntity):
     """Implementation of a Nature Remo sensor."""
+
     _attr_device_class = SensorDeviceClass.HUMIDITY
     _attr_state_class = SensorStateClass.MEASUREMENT
     _attr_unit_of_measurement = PERCENTAGE
@@ -105,6 +117,7 @@ class HacsNatureRemoHumiditySensor(HacsNatureRemoDeviceEntity, SensorEntity):
 
 class HacsNatureRemoIlluminanceSensor(HacsNatureRemoDeviceEntity, SensorEntity):
     """Implementation of a Nature Remo sensor."""
+
     _attr_device_class = SensorDeviceClass.ILLUMINANCE
     _attr_state_class = SensorStateClass.MEASUREMENT
     _attr_unit_of_measurement = LIGHT_LUX

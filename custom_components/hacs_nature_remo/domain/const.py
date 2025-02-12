@@ -1,4 +1,5 @@
 """Constants for hacs-nature-remo."""
+
 # Should be equal to the name of your component.
 from datetime import timedelta
 

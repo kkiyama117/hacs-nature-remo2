@@ -1,4 +1,5 @@
 """Global fixtures for hacs-nature-remo integration."""
+
 from unittest.mock import patch
 
 import pytest
@@ -12,8 +13,9 @@ pytest_plugins = "pytest_homeassistant_custom_component"
 @pytest.fixture(name="skip_notifications", autouse=True)
 def skip_notifications_fixture():
     """Skip notification calls."""
-    with patch("homeassistant.components.persistent_notification.async_create"), patch(
-        "homeassistant.components.persistent_notification.async_dismiss"
+    with (
+        patch("homeassistant.components.persistent_notification.async_create"),
+        patch("homeassistant.components.persistent_notification.async_dismiss"),
     ):
         yield
 
@@ -23,7 +25,9 @@ def skip_notifications_fixture():
 @pytest.fixture(name="bypass_get_data")
 def bypass_get_data_fixture():
     """Skip calls to get data from API."""
-    with patch("custom_components.hacs_nature_remo.HacsNatureRemoApiClient.async_get_data"):
+    with patch(
+        "custom_components.hacs_nature_remo.HacsNatureRemoApiClient.async_get_data"
+    ):
         yield
 
 

@@ -1,12 +1,14 @@
 """Adds config flow for hacs-nature-remo."""
+
 import voluptuous as vol
 from homeassistant import config_entries
+from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import callback
 from homeassistant.helpers.aiohttp_client import async_create_clientsession
 
 from .api import HacsNatureRemoApiClient
-from .domain.const import CONF_API_TOKEN, DOMAIN, PLATFORMS, CONF_DEFAULT_TEMP_COOL_KEY, CONF_DEFAULT_TEMP_HEAT_KEY
-from .domain.config_schema import CONFIG_SCHEMA
+from .domain.const import DOMAIN, PLATFORMS
+from .domain.config_schema import CONFIG_SCHEMA, CONF_API_TOKEN_KEY
 
 
 class HacsNatureRemoFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
@@ -29,14 +31,12 @@ class HacsNatureRemoFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             return self.async_abort(reason="single_instance_allowed")
 
         if user_input is not None:
-            valid = await self._test_credentials(
-                user_input[CONF_API_TOKEN]
-            )
+            valid = await self._test_credentials(user_input[CONF_API_TOKEN_KEY])
             valid2 = await self._test_other_configs(user_input)
             if valid and valid2:
                 # Create CONFIG_ENTRY named as token value
                 return self.async_create_entry(
-                    title=user_input[CONF_API_TOKEN], data=user_input
+                    title=user_input[CONF_API_TOKEN_KEY], data=user_input
                 )
             else:
                 self._errors["base"] = "auth"
@@ -71,16 +71,10 @@ class HacsNatureRemoFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         return False
 
     @staticmethod
-    async def _test_other_configs(self, config_entry): # pylint: disable=no-self-use
+    async def _test_other_configs(user_input: dict):  # pylint: disable=no-self-use
         """Return true if credentials is valid."""
-        try:
-            cool_default_temp= config_entry.get(CONF_DEFAULT_TEMP_COOL_KEY)
-            heat_default_temp= config_entry.get(CONF_DEFAULT_TEMP_HEAT_KEY)
-            #TODO: check config
-            return True
-        except Exception:  # pylint: disable=broad-except
-            pass
-        return False
+        # TODO: Implement
+        return True
 
 
 class HacsNatureRemoOptionsFlowHandler(config_entries.OptionsFlow):
@@ -114,5 +108,5 @@ class HacsNatureRemoOptionsFlowHandler(config_entries.OptionsFlow):
     async def _update_options(self):
         """Update config entry options."""
         return self.async_create_entry(
-            title=self.config_entry.data.get(CONF_API_TOKEN), data=self.options
+            title=self.config_entry.data.get(CONF_API_TOKEN_KEY), data=self.options
         )
