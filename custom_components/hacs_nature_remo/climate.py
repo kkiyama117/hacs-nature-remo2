@@ -13,11 +13,9 @@ from . import LOGGER
 from .coordinators import HacsNatureRemoDataUpdateCoordinator
 from .domain import climate as climate_const
 from .domain.config_schema import (
-    CLIMATE_CONFIG_SCHEMA,
     KEY_APPLIANCES,
-    CONF_CLIMATE_KEY,
     KEY_DEVICES,
-    PluginDataDict,
+    PluginDataDict, CONFIG_SCHEMA,
 )
 from .domain.const import DEFAULT_NAME, DOMAIN, ICON, SWITCH
 from .entity import HacsNatureRemoApplianceEntity
@@ -40,7 +38,7 @@ async def async_setup_entry(hass, entry: ConfigEntry, async_add_devices):
 
 @dataclass
 class HacsNatureRemoACData:
-    default_config: CLIMATE_CONFIG_SCHEMA
+    default_config: CONFIG_SCHEMA
     # Mode of HA
     current_mode: HVACMode
     # Mode list of Remo
@@ -78,7 +76,7 @@ class HacsNatureRemoAC(HacsNatureRemoApplianceEntity, ClimateEntity):
             current_mode_temp_range=[],
             # set None for each HVAC mode
             last_target_temperatures={v: None for v in HVACMode},
-            default_config=entry.data.get(CONF_CLIMATE_KEY),
+            default_config=entry.data,
         )
         # Update(Init)
         self._update_data(ac_settings, None)
