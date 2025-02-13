@@ -244,7 +244,7 @@ class HacsNatureRemoAC(HacsNatureRemoApplianceEntity, ClimateEntity):
     # HELPERS ----------------------------------------------------------------------------------------------------------
     async def _post_aircon_settings(self, data):
         # Maybe this API return appliances
-        response = self.coordinator.raw_api().update_aircon_settings(
+        response = await self.coordinator.raw_api().update_aircon_settings(
             appliance=self.appliance.id, **data
         )
         self._update_data(response)
