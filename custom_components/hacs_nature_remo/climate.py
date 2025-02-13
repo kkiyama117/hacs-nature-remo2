@@ -254,8 +254,16 @@ class HacsNatureRemoAC(HacsNatureRemoApplianceEntity, ClimateEntity):
         if response is not None:
             temp_unit = response.pop("temp_unit")
             updated_at = response.pop("updated_at")
-            ac_params = remo.AirConParams(**response)
-            self._update_data(ac_params, None)
+            dirh = response.pop("dirh")
+            try:
+                ac_params = remo.AirConParams(**response)
+                self._update_data(ac_params, None)
+            except ValueError:
+                LOGGER.warning(f"This is Illegal response of Nature Remo API for this plugin. "
+                               f"Please send issue to HACS NATURE REMO plugin developer"
+                               f"https://github.com/kkiyama117/hacs-nature-remo2")
+                LOGGER.debug(f"{response}, {temp_unit}, {updated_at}, {dirh}")
+
         self.async_write_ha_state()
 
     def _get_current_mode_temp_range(self, mode_name: HVACMode) -> list[float]:
