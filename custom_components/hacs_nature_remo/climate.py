@@ -201,7 +201,7 @@ class HacsNatureRemoAC(HacsNatureRemoApplianceEntity, ClimateEntity):
             data = {"operation_mode": mode}
             if self._inner_data.last_target_temperatures[mode]:
                 data["temperature"] = self._inner_data.last_target_temperatures[mode]
-            elif self._inner_data.default_config[hvac_mode].get(hvac_mode):
+            elif self._inner_data.default_config.get(hvac_mode):
                 data["temperature"] = self._inner_data.default_config[hvac_mode]
             await self._post_aircon_settings(data)
 
