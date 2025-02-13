@@ -248,12 +248,14 @@ class HacsNatureRemoAC(HacsNatureRemoApplianceEntity, ClimateEntity):
     # HELPERS ----------------------------------------------------------------------------------------------------------
     async def _post_aircon_settings(self, data):
         # Maybe this API return appliances
-        response = await self.coordinator.raw_api().update_aircon_settings(
+        response: dict = await self.coordinator.raw_api().update_aircon_settings(
             appliance=self.appliance.id, **data
         )
         if response is not None:
-            response = remo.AirConParams(**response)
-            self._update_data(response, None)
+            temp_unit = response.pop("temp_unit")
+            updated_at = response.pop("updated_at")
+            ac_params = remo.AirConParams(**response)
+            self._update_data(ac_params, None)
         self.async_write_ha_state()
 
     def _get_current_mode_temp_range(self, mode_name: HVACMode) -> list[float]:
