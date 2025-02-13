@@ -26,10 +26,9 @@ ICON = "mdi:format-quote-close"
 # Platforms
 SWITCH = "switch"
 CLIMATE = "climate"
-LIGHT = "light"
+# LIGHT = "light"
 SENSOR = "sensor"
 # BINARY_SENSOR = "binary_sensor"
-# PLATFORMS = [SENSOR, SWITCH, LIGHT]
 PLATFORMS = [SENSOR, SWITCH, CLIMATE]
 
 # Configuration and options

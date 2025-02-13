@@ -2,10 +2,7 @@ from typing import TypedDict
 
 import remo
 import voluptuous as vol
-from homeassistant.helpers import config_validation as cv
 from homeassistant.components.climate import HVACMode
-
-from .const import DOMAIN
 
 CONF_API_TOKEN_KEY = "api_token"
 CONF_CLIMATE_KEY = "climate"
@@ -18,14 +15,10 @@ CLIMATE_CONFIG_SCHEMA = vol.Schema(
 
 CONFIG_SCHEMA = vol.Schema(
     {
-        DOMAIN: vol.Required(
-            {
-                vol.Required(
-                    CONF_API_TOKEN_KEY, default="Please_set_nature_remo_API"
-                ): cv.string,
-                vol.Required(CONF_CLIMATE_KEY): CLIMATE_CONFIG_SCHEMA,
-            }
-        )
+        vol.Required(
+            CONF_API_TOKEN_KEY, default="Please_set_nature_remo_API"
+        ): str,
+        vol.Required(CONF_CLIMATE_KEY): CLIMATE_CONFIG_SCHEMA,
     },
     extra=vol.ALLOW_EXTRA,
 )

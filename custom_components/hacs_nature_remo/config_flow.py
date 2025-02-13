@@ -2,10 +2,10 @@
 
 import voluptuous as vol
 from homeassistant import config_entries
-from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import callback
 from homeassistant.helpers.aiohttp_client import async_create_clientsession
 
+from . import LOGGER
 from .api import HacsNatureRemoApiClient
 from .domain.const import DOMAIN, PLATFORMS
 from .domain.config_schema import CONFIG_SCHEMA, CONF_API_TOKEN_KEY
@@ -40,7 +40,6 @@ class HacsNatureRemoFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                 )
             else:
                 self._errors["base"] = "auth"
-
             return await self._show_config_form(user_input)
 
         return await self._show_config_form(user_input)
@@ -52,6 +51,7 @@ class HacsNatureRemoFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
 
     async def _show_config_form(self, user_input):  # pylint: disable=unused-argument
         """Show the configuration form to edit location data."""
+        LOGGER.debug("")
         return self.async_show_form(
             step_id="user",
             data_schema=CONFIG_SCHEMA,
