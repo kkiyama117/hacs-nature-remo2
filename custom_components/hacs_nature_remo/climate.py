@@ -118,7 +118,8 @@ class HacsNatureRemoAC(HacsNatureRemoApplianceEntity, ClimateEntity):
         except:
             _swing = None
         if device is not None:
-            _current_temperature = float(device.newest_events.get("te").get("val"))
+            _ce: remo.SensorValue = device.newest_events.get("te")
+            _current_temperature = float(_ce.val)
         else:
             _current_temperature = None
         current_mode_temp_range = self._get_current_mode_temp_range(current_mode)
