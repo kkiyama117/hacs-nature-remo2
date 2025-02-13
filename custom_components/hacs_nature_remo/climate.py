@@ -1,13 +1,13 @@
 """Switch platform for hacs-nature-remo."""
-
+import dataclasses
 from copy import deepcopy
-from dataclasses import dataclass
 
 import remo
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import ATTR_TEMPERATURE
 from homeassistant.core import callback
-from homeassistant.components.climate import ClimateEntity, HVACMode
+from homeassistant.components.climate import ClimateEntity, HVACMode, HVAC_MODES
+from mashumaro import DataClassDictMixin
 
 from . import LOGGER
 from .coordinators import HacsNatureRemoDataUpdateCoordinator
@@ -15,7 +15,7 @@ from .domain import climate as climate_const
 from .domain.config_schema import (
     KEY_APPLIANCES,
     KEY_DEVICES,
-    PluginDataDict, CONFIG_SCHEMA,
+    PluginDataDict
 )
 from .domain.const import DEFAULT_NAME, DOMAIN, ICON, SWITCH
 from .entity import HacsNatureRemoApplianceEntity
@@ -36,9 +36,21 @@ async def async_setup_entry(hass, entry: ConfigEntry, async_add_devices):
     )
 
 
-@dataclass
+@dataclasses.dataclass(frozen=True)
+class DefaultClimateConfig:
+    cool_temperature: float
+    heat_temperature: float
+
+
+def config_entry_to_default_climate_config(entry: ConfigEntry) -> DefaultClimateConfig:
+    _ct = entry.data.get(str(HVACMode.COOL))
+    _ht = entry.data.get(str(HVACMode.HEAT))
+    return DefaultClimateConfig(cool_temperature=_ct, heat_temperature=_ht)
+
+
+@dataclasses.dataclass(frozen=True)
 class HacsNatureRemoACData:
-    default_config: CONFIG_SCHEMA
+    default_config: DefaultClimateConfig
     # Mode of HA
     current_mode: HVACMode
     # Mode list of Remo
@@ -65,6 +77,11 @@ class HacsNatureRemoAC(HacsNatureRemoApplianceEntity, ClimateEntity):
         ac_settings: remo.AirConParams = self.appliance.settings
         if ac_settings is None:
             LOGGER.warning("Empty AC is added")
+        entry_config = entry.data
+        default_config: DefaultClimateConfig = DefaultClimateConfig(
+            cool_temperature=entry_config.get(str(HVACMode.COOL)),
+            heat_temperature=entry_config.get(str(HVACMode.HEAT)),
+        )
         self._inner_data: HacsNatureRemoACData = HacsNatureRemoACData(
             # DEFAULT VALUE
             current_mode=HVACMode.OFF,
@@ -75,8 +92,8 @@ class HacsNatureRemoAC(HacsNatureRemoApplianceEntity, ClimateEntity):
             target_temperature=None,
             current_mode_temp_range=[],
             # set None for each HVAC mode
-            last_target_temperatures={v: None for v in HVACMode},
-            default_config=entry.data,
+            last_target_temperatures={v: None for v in HVAC_MODES},
+            default_config=default_config,
         )
         # Update(Init)
         self._update_data(ac_settings, None)
@@ -84,7 +101,7 @@ class HacsNatureRemoAC(HacsNatureRemoApplianceEntity, ClimateEntity):
     # Fetch from coordinator and set new attribute data
     # This method need to get AC params
     # https://swagger.nature.global/#/default/post_1_appliances__applianceid__aircon_settings
-    def _update_data(self, ac_settings:remo.AirConParams, device=None):
+    def _update_data(self, ac_settings: remo.AirConParams, device=None):
         self._update_inner_data(ac_settings, device)
         self._update_from_inner_data()
 
@@ -92,47 +109,36 @@ class HacsNatureRemoAC(HacsNatureRemoApplianceEntity, ClimateEntity):
     def _update_inner_data(
             self, ac_settings: remo.AirConParams, device: remo.Device | None = None
     ):
-        previous_data: HacsNatureRemoACData = deepcopy(self._inner_data)
-        try:
-            current_mode = climate_const.CLIMATE_MODE_REMO_TO_HA.get(ac_settings.mode)
-        except:
-            current_mode = previous_data.current_mode
-        _last_target_temperatures = previous_data.last_target_temperatures
-        try:
-            _target_temperature = float(ac_settings.temp)
-            _last_target_temperature_key = previous_data.current_mode
-            _last_target_temperature_value = float(ac_settings.temp)
-            _last_target_temperatures[_last_target_temperature_key] = (
-                _last_target_temperature_value
-            )
-        except:
-            _target_temperature = None
-        try:
-            _fan = ac_settings.vol or None
-        except:
-            _fan = None
-        try:
-            _swing = ac_settings.dir or None
-        except:
-            _swing = None
+        _last_inner_data_dict = dataclasses.asdict(self._inner_data)
+        result = {}
+        current_mode = climate_const.CLIMATE_MODE_REMO_TO_HA.get(ac_settings.mode)
+        if current_mode is not None:
+            result.setdefault("current_mode", current_mode)
+        else:
+            result.setdefault(self._inner_data.current_mode)
+        result.setdefault("all_modes", self._inner_data.all_modes)
+        _fan = ac_settings.vol or None
+        result.setdefault("current_fan", _fan)
+        _swing = ac_settings.dir or None
+        result.setdefault("current_swing", _swing)
         if device is not None:
             _ce: remo.SensorValue = device.newest_events.get("te")
-            _current_temperature = float(_ce.val)
+            result.setdefault("current_temperature", float(_ce.val))
         else:
-            _current_temperature = None
+            result.setdefault("current_temperature", None)
+        last_target_temperatures = deepcopy(self._inner_data.last_target_temperatures)
+        target_temperature = float(ac_settings.temp)
+        last_target_temperatures[current_mode] = target_temperature
+        if current_mode is not HVACMode.OFF and current_mode is not None:
+            result.setdefault("target_temperature", target_temperature)
+        else:
+            result.setdefault("target_temperature", self._inner_data.current_temperature)
         current_mode_temp_range = self._get_current_mode_temp_range(current_mode)
-        new_one = HacsNatureRemoACData(
-            current_mode=current_mode,
-            all_modes=previous_data.all_modes,
-            target_temperature=_target_temperature,
-            last_target_temperatures=_last_target_temperatures,
-            current_fan=_fan,
-            current_swing=_swing,
-            current_temperature=_current_temperature,
-            default_config=previous_data.default_config,
-            current_mode_temp_range=current_mode_temp_range,
-        )
-        self._inner_data = new_one
+        result.setdefault("current_mode_temp_range", current_mode_temp_range)
+        result.setdefault("last_target_temperatures", last_target_temperatures)
+        result.setdefault("default_config",self._inner_data.default_config)
+        LOGGER.debug(f"climate: last temperatures:{self._inner_data.last_target_temperatures}")
+        self._inner_data = HacsNatureRemoACData(**result)
 
     # Update attributes
     def _update_from_inner_data(self):
@@ -149,7 +155,7 @@ class HacsNatureRemoAC(HacsNatureRemoApplianceEntity, ClimateEntity):
             step = round(temperature_range[1] - temperature_range[0], 1)
             if step in [1.0, 0.5]:
                 self._attr_target_temperature_step = step
-        elif len(temperature_range)==0:
+        elif len(temperature_range) == 0:
             self._attr_max_temp = max(temperature_range)
             self._attr_min_temp = min(temperature_range)
             self._attr_target_temperature_step = 1
@@ -199,8 +205,10 @@ class HacsNatureRemoAC(HacsNatureRemoApplianceEntity, ClimateEntity):
             data = {"operation_mode": mode}
             if self._inner_data.last_target_temperatures[mode]:
                 data["temperature"] = self._inner_data.last_target_temperatures[mode]
-            elif self._inner_data.default_config.get(hvac_mode):
-                data["temperature"] = self._inner_data.default_config[hvac_mode]
+            elif self._inner_data.current_mode is HVACMode.COOL:
+                data["temperature"] = self._inner_data.default_config.cool_temperature
+            elif self._inner_data.current_mode is HVACMode.HEAT:
+                data["temperature"] = self._inner_data.default_config.heat_temperature
             await self._post_aircon_settings(data)
 
     async def async_set_fan_mode(self, fan_mode):
@@ -228,7 +236,7 @@ class HacsNatureRemoAC(HacsNatureRemoApplianceEntity, ClimateEntity):
         """Handle updated data from the coordinator."""
         aps_data = self.coordinator.data.get(KEY_APPLIANCES)
         # GET AC_PARAMS
-        ap_data:remo.AirConParams = aps_data.get(self.appliance.id).settings
+        ap_data: remo.AirConParams = aps_data.get(self.appliance.id).settings
         device_data = self.coordinator.data.get(KEY_DEVICES).get(
             self.appliance.device.id
         )
@@ -245,7 +253,8 @@ class HacsNatureRemoAC(HacsNatureRemoApplianceEntity, ClimateEntity):
         response = await self.coordinator.raw_api().update_aircon_settings(
             appliance=self.appliance.id, **data
         )
-        self._update_data(response)
+        if response is not None:
+            self._update_data(response)
         self.async_write_ha_state()
 
     def _get_current_mode_temp_range(self, mode_name: HVACMode) -> list[float]:
@@ -254,11 +263,11 @@ class HacsNatureRemoAC(HacsNatureRemoApplianceEntity, ClimateEntity):
         )
         if mode_data is not None:
             temp_range = mode_data.temp
-            result =  list(map(float, filter(None, temp_range)))
+            result = list(map(float, filter(None, temp_range)))
             LOGGER.debug(f"current mode({mode_name}) temp_range: {result}")
             return result
         else:
-            return [0,0]
+            return [0, 0]
 
     @staticmethod
     def _convert_to_hvac_list(
