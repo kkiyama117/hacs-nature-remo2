@@ -109,6 +109,9 @@ class HacsNatureRemoAC(HacsNatureRemoApplianceEntity, ClimateEntity):
     def _update_inner_data(
             self, ac_settings: remo.AirConParams, device: remo.Device | None = None
     ):
+        LOGGER.debug(f"Update climate data")
+        LOGGER.debug(f"ac_settings: {ac_settings}")
+        LOGGER.debug(f"Device: {device}")
         result = {}
         current_mode = climate_const.CLIMATE_MODE_REMO_TO_HA.get(ac_settings.mode)
         if current_mode is not None:
