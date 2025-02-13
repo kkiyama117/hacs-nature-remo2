@@ -1,4 +1,5 @@
 """Tests for hacs-nature-remo api."""
+
 import asyncio
 
 import aiohttp

@@ -12,7 +12,7 @@ import aiohttp
 import async_timeout
 from remo import NatureRemoError
 from remo.models import *
-from custom_components.hacs_nature_remo.domain.const import NATURE_REMO_API_BASE_URL, NATURE_REMO_API_TIMEOUT_SEC
+from ..domain.const import NATURE_REMO_API_BASE_URL, NATURE_REMO_API_TIMEOUT_SEC
 
 BASE_URL = NATURE_REMO_API_BASE_URL
 __version__ = ""
@@ -45,11 +45,11 @@ class RateLimit:
 
 class HacsNatureRemoApiClient:
     def __init__(
-            self,
-            access_token: str,
-            session: aiohttp.ClientSession,
-            nature_remo_api_version: str = "1",
-            debug: bool = False
+        self,
+        access_token: str,
+        session: aiohttp.ClientSession,
+        nature_remo_api_version: str = "1",
+        debug: bool = False,
     ) -> None:
         if debug:
             enable_debug_mode()
@@ -89,7 +89,9 @@ class HacsNatureRemoApiClient:
         """
         endpoint = f"{self.url}/users/me"
         try:
-            response = await self.api_wrapper_json("post", endpoint, data={"nickname": nickname})
+            response = await self.api_wrapper_json(
+                "post", endpoint, data={"nickname": nickname}
+            )
             return UserSchema().load(response)
         except Exception as e:
             _LOGGER.error(f"Error: {e}")
@@ -170,7 +172,9 @@ class HacsNatureRemoApiClient:
         """
         endpoint = f"{self.url}/detectappliance"
         try:
-            resp = await self.api_wrapper_json("post", endpoint, data={"message": message})
+            resp = await self.api_wrapper_json(
+                "post", endpoint, data={"message": message}
+            )
             return ApplianceModelAndParamsSchema(many=True).load(resp)
         except Exception as e:
             _LOGGER.error(f"Error: {e}")
@@ -183,18 +187,21 @@ class HacsNatureRemoApiClient:
         """
         endpoint = f"{self.url}/appliances"
         try:
-            resp = await self.api_wrapper_json("get", endpoint, )
+            resp = await self.api_wrapper_json(
+                "get",
+                endpoint,
+            )
             return ApplianceSchema(many=True).load(resp)
         except Exception as e:
             _LOGGER.error(f"Error: {e}")
 
     async def create_appliance(
-            self,
-            device: str,
-            nickname: str,
-            image: str,
-            model: str = None,
-            model_type: str = None,
+        self,
+        device: str,
+        nickname: str,
+        image: str,
+        model: str = None,
+        model_type: str = None,
     ) -> Appliance:
         """Create a new appliance.
 
@@ -226,13 +233,15 @@ class HacsNatureRemoApiClient:
         """
         endpoint = f"{self.url}/appliance_orders"
         try:
-            resp = await self.api_wrapper_json("post", endpoint, data={"appliances": appliances})
+            resp = await self.api_wrapper_json(
+                "post", endpoint, data={"appliances": appliances}
+            )
             return ApplianceSchema().load(resp)
         except Exception as e:
             _LOGGER.error(f"Error: {e}")
 
     async def update_appliance(
-            self, appliance: str, nickname: str, image: str
+        self, appliance: str, nickname: str, image: str
     ) -> Appliance:
         """Update appliance.
 
@@ -243,8 +252,9 @@ class HacsNatureRemoApiClient:
         """
         endpoint = f"{self.url}/appliances/{appliance}"
         try:
-            resp = await self.api_wrapper_json("post", endpoint,
-                                               data={"nickname": nickname, "image": image})
+            resp = await self.api_wrapper_json(
+                "post", endpoint, data={"nickname": nickname, "image": image}
+            )
             return ApplianceSchema().load(resp)
         except Exception as e:
             _LOGGER.error(f"Error: {e}")
@@ -263,13 +273,13 @@ class HacsNatureRemoApiClient:
 
     # Aircon Settings ==================================================================================================
     async def update_aircon_settings(
-            self,
-            appliance: str,
-            operation_mode: str = None,
-            temperature: str = None,
-            air_volume: str = None,
-            air_direction: str = None,
-            button: str = None,
+        self,
+        appliance: str,
+        operation_mode: str = None,
+        temperature: str = None,
+        air_volume: str = None,
+        air_direction: str = None,
+        button: str = None,
     ):
         """Update air conditioner settings.
 
@@ -341,7 +351,7 @@ class HacsNatureRemoApiClient:
             _LOGGER.error(f"Error: {e}")
 
     async def create_signal(
-            self, appliance: str, name: str, message: str, image: str
+        self, appliance: str, name: str, message: str, image: str
     ) -> Signal:
         """Create a signal under this appliance.
 
@@ -354,9 +364,10 @@ class HacsNatureRemoApiClient:
         """
         endpoint = f"{self.url}/appliances/{appliance}/signals"
         try:
-
             response = await self.api_wrapper_json(
-                "post", endpoint, data={"name": name, "message": message, "image": image},
+                "post",
+                endpoint,
+                data={"name": name, "message": message, "image": image},
             )
             return SignalSchema().load(response)
         except Exception as e:
@@ -372,7 +383,9 @@ class HacsNatureRemoApiClient:
         endpoint = f"{self.url}/appliances/{appliance}/signal_orders"
         try:
             await self.api_wrapper_json(
-                "post", endpoint, data={"signals": signals},
+                "post",
+                endpoint,
+                data={"signals": signals},
             )
         except Exception as e:
             _LOGGER.error(f"Error: {e}")
@@ -419,17 +432,25 @@ class HacsNatureRemoApiClient:
             raise e
 
     # ------------------------------------------------------------------------------------------------------------------
-    async def api_wrapper_json(self, method: str, url: str, data: dict = None, headers: dict = None) -> dict | None:
+    async def api_wrapper_json(
+        self, method: str, url: str, data: dict = None, headers: dict = None
+    ) -> dict | None:
         try:
-            api_response = await self.api_wrapper(method, url, data, headers, is_raise_error=True)
+            api_response = await self.api_wrapper(
+                method, url, data, headers, is_raise_error=True
+            )
             return api_response
         except Exception as e:
             _LOGGER.error(f"Json Error: {e}")
             raise NatureRemoError()
 
     async def api_wrapper(
-            self, method: str, url: str, data: dict = None, headers: dict = None,
-            is_raise_error: bool = False
+        self,
+        method: str,
+        url: str,
+        data: dict = None,
+        headers: dict = None,
+        is_raise_error: bool = False,
     ) -> dict:
         """Get information from the API."""
         if headers is None:
@@ -447,7 +468,9 @@ class HacsNatureRemoApiClient:
                 elif method == "put":
                     response = await self._session.put(url, headers=headers, json=data)
                 elif method == "patch":
-                    response = await self._session.patch(url, headers=headers, json=data)
+                    response = await self._session.patch(
+                        url, headers=headers, json=data
+                    )
                 elif method == "post":
                     response = await self._session.post(url, headers=headers, json=data)
                 self.__set_api_rate_limit(response)
@@ -494,9 +517,7 @@ class HacsNatureRemoApiClient:
         if "X-Rate-Limit-Limit" in response.headers:
             self.rate_limit.limit = int(response.headers["X-Rate-Limit-Limit"])
         if "X-Rate-Limit-Remaining" in response.headers:
-            self.rate_limit.remaining = int(
-                response.headers["X-Rate-Limit-Remaining"]
-            )
+            self.rate_limit.remaining = int(response.headers["X-Rate-Limit-Remaining"])
         if "X-Rate-Limit-Reset" in response.headers:
             self.rate_limit.reset = datetime.fromtimestamp(
                 int(response.headers["X-Rate-Limit-Reset"])

@@ -4,6 +4,7 @@ Custom integration to integrate hacs-nature-remo with Home Assistant.
 For more details about this integration, please refer to
 https://github.com/kkiyama117/hacs-nature-remo2
 """
+
 import asyncio
 
 from homeassistant.config_entries import ConfigEntry
@@ -11,17 +12,18 @@ from homeassistant.core_config import Config
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
-import remo
 
 from .coordinators import HacsNatureRemoDataUpdateCoordinator
 
 from .domain import LOGGER
 from .api import HacsNatureRemoApiClient
 from .domain.config_schema import PluginDataDict, CONF_API_TOKEN_KEY
-from .domain.const import (DOMAIN,
-                           STARTUP_MESSAGE, PLATFORMS,
-                           DEFAULT_SCAN_INTERVAL,
-                           )
+from .domain.const import (
+    DOMAIN,
+    STARTUP_MESSAGE,
+    PLATFORMS,
+    DEFAULT_SCAN_INTERVAL,
+)
 
 
 async def async_setup(hass: HomeAssistant, config: Config) -> bool:
@@ -38,7 +40,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     # get API token from user config
     conf_data = entry.data
     api_token = conf_data.get(CONF_API_TOKEN_KEY)
-    coordinator: HacsNatureRemoDataUpdateCoordinator = await _common_setup_flow(hass, api_token)
+    coordinator: HacsNatureRemoDataUpdateCoordinator = await _common_setup_flow(
+        hass, api_token
+    )
     hass.data[DOMAIN][entry.entry_id]: PluginDataDict = coordinator
 
     for platform in PLATFORMS:
@@ -71,7 +75,9 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     return unloaded
 
 
-async def _common_setup_flow(hass: HomeAssistant, api_token: str | None) -> HacsNatureRemoDataUpdateCoordinator:
+async def _common_setup_flow(
+    hass: HomeAssistant, api_token: str | None
+) -> HacsNatureRemoDataUpdateCoordinator:
     session = async_get_clientsession(hass)
     if api_token is None or len(api_token) == 0:
         raise RuntimeError("Error: Nature Remo API token is not set!")

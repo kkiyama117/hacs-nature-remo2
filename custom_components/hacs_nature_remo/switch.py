@@ -1,9 +1,12 @@
 """Switch platform for Cookiecutter Home Assistant Custom Component Instance."""
+
 import remo
 from homeassistant.components.switch import SwitchEntity
 
-from . import LOGGER, HacsNatureRemoDataUpdateCoordinator, PluginDataDict
-from .domain.const import DOMAIN, DEFAULT_NAME, ICON, SWITCH, KEY_APPLIANCES
+from . import LOGGER
+from .coordinators import HacsNatureRemoDataUpdateCoordinator
+from .domain.config_schema import KEY_APPLIANCES, PluginDataDict
+from .domain.const import SWITCH, DOMAIN
 from .entity import HacsNatureRemoApplianceEntity
 
 
@@ -13,31 +16,30 @@ async def async_setup_entry(hass, entry, async_add_devices):
     coordinator: HacsNatureRemoDataUpdateCoordinator = hass.data[DOMAIN][entry.entry_id]
     _data: PluginDataDict = coordinator.data
     appliances: dict[str, remo.Appliance] = _data.get(KEY_APPLIANCES)
-    async_add_devices([
-        NatureRemoIR(coordinator, appliance_key)
-        for appliance_key, app in appliances.items() if app.type == "IR"
-    ])
+    async_add_devices(
+        [
+            NatureRemoIR(coordinator, appliance_key)
+            for appliance_key, app in appliances.items()
+            if app.type == "IR"
+        ]
+    )
 
 
 class NatureRemoIR(HacsNatureRemoApplianceEntity, SwitchEntity):
     """Switch Entity for Nature Remo IR"""
+
     _attr_assumed_state = True
 
-    def __init__(self, coordinator: HacsNatureRemoDataUpdateCoordinator, idx: str) -> None:
-        super().__init__(self, coordinator, idx)
+    def __init__(
+        self, coordinator: HacsNatureRemoDataUpdateCoordinator, idx: str
+    ) -> None:
+        super().__init__(coordinator, idx)
         self._attr_name = f"{self._base_name.strip()} {SWITCH}"
         self._signals: list[remo.Signal] = self.appliance.signals
 
-
     async def _async_turn_switch(self, is_on: bool):
         LOGGER.debug(f"{self.unique_id}: set state {is_on}")
-        _names = [
-            "ico_on"
-            "ico_io"
-        ] if is_on else [
-            "ico_off"
-            "ico_io"
-        ]
+        _names = ["ico_onico_io"] if is_on else ["ico_offico_io"]
         try:
             images = [x.image for x in self._signals]
             for name in _names:
