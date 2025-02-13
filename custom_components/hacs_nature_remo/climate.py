@@ -229,7 +229,7 @@ class HacsNatureRemoAC(HacsNatureRemoApplianceEntity, ClimateEntity):
         """Handle updated data from the coordinator."""
         aps_data = self.coordinator.data.get(KEY_APPLIANCES)
         # GET AC_PARAMS
-        ap_data:remo.AirConParams = aps_data.get(self.appliance.id).get("settings")
+        ap_data:remo.AirConParams = aps_data.get(self.appliance.id).settings
         device_data = self.coordinator.data.get(KEY_DEVICES).get(
             self.appliance.device.id
         )
