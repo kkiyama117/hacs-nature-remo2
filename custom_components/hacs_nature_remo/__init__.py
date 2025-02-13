@@ -44,15 +44,14 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
         hass, api_token
     )
     hass.data[DOMAIN][entry.entry_id]: PluginDataDict = coordinator
-
-    for platform in PLATFORMS:
-        if entry.options.get(platform, True):
-            coordinator.platforms.append(platform)
-            await entry.async_create_background_task(
-                hass,
-                hass.config_entries.async_forward_entry_setup(entry, platform),
-                name=f"{DOMAIN}_entry_setup_{platform}",
-            )
+    coordinator.platforms = [
+        platform for platform in PLATFORMS
+        if entry.options.get(platform, True)
+    ]
+    entry.async_create_background_task(
+        hass, hass.config_entries.async_forward_entry_setups(entry, coordinator.platforms),
+        name=f"{DOMAIN}_entry_setup_all",
+    )
     entry.add_update_listener(async_reload_entry)
     return True
 
@@ -76,7 +75,7 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
 
 async def _common_setup_flow(
-    hass: HomeAssistant, api_token: str | None
+        hass: HomeAssistant, api_token: str | None
 ) -> HacsNatureRemoDataUpdateCoordinator:
     session = async_get_clientsession(hass)
     if api_token is None or len(api_token) == 0:

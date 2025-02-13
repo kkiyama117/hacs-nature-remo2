@@ -101,6 +101,7 @@ class HacsNatureRemoAC(HacsNatureRemoApplianceEntity, ClimateEntity):
     # This method need to get AC params
     # https://swagger.nature.global/#/default/post_1_appliances__applianceid__aircon_settings
     def _update_data(self, ac_settings: remo.AirConParams, device=None):
+        LOGGER.debug(f"Climate data update")
         self._update_inner_data(ac_settings, device)
         self._update_from_inner_data()
 
@@ -137,10 +138,14 @@ class HacsNatureRemoAC(HacsNatureRemoApplianceEntity, ClimateEntity):
         result.setdefault("default_config", self._inner_data.default_config)
         LOGGER.debug(f"climate: last temperatures:{self._inner_data.last_target_temperatures}")
         self._inner_data = HacsNatureRemoACData(**result)
+        LOGGER.debug(f"Update Climate Data from coordinator finished")
+        LOGGER.debug(f"{self._inner_data}")
 
     # Update attributes
     def _update_from_inner_data(self):
         """Update HA Entity value"""
+        LOGGER.debug(f"Update Climate Data for view")
+        LOGGER.debug(f"{self._inner_data}")
         self._attr_current_temperature = self._inner_data.current_temperature
         self._attr_target_temperature = self._inner_data.target_temperature
         self._attr_hvac_mode = self._inner_data.current_mode
