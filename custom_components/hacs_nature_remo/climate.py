@@ -7,7 +7,6 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import ATTR_TEMPERATURE
 from homeassistant.core import callback
 from homeassistant.components.climate import ClimateEntity, HVACMode, HVAC_MODES
-from mashumaro import DataClassDictMixin
 
 from . import LOGGER
 from .coordinators import HacsNatureRemoDataUpdateCoordinator
@@ -109,7 +108,6 @@ class HacsNatureRemoAC(HacsNatureRemoApplianceEntity, ClimateEntity):
     def _update_inner_data(
             self, ac_settings: remo.AirConParams, device: remo.Device | None = None
     ):
-        _last_inner_data_dict = dataclasses.asdict(self._inner_data)
         result = {}
         current_mode = climate_const.CLIMATE_MODE_REMO_TO_HA.get(ac_settings.mode)
         if current_mode is not None:
@@ -136,7 +134,7 @@ class HacsNatureRemoAC(HacsNatureRemoApplianceEntity, ClimateEntity):
         current_mode_temp_range = self._get_current_mode_temp_range(current_mode)
         result.setdefault("current_mode_temp_range", current_mode_temp_range)
         result.setdefault("last_target_temperatures", last_target_temperatures)
-        result.setdefault("default_config",self._inner_data.default_config)
+        result.setdefault("default_config", self._inner_data.default_config)
         LOGGER.debug(f"climate: last temperatures:{self._inner_data.last_target_temperatures}")
         self._inner_data = HacsNatureRemoACData(**result)
 
@@ -254,7 +252,8 @@ class HacsNatureRemoAC(HacsNatureRemoApplianceEntity, ClimateEntity):
             appliance=self.appliance.id, **data
         )
         if response is not None:
-            self._update_data(response)
+            LOGGER.debug(f"Post response: {response}")
+            self._update_data(response, None)
         self.async_write_ha_state()
 
     def _get_current_mode_temp_range(self, mode_name: HVACMode) -> list[float]:
