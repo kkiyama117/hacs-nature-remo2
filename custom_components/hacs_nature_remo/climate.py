@@ -252,7 +252,7 @@ class HacsNatureRemoAC(HacsNatureRemoApplianceEntity, ClimateEntity):
             appliance=self.appliance.id, **data
         )
         if response is not None:
-            LOGGER.debug(f"Post response: {response}")
+            response = remo.AirConParams(**response)
             self._update_data(response, None)
         self.async_write_ha_state()
 
