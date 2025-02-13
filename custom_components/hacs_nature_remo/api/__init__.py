@@ -304,7 +304,7 @@ class HacsNatureRemoApiClient:
         if button:
             data["button"] = button
         try:
-            await self.api_wrapper_json("post", endpoint, data=data)
+            return await self.api_wrapper_json("post", endpoint, data=data)
         except Exception as e:
             _LOGGER.error(f"Error: {e}")
 

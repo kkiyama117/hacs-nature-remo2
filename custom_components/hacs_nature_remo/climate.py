@@ -243,10 +243,9 @@ class HacsNatureRemoAC(HacsNatureRemoApplianceEntity, ClimateEntity):
 
     # HELPERS ----------------------------------------------------------------------------------------------------------
     async def _post_aircon_settings(self, data):
-        # TODO: Wrap API
         # Maybe this API return appliances
-        response = self.coordinator.raw_api().post(
-            f"/appliances/{self.appliance.id}/aircon_settings", data
+        response = self.coordinator.raw_api().update_aircon_settings(
+            appliance=self.appliance.id, **data
         )
         self._update_data(response)
         self.async_write_ha_state()
