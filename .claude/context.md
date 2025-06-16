@@ -2,27 +2,37 @@
 
 ## プロジェクト概要
 
-Please add and edit as necessary. If you update this file in line with this project, please delete the old examples indicated as (example).
-(example: AIプロンプトの収集・共有を目的とした日本語・英語併用のリポジトリです。AIシステムで使用するプロンプトを体系的に管理し、プロンプトエンジニアリングの実践例を蓄積しています。)
+Nature Remo デバイスを Home Assistant に統合するためのカスタムコンポーネント（HACS）です。Nature Remo は、赤外線信号やスマート連携を通じてエアコン、照明、その他の家電を制御できるスマートホームデバイスです。
 
 ## 技術的背景
 
 ### リポジトリの特性
-- **タイプ**: (example: ドキュメント中心のリポジトリ, `runner` 内はpythonのlibrary)
-- **言語**: 日本語・英語
-- **目的**: (example: プロンプトの収集、生成、管理)
+- **タイプ**: Home Assistant カスタムインテグレーション（HACS対応）
+- **言語**: Python（Home Assistant フレームワーク準拠）
+- **目的**: Nature Remo API を通じた家電制御の Home Assistant 統合
 
 ### ディレクトリ構造の設計思想
-(example start: below is example)
-- `prompts/`: 実際のプロンプトを格納（用途が明確なファイル名を使用）
-- `prompt_generators/`: Anthropicのガイドラインに従った詳細なプロンプト生成テンプレート
-- `guides/`: AIプロンプトや学術分野に関する情報
-- `runner/`: プロンプト生成のためのPythonパッケージ
-(example end: above is example)
+- `custom_components/hacs_nature_remo/`: メインインテグレーションコード
+  - `api/`: Nature Remo API クライアント実装（カスタムフォーク使用）
+  - `domain/`: ビジネスロジック、定数、設定スキーマ
+  - `coordinators.py`: データ更新の効率化のための DataUpdateCoordinator
+  - 各プラットフォーム実装: `climate.py`, `sensor.py`, `switch.py`
+- `tests/`: pytest による包括的なテストスイート（100%カバレッジ目標）
+- `.github/workflows/`: CI/CD パイプライン（テスト、リンティング、検証）
+
+### 開発の制約事項
+- Home Assistant の開発ガイドラインに準拠
+- 非同期処理（async/await）の完全実装
+- DataUpdateCoordinator パターンによる効率的なデータ取得
+- UI設定のみ対応（YAML設定は非対応）
+- シングルコンフィグエントリー制限
 
 ## 重要な注意事項
 
 - 不要なファイルの作成は避ける
 - 既存ファイルの編集を新規作成より優先する
-- 必要に応じ、ドキュメントを作成する
-  - 明示的に否定されない限り、必ずドキュメントファイル（*.md）やREADMEファイル作成時には許可を得る。また、変更履歴に追加/変更したドキュメントのファイル名を残す.
+- Home Assistant のエンティティパターンに従う
+- すべての文字列は翻訳可能にし、翻訳ファイルに追加する
+- API呼び出しはコーディネーター経由で行い、エンティティから直接呼び出さない
+- テストカバレッジ100%を維持する
+- セマンティックバージョニングに従う

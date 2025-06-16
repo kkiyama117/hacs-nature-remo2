@@ -5,77 +5,140 @@ Updated when /init is run. Update also if new knowledge is acquired.
 ## プロジェクトの制約
 
 ### 開発上の制約
-1. uv, ruff, pytestを用いてpythonで開発する
-    - 必要に応じて別の言語・ツールを用いる (例: pyo3を用いて一部の処理をRustで記述する)
-2. ファイル名は目的を明確に示すように命名する必要がある
+1. Home Assistant の開発ガイドラインに厳密に準拠
+2. Python 3.9+ 互換性の維持（Home Assistant の要件）
+3. 非同期処理（async/await）の完全実装
+4. pytest によるテストカバレッジ 100% の維持
+5. HACS（Home Assistant Community Store）の要件を満たす
 
 ### 言語に関する制約
-- ドキュメントは主に日本語/英語で記述する
-    - 日本語で記載されたドキュメントなら、ファイル名の拡張子の前に`_ja`を付けて`how_to_test_ja.md`のように命名する
-- プロンプト自体は用途に応じて日本語または英語を使用
-    - 日本語で記載されたドキュメントなら、ファイル名の拡張子の前に`_ja`を付けて`how_to_test_ja.md`のように命名する
-- 同一ファイル内では、言語の一貫性を保つことが重要. ファイル間では、必要に応じて揃える.
+- コード内のコメント・ドキュメント: 英語
+- UI文字列: 多言語対応（translations/ ディレクトリで管理）
+  - 現在対応: 英語(en)、フランス語(fr)、日本語(ja)、ノルウェー語(nb)
+- git コミットメッセージ: 英語
+- 内部ドキュメント（.claude/）: 日本語・英語混在可
 
 ## 実装上の技術的洞察
 
-### ファイル命名規則
-- プロンプト: `{purpose}_{lang}.md` (例: `code_review_ja.md`)
+### Home Assistant Integration パターン
 
-### バージョン管理のベストプラクティス
-- 意味のあるコミットメッセージ
-- プロンプトの更新履歴の記録
-- 効果的だった変更の文書化
+#### DataUpdateCoordinator の活用
+- **ApplianceCoordinator**: 家電データの集中管理
+- **DeviceCoordinator**: センサーデータの集中管理
+- 30秒のデフォルト更新間隔（SCAN_INTERVAL）
+- API呼び出しの最小化とデータ共有の最大化
 
-## Runner Package Technical Architecture
+#### Entity 実装のベストプラクティス
+1. **Unique ID**: アプライアンス/デバイスIDベースで必須
+2. **Availability**: コーディネーターのlast_update_successを使用
+3. **State Updates**: コーディネーターデータのみを参照
+4. **Device Info**: 適切なデバイスグルーピングのために実装
 
-### Unified TOML Configuration System
+### API クライアント設計
 
-#### Design Principles
-1. **Logical Grouping**: Configuration organized into sections ([paths], [anthropic], [application], [generation], [output], [compatibility])
-2. **Backward Compatibility**: Environment variables and legacy flat TOML continue to work
-3. **Security Best Practices**: API keys default to environment variables with clear warnings
-4. **Sensible Defaults**: All sections optional with comprehensive defaults
+#### Nature Remo API の特徴
+- RESTful API（OAuth2認証）
+- レート制限: 30リクエスト/5分
+- カスタムフォーク使用: `nature-remo-fork-only-for-hacs-nature-remo`
+- エンドポイント:
+  - `/appliances`: 家電一覧
+  - `/devices`: センサーデバイス一覧
+  - `/appliances/{id}/aircon_settings`: エアコン制御
 
-### Test Suite Architecture
+### テスト戦略
 
-#### Coverage Statistics
-- **ConfigManager**: 94% test coverage (up from ~60%)
-- **Total Tests**: 141 tests (52 new tests added)
-- **Test Files**: 3 new test files created for unified configuration
+#### フィクスチャの活用
+- `tests/fixtures/`: API レスポンスのモックデータ
+- `conftest.py`: 共通のpytestフィクスチャ定義
+- モックの一貫性維持が重要
 
-#### Test Organization
+#### テストパターン
+1. **Unit Tests**: 個別コンポーネントの機能テスト
+2. **Integration Tests**: Home Assistant との統合テスト
+3. **Config Flow Tests**: UI設定フローの完全テスト
 
-#### Key Testing Patterns
-2. **Type Safety**: String to appropriate type conversion
-3. **Error Handling**: Graceful degradation
-4. **Integration Testing**: Configuration affects behavior
+### CI/CD パイプライン
 
-### Implementation Details
+#### GitHub Actions ワークフロー
+1. **Linting** (`.github/workflows/linting.yaml`)
+   - pre-commit hooks の実行
+   - flake8, black, isort によるコード品質チェック
 
+2. **Tests** (`.github/workflows/tests.yaml`)
+   - 複数の Python バージョンでのテスト実行
+   - カバレッジレポートの生成
 
-### Runner Package Build System and Tools
+3. **HACS Validation** (`.github/workflows/validate.yaml`)
+   - HACS 要件の検証
+   - manifest.json の妥当性チェック
 
-1. **uv** - Fast Python package installer and resolver
-   - Manages dependencies and virtual environments
-   - Lock file: `uv.lock` ensures reproducible builds
-   - Alternative to pip/poetry/pipenv with better performance
+4. **Hassfest** (`.github/workflows/hassfest.yaml`)
+   - Home Assistant 統合要件の検証
 
-2. **Taskfile** - Task runner for common operations
-   - Defined in `runner/Taskfile.yml`
-   - Provides consistent development commands
-   - Includes tasks for install, test, lint, format, build, and generate-prompt
+### 設定管理
 
-3. **Hatchling** - Modern Python build backend
-   - Configured in `pyproject.toml`
-   - Handles package building and distribution
-   - PEP 517/518 compliant build system
+#### Config Flow の実装
+- ステップ: user → 認証情報入力 → 検証 → 作成
+- エラーハンドリング: 無効なトークン、接続エラー
+- 単一設定エントリーの強制
 
-4. **pytest** - Testing framework
-   - Comprehensive test suite with 94%+ coverage
-   - Tests located in `runner/tests/`
-   - Includes fixtures and integration tests
+#### 翻訳システム
+- `translations/` ディレクトリで管理
+- キー構造: `config.step.user.data.access_token`
+- 新機能追加時は全言語ファイルの更新が必要
 
-5. **ruff** - Fast Python linter and formatter
-   - Replaces flake8, black, isort, and more
-   - Configured in `pyproject.toml`
-   - Used for both linting and code formatting
+### 開発ツールとコマンド
+
+#### 依存関係管理
+- `requirements.txt`: 実行時依存関係
+- `requirements_dev.txt`: 開発ツール
+- `requirements_test.txt`: テスト依存関係
+
+#### よく使うコマンド
+```bash
+# 開発環境のセットアップ
+pip install -r requirements_dev.txt -r requirements_test.txt
+
+# テスト実行（並列実行）
+pytest --timeout=9 --durations=10 -n auto -p no:sugar tests
+
+# 特定のテストファイル実行
+pytest tests/test_climate.py
+
+# カバレッジレポート生成
+pytest --cov=custom_components.hacs_nature_remo --cov-report=html
+
+# コード品質チェック
+pre-commit run --all-files
+
+# Home Assistant 検証
+python -m script.hassfest
+```
+
+### 既知の課題と回避策
+
+1. **Nature Remo API のレート制限**
+   - DataUpdateCoordinator で更新頻度を制御
+   - 最小更新間隔: 30秒
+
+2. **エアコンの温度単位**
+   - API は摂氏のみサポート
+   - Home Assistant 側で華氏変換を実装
+
+3. **デバイスのオフライン検出**
+   - API はリアルタイムステータスを提供しない
+   - 最終更新時刻で推定
+
+### パフォーマンス最適化
+
+1. **並行データ取得**
+   - appliances と devices を並行取得
+   - asyncio.gather() の活用
+
+2. **キャッシュ戦略**
+   - DataUpdateCoordinator による自動キャッシュ
+   - エンティティは直接APIを呼ばない
+
+3. **エラーリトライ**
+   - 指数バックオフによる自動リトライ
+   - 一時的なネットワークエラーに対応

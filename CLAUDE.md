@@ -1,15 +1,20 @@
 # CLAUDE.md
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
-When `/init` is called, Update this file. In particular, be sure to update the section enclosed by "~-" and "-~" according to the instructions therein. Then, delete the original instructions written between "~-" and "-~"
 
 ## Repository Overview
 
-~- This is the overview of repository. Please rewrite this to suit this project. -~
+This is a Home Assistant Custom Component (HACS) for integrating Nature Remo smart home devices with Home Assistant. Nature Remo is a device that can control air conditioners, lights, and other appliances via infrared signals and smart integrations.
+
+**Key Facts:**
+- Domain: `hacs_nature_remo`
+- Version: 0.1.1
+- Integration type: Cloud Polling (requires Nature Remo API token)
+- Supported platforms: Climate, Sensor, Switch
+- Configuration: UI-based (config flow)
 
 ## Repository Structure
 
-~- This is the overview of `.claude`. make their files and create if it does not exist.  -~
 - `.claude/` - Knowledge management system for Claude Code containing:
   - `context.md` - Project background.
   - `project-knowledge.md` - Technical insights and patterns to implement program in this repository and write constraint of repository also.
@@ -18,59 +23,101 @@ When `/init` is called, Update this file. In particular, be sure to update the s
   - `debug-log.md` - Important debug records and log.
     - If you took over 30 minutes to resolve some issue, need to write about description and how to resolve it here.
   - `debug/` - Directory for session-specific logs and archives to remind or tell what was doing and done.
-~- For the remaining directories, list the structure excluding those specified in gitignore. -~
+- `custom_components/hacs_nature_remo/` - Main integration code
+  - `api/` - Nature Remo API client implementation
+  - `domain/` - Business logic, constants, and configuration schemas
+  - `coordinators.py` - DataUpdateCoordinator for efficient data fetching
+  - `climate.py`, `sensor.py`, `switch.py` - Entity platform implementations
+  - `config_flow.py` - UI configuration flow
+  - `translations/` - Multi-language support (en, fr, ja, nb)
+- `tests/` - Comprehensive test suite with fixtures and mocks
+- `.github/workflows/` - CI/CD pipelines for testing, linting, and validation
 
 ## Development Tools and Commands
 
-~- Update this chapter to match the tools that are actually being used. -~
+### Setup and Dependencies
 
-### Python Package
+```bash
+# Install development dependencies
+pip install -r requirements_dev.txt
+pip install -r requirements_test.txt
 
-The repository includes a sophisticated Python package for prompt generation with the following tools:
+# Install the custom component in development mode
+pip install -e .
+```
 
-1. **uv** - Fast Python package installer and resolver
-   - Install dependencies: `uv sync`
-   - Install with dev dependencies: `uv sync --all-extras --dev`
+### Testing
 
-2. **Task** (Taskfile.yml) - Task runner for common operations
-   ```bash
-   task install         # Install dependencies
-   task test            # Run tests
-   task lint            # Run ruff linter
-   task format          # Format code with ruff
-   task build           # Build the package
-   ```
+```bash
+# Run full test suite with parallel execution
+pytest --timeout=9 --durations=10 -n auto -p no:sugar tests
 
-3. **Testing**
-   - Framework: pytest with ~98% code coverage
-   - Run tests: `uv run pytest`
-   - Coverage report: `uv run pytest --cov`
+# Run specific test file
+pytest tests/test_climate.py
 
-4. **Linting and Formatting**
-   - Tool: ruff (configured in pyproject.toml)
-   - Check: `uv run ruff check src tests`
-   - Format: `uv run ruff format src tests`
+# Run with coverage report
+pytest --cov=custom_components.hacs_nature_remo --cov-report=html
 
+# Run a single test
+pytest tests/test_climate.py::test_climate_entity_setup
+```
+
+### Code Quality
+
+```bash
+# Run all pre-commit hooks (formatting, linting, type checking)
+pre-commit run --all-files
+
+# Run specific checks
+flake8 custom_components/hacs_nature_remo
+black custom_components/hacs_nature_remo --check
+isort custom_components/hacs_nature_remo --check-only
+```
+
+### Validation
+
+```bash
+# Validate Home Assistant integration requirements
+python -m script.hassfest
+
+# Validate HACS requirements
+python -m pytest tests/test_hacs.py
+```
 
 ## Architecture and Important Patterns
 
-~- Update this chapter to match the tools that are actually being used. -~
-
 ### High-Level Architecture
 
-1. **Package Structure** :
-~- Update this chapter to match the tools that are actually being used. -~
-~- example:  - `anthropic_client.py` - Claude API integration -~
+1. **API Layer** (`api/`):
+   - `NatureRemoAPI` - HTTP client for Nature Remo cloud API
+   - Uses custom fork: `nature-remo-fork-only-for-hacs-nature-remo`
+   - Handles authentication and request formatting
 
-3. **Key Design Patterns**:
-~- Update this chapter to match the tools that are actually being used. -~
-~- example
-   - **Strategy Pattern**: Different generators (MetapromptGenerator, TemplateGenerator) implementing BaseGenerator
-   - **Repository Pattern**: Separate file handling logic in utils/file_handler.py
-   - **Configuration Management**: Environment variables via .env files with ConfigManager
-   - **Type Safety**: Full type hints with py.typed marker
-   example end -~ 
+2. **Coordinator Pattern**:
+   - `ApplianceCoordinator` - Manages appliance data updates
+   - `DeviceCoordinator` - Manages device sensor data
+   - 30-second default update interval
+   - Shared data across all entities for efficiency
 
+3. **Entity Implementation**:
+   - All entities inherit from Home Assistant base classes
+   - Use coordinator data to avoid redundant API calls
+   - Implement proper availability and state update patterns
+
+### Key Design Patterns
+
+- **DataUpdateCoordinator Pattern**: Centralized data fetching to minimize API calls and share data across entities
+- **Async/Await**: Fully asynchronous integration following Home Assistant patterns
+- **Config Flow**: Modern UI-based configuration with proper error handling and validation
+- **Entity Registry**: Proper unique ID assignment for entity tracking across restarts
+- **Translation Support**: Full i18n implementation with multiple languages
+
+### Configuration Constraints
+
+- Single configuration entry allowed (`single_config_entry: true`)
+- Requires valid Nature Remo API token
+- Cannot be configured via YAML (UI-only)
+- Automatic device and entity discovery
 
 ## Knowledge Management System
 
@@ -87,36 +134,39 @@ This repository implements a systematic knowledge management approach for Claude
 ## Development Notes
 
 When working with this repository:
-- The runner package is a fully-featured Python package with CI/CD, not just scripts
-- Maintain type hints - the package includes py.typed for type checking
-- Run tests before committing - aim to maintain >95% coverage
-- Use the Task commands for consistency across development operations
-- Update documentation when adding new development tools or changing workflows
-- The package supports both online (AI-powered) and offline (template-based) prompt generation
-- Use the knowledge management system in `.claude/` to maintain continuity across sessions
-- Update relevant knowledge files when discovering new patterns or solutions
+- Follow Home Assistant development guidelines and entity patterns
+- Maintain 100% test coverage as configured in setup.cfg
+- Use the coordinator pattern for any new data sources
+- Ensure all strings are translatable and added to translation files
+- Test with actual Nature Remo devices when possible
+- Update manifest.json version for any changes
+- Follow semantic versioning for releases
 
-### Runner Package Development Guidelines
+### Integration Development Guidelines
 
-When working with the runner package:
+1. **Entity Development**:
+   - Always use unique IDs based on appliance/device IDs
+   - Implement proper availability checks
+   - Use coordinator data, never fetch directly in entities
+   
+2. **API Changes**:
+   - Maintain compatibility with the Nature Remo API
+   - Handle rate limiting appropriately
+   - Log API errors clearly for debugging
 
-1. **Maintain Type Hints**: The package includes py.typed, so ensure all new code includes proper type annotations
-2. **Follow Existing Patterns**: 
-   - Use the established class structure (PromptGenerator, TemplateManager, AnthropicPromptEngineer)
-   - Maintain separation of concerns between core functionality, templates, and guidelines
-3. **Testing**: Use `uv run pytest` to run the comprehensive test suite with 98% coverage
-4. **Documentation**: Update the `README.md` when adding new features or changing APIs
-5. **Error Handling**: Provide clear error messages, especially for template not found or invalid parameter scenarios
+3. **Testing**:
+   - Write tests for all new functionality
+   - Use the provided fixtures for consistent test data
+   - Mock API calls properly using the test fixtures
 
 ## CI/CD Pipeline
 
 GitHub Actions workflows:
-- **test.yml**: Runs on push/PR - linting, formatting, tests across Python 3.9-3.13
-- **release.yml**: Automated package releases to GitHub
-- **claude.yml**: Additional Claude-specific workflows
+- **Linting**: Pre-commit hooks, flake8, black, isort
+- **HACS Validation**: Ensures compatibility with HACS
+- **Hassfest**: Validates Home Assistant integration requirements
+- **Tests**: Runs full test suite on multiple Python versions
+- **Release Drafter**: Automated release note generation
+- **Dependabot**: Automated dependency updates
 
-The CI pipeline includes:
-- Linting with ruff
-- Testing across multiple Python versions (3.9, 3.12, 3.13)
-- Coverage reporting to Codecov
-- Package building and distribution artifact upload
+The CI pipeline ensures code quality and Home Assistant compatibility before any merge.
