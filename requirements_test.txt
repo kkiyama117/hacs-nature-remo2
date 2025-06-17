@@ -1,2 +1,11 @@
+# Test dependencies
+pytest-homeassistant-custom-component>=0.13.236
+
+# pytest plugins
+pytest-cov>=2.10.1
+pytest-timeout>=1.4.2
+pytest-xdist>=2.1.0
+pytest-sugar>=0.9.4
+
+# Include development dependencies for testing
 -r requirements_dev.txt
-pytest-homeassistant-custom-component==0.9.16

@@ -1,2 +1,16 @@
+# Development dependencies
 homeassistant>=2025.1.4
-nature-remo-fork-only-for-hacs-nature-remo
+nature-remo-fork-only-for-hacs-nature-remo>=0.3.3
+
+# Code formatting and linting
+black==20.8b1
+flake8==3.8.4
+isort>=5.0.0
+reorder-python-imports==2.3.6
+pre-commit==2.9.3
+
+# Type checking
+mypy>=0.800
+
+# Additional development tools
+pip>=21.0

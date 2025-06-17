@@ -35,7 +35,35 @@ This is a Home Assistant Custom Component (HACS) for integrating Nature Remo sma
 
 ## Development Tools and Commands
 
+### Quick Start with UV (Recommended)
+
+UV is a fast Python package manager that simplifies development setup. This project is configured to use UV for local development.
+
+```bash
+# Install UV (if not already installed)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Quick setup - installs all dependencies and configures environment
+uv sync
+
+# Run tests with UV
+uv run pytest tests/
+```
+
 ### Setup and Dependencies
+
+#### Using UV (Recommended for Development)
+
+```bash
+# Install all dependencies (dev, test, and runtime)
+uv sync
+
+# The project uses pyproject.toml for configuration
+# Note: custom_components requires special pythonpath configuration
+# This is already configured in pyproject.toml under [tool.uv.sources]
+```
+
+#### Using pip (Alternative - for CI/CD compatibility)
 
 ```bash
 # Install development dependencies
@@ -46,7 +74,32 @@ pip install -r requirements_test.txt
 pip install -e .
 ```
 
+### Why UV?
+
+- **Faster**: UV installs dependencies 10-100x faster than pip
+- **Simpler**: Single command (`uv sync`) sets up everything
+- **Reliable**: Lockfile ensures consistent dependencies across environments
+- **Python Path Handling**: Automatically configures PYTHONPATH for custom_components directory
+
 ### Testing
+
+#### Using UV
+
+```bash
+# Run full test suite with parallel execution
+uv run pytest --timeout=9 --durations=10 -n auto -p no:sugar tests
+
+# Run specific test file
+uv run pytest tests/test_climate.py
+
+# Run with coverage report
+uv run pytest --cov=custom_components.hacs_nature_remo --cov-report=html
+
+# Run a single test
+uv run pytest tests/test_climate.py::test_climate_entity_setup
+```
+
+#### Using pytest directly (after setup)
 
 ```bash
 # Run full test suite with parallel execution
@@ -63,6 +116,20 @@ pytest tests/test_climate.py::test_climate_entity_setup
 ```
 
 ### Code Quality
+
+#### Using UV
+
+```bash
+# Run all pre-commit hooks (formatting, linting, type checking)
+uv run pre-commit run --all-files
+
+# Run specific checks
+uv run flake8 custom_components/hacs_nature_remo
+uv run black custom_components/hacs_nature_remo --check
+uv run isort custom_components/hacs_nature_remo --check-only
+```
+
+#### Direct commands (after setup)
 
 ```bash
 # Run all pre-commit hooks (formatting, linting, type checking)
@@ -141,6 +208,17 @@ When working with this repository:
 - Test with actual Nature Remo devices when possible
 - Update manifest.json version for any changes
 - Follow semantic versioning for releases
+
+### Python Path Configuration
+
+This project requires special Python path configuration for the `custom_components` directory to work properly with Home Assistant's module structure. When using UV, this is automatically handled through the `pyproject.toml` configuration:
+
+```toml
+[tool.uv.sources]
+hacs-nature-remo = { path = "custom_components", editable = true }
+```
+
+This ensures that imports like `from custom_components.hacs_nature_remo` work correctly in tests without manual PYTHONPATH configuration.
 
 ### Integration Development Guidelines
 

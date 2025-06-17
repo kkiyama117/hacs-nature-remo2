@@ -1,0 +1,2 @@
+# Runtime dependencies
+nature-remo-fork-only-for-hacs-nature-remo>=0.3.3
