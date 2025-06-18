@@ -27,6 +27,7 @@ dev = [
     "flake8>=3.8.4",
     "isort>=5.0.0",
     "reorder-python-imports>=2.3.6",
+    "ruff>=0.11.13",
 ]
 test = [
     "pytest>=7.0.0",
@@ -41,6 +42,11 @@ pythonpath = [".", "custom_components"]
 testpaths = ["tests"]
 addopts = "-qq --cov=custom_components.hacs_nature_remo --timeout=9 --durations=10"
 console_output_style = "count"
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+markers = [
+    "asyncio: mark test as an asyncio coroutine",
+]
 
 [tool.setuptools.packages.find]
 where = ["."]

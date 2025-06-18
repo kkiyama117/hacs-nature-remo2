@@ -21,6 +21,9 @@ async def async_setup_entry(hass, entry, async_add_devices):
     """Setup sensor platform."""
     LOGGER.debug("Setting up sensor platform")
     # Use config entry
+    if DOMAIN not in hass.data or entry.entry_id not in hass.data[DOMAIN]:
+        LOGGER.error(f"Coordinator not found for entry {entry.entry_id}")
+        return
     coordinator: HacsNatureRemoDataUpdateCoordinator = hass.data[DOMAIN][entry.entry_id]
     _data: PluginDataDict = coordinator.data
     devices: dict[str, remo.Device] = _data.get(KEY_DEVICES)

@@ -1,0 +1,208 @@
+/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pytest_asyncio/plugin.py:217: PytestDeprecationWarning: The configuration option "asyncio_default_fixture_loop_scope" is unset.
+The event loop scope for asynchronous fixtures will default to the fixture caching scope. Future versions of pytest-asyncio will default the loop scope for asynchronous fixtures to function scope. Set the default fixture loop scope explicitly in order to avoid unexpected behavior in the future. Valid fixture loop scopes are: "function", "class", "module", "package", "session"
+
+  warnings.warn(PytestDeprecationWarning(_DEFAULT_FIXTURE_LOOP_SCOPE_UNSET))
+============================= test session starts ==============================
+platform linux -- Python 3.13.1, pytest-8.3.5, pluggy-1.6.0 -- /home/kiyama/programs/mine/hacs-nature-remo2/.venv/bin/python3
+cachedir: .pytest_cache
+rootdir: /home/kiyama/programs/mine/hacs-nature-remo2
+configfile: pytest.ini
+plugins: cov-6.0.0, asyncio-0.26.0, github-actions-annotate-failures-0.3.0, requests-mock-1.12.1, sugar-1.0.0, xdist-3.6.1, timeout-2.3.1, unordered-0.6.1, pytest_freezer-0.4.9, syrupy-4.8.1, picked-0.5.1, anyio-4.9.0, homeassistant-custom-component-0.13.236, socket-0.7.0, respx-0.22.0, aiohttp-1.1.0
+asyncio: mode=Mode.AUTO, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 9 items
+
+tests/test_api.py::test_api_client_initialization PASSED                 [ 11%]
+tests/test_api.py::test_api_methods_with_mocks PASSED                    [ 22%]
+tests/test_api.py::test_api_error_handling PASSED                        [ 33%]
+tests/test_config_flow.py::test_successful_config_flow FAILED            [ 44%]
+tests/test_config_flow.py::test_failed_config_flow FAILED                [ 55%]
+tests/test_config_flow.py::test_options_flow FAILED                      [ 66%]
+tests/test_init.py::test_setup_unload_and_reload_entry PASSED            [ 77%]
+tests/test_init.py::test_setup_entry_exception PASSED                    [ 88%]
+tests/test_switch.py::test_switch_services FAILED                        [100%]
+
+=================================== FAILURES ===================================
+_________________________ test_successful_config_flow __________________________
+tests/test_config_flow.py:55: in test_successful_config_flow
+    assert result["type"] == data_entry_flow.RESULT_TYPE_FORM
+E   AttributeError: module 'homeassistant.data_entry_flow' has no attribute 'RESULT_TYPE_FORM'
+---------------------------- Captured stderr setup -----------------------------
+DEBUG:asyncio:Using selector: EpollSelector
+DEBUG:homeassistant.helpers.restore_state:Not creating cache - no saved states found
+------------------------------ Captured log setup ------------------------------
+DEBUG    asyncio:selector_events.py:64 Using selector: EpollSelector
+DEBUG    homeassistant.helpers.restore_state:restore_state.py:147 Not creating cache - no saved states found
+----------------------------- Captured stderr call -----------------------------
+INFO:homeassistant.loader:Loaded hacs_nature_remo from custom_components.hacs_nature_remo
+WARNING:homeassistant.loader:We found a custom integration hacs_nature_remo which has not been tested by Home Assistant. This component might cause stability problems, be sure to disable it if you experience issues with Home Assistant
+DEBUG:homeassistant.loader:Importing platforms for hacs_nature_remo executor=['config_flow'] loop=[] took 0.00s
+DEBUG:custom_components.hacs_nature_remo.domain:
+------------------------------ Captured log call -------------------------------
+INFO     homeassistant.loader:loader.py:773 Loaded hacs_nature_remo from custom_components.hacs_nature_remo
+WARNING  homeassistant.loader:loader.py:689 We found a custom integration hacs_nature_remo which has not been tested by Home Assistant. This component might cause stability problems, be sure to disable it if you experience issues with Home Assistant
+DEBUG    homeassistant.loader:loader.py:1170 Importing platforms for hacs_nature_remo executor=['config_flow'] loop=[] took 0.00s
+DEBUG    custom_components.hacs_nature_remo.domain:config_flow.py:54
+--------------------------- Captured stderr teardown ---------------------------
+DEBUG:homeassistant.core:Bus:Handling <Event homeassistant_stop[L]>
+DEBUG:homeassistant.core:Bus:Handling <Event homeassistant_final_write[L]>
+DEBUG:homeassistant.core:Bus:Handling <Event homeassistant_close[L]>
+DEBUG:asyncio:Close <_UnixSelectorEventLoop running=False closed=False debug=True>
+---------------------------- Captured log teardown -----------------------------
+DEBUG    homeassistant.core:core.py:1547 Bus:Handling <Event homeassistant_stop[L]>
+DEBUG    homeassistant.core:core.py:1547 Bus:Handling <Event homeassistant_final_write[L]>
+DEBUG    homeassistant.core:core.py:1547 Bus:Handling <Event homeassistant_close[L]>
+DEBUG    asyncio:base_events.py:743 Close <_UnixSelectorEventLoop running=False closed=False debug=True>
+___________________________ test_failed_config_flow ____________________________
+tests/test_config_flow.py:83: in test_failed_config_flow
+    assert result["type"] == data_entry_flow.RESULT_TYPE_FORM
+E   AttributeError: module 'homeassistant.data_entry_flow' has no attribute 'RESULT_TYPE_FORM'
+---------------------------- Captured stderr setup -----------------------------
+DEBUG:asyncio:Using selector: EpollSelector
+DEBUG:homeassistant.helpers.restore_state:Not creating cache - no saved states found
+------------------------------ Captured log setup ------------------------------
+DEBUG    asyncio:selector_events.py:64 Using selector: EpollSelector
+DEBUG    homeassistant.helpers.restore_state:restore_state.py:147 Not creating cache - no saved states found
+----------------------------- Captured stderr call -----------------------------
+INFO:homeassistant.loader:Loaded hacs_nature_remo from custom_components.hacs_nature_remo
+WARNING:homeassistant.loader:We found a custom integration hacs_nature_remo which has not been tested by Home Assistant. This component might cause stability problems, be sure to disable it if you experience issues with Home Assistant
+DEBUG:homeassistant.loader:Importing platforms for hacs_nature_remo executor=[] loop=['config_flow'] took 0.00s
+DEBUG:custom_components.hacs_nature_remo.domain:
+------------------------------ Captured log call -------------------------------
+INFO     homeassistant.loader:loader.py:773 Loaded hacs_nature_remo from custom_components.hacs_nature_remo
+WARNING  homeassistant.loader:loader.py:689 We found a custom integration hacs_nature_remo which has not been tested by Home Assistant. This component might cause stability problems, be sure to disable it if you experience issues with Home Assistant
+DEBUG    homeassistant.loader:loader.py:1170 Importing platforms for hacs_nature_remo executor=[] loop=['config_flow'] took 0.00s
+DEBUG    custom_components.hacs_nature_remo.domain:config_flow.py:54
+--------------------------- Captured stderr teardown ---------------------------
+DEBUG:homeassistant.core:Bus:Handling <Event homeassistant_stop[L]>
+DEBUG:homeassistant.core:Bus:Handling <Event homeassistant_final_write[L]>
+DEBUG:homeassistant.core:Bus:Handling <Event homeassistant_close[L]>
+DEBUG:asyncio:Close <_UnixSelectorEventLoop running=False closed=False debug=True>
+---------------------------- Captured log teardown -----------------------------
+DEBUG    homeassistant.core:core.py:1547 Bus:Handling <Event homeassistant_stop[L]>
+DEBUG    homeassistant.core:core.py:1547 Bus:Handling <Event homeassistant_final_write[L]>
+DEBUG    homeassistant.core:core.py:1547 Bus:Handling <Event homeassistant_close[L]>
+DEBUG    asyncio:base_events.py:743 Close <_UnixSelectorEventLoop running=False closed=False debug=True>
+______________________________ test_options_flow _______________________________
+tests/test_config_flow.py:107: in test_options_flow
+    assert result["type"] == data_entry_flow.RESULT_TYPE_FORM
+E   AttributeError: module 'homeassistant.data_entry_flow' has no attribute 'RESULT_TYPE_FORM'
+---------------------------- Captured stderr setup -----------------------------
+DEBUG:asyncio:Using selector: EpollSelector
+DEBUG:homeassistant.helpers.restore_state:Not creating cache - no saved states found
+------------------------------ Captured log setup ------------------------------
+DEBUG    asyncio:selector_events.py:64 Using selector: EpollSelector
+DEBUG    homeassistant.helpers.restore_state:restore_state.py:147 Not creating cache - no saved states found
+----------------------------- Captured stderr call -----------------------------
+INFO:homeassistant.loader:Loaded hacs_nature_remo from custom_components.hacs_nature_remo
+WARNING:homeassistant.loader:We found a custom integration hacs_nature_remo which has not been tested by Home Assistant. This component might cause stability problems, be sure to disable it if you experience issues with Home Assistant
+DEBUG:homeassistant.helpers.translation:Cache miss for en: {'hacs_nature_remo'}
+DEBUG:homeassistant.loader:Component hacs_nature_remo import took 0.000 seconds (loaded_executor=False)
+DEBUG:homeassistant.setup:Setting up hacs_nature_remo
+DEBUG:homeassistant.loader:Importing platforms for hacs_nature_remo executor=[] loop=['config_flow'] took 0.00s
+DEBUG:homeassistant.core:Bus:Handling <Event component_loaded[L]: component=hacs_nature_remo>
+WARNING:homeassistant.helpers.frame:Detected that custom integration 'hacs_nature_remo' sets option flow config_entry explicitly, which is deprecated at custom_components/hacs_nature_remo/config_flow.py, line 85: self.config_entry = config_entry. This will stop working in Home Assistant 2025.12, please create a bug report at https://github.com/kkiyama117/hacs-nature-remo2/issues
+------------------------------ Captured log call -------------------------------
+INFO     homeassistant.loader:loader.py:773 Loaded hacs_nature_remo from custom_components.hacs_nature_remo
+WARNING  homeassistant.loader:loader.py:689 We found a custom integration hacs_nature_remo which has not been tested by Home Assistant. This component might cause stability problems, be sure to disable it if you experience issues with Home Assistant
+DEBUG    homeassistant.helpers.translation:translation.py:214 Cache miss for en: {'hacs_nature_remo'}
+DEBUG    homeassistant.loader:loader.py:982 Component hacs_nature_remo import took 0.000 seconds (loaded_executor=False)
+DEBUG    homeassistant.setup:setup.py:390 Setting up hacs_nature_remo
+DEBUG    homeassistant.loader:loader.py:1170 Importing platforms for hacs_nature_remo executor=[] loop=['config_flow'] took 0.00s
+DEBUG    homeassistant.core:core.py:1547 Bus:Handling <Event component_loaded[L]: component=hacs_nature_remo>
+WARNING  homeassistant.helpers.frame:frame.py:335 Detected that custom integration 'hacs_nature_remo' sets option flow config_entry explicitly, which is deprecated at custom_components/hacs_nature_remo/config_flow.py, line 85: self.config_entry = config_entry. This will stop working in Home Assistant 2025.12, please create a bug report at https://github.com/kkiyama117/hacs-nature-remo2/issues
+--------------------------- Captured stderr teardown ---------------------------
+ERROR:homeassistant.config_entries:Error unloading entry Mock Title for hacs_nature_remo
+Traceback (most recent call last):
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/homeassistant/config_entries.py", line 965, in async_unload
+    result = await component.async_unload_entry(hass, self)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/custom_components/hacs_nature_remo/__init__.py", line 61, in async_unload_entry
+    coordinator = hass.data[DOMAIN][entry.entry_id]
+                  ~~~~~~~~~^^^^^^^^
+KeyError: 'hacs_nature_remo'
+DEBUG:homeassistant.core:Bus:Handling <Event homeassistant_stop[L]>
+DEBUG:homeassistant.core:Bus:Handling <Event homeassistant_final_write[L]>
+DEBUG:homeassistant.core:Bus:Handling <Event homeassistant_close[L]>
+DEBUG:asyncio:Close <_UnixSelectorEventLoop running=False closed=False debug=True>
+---------------------------- Captured log teardown -----------------------------
+ERROR    homeassistant.config_entries:config_entries.py:983 Error unloading entry Mock Title for hacs_nature_remo
+Traceback (most recent call last):
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/homeassistant/config_entries.py", line 965, in async_unload
+    result = await component.async_unload_entry(hass, self)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/custom_components/hacs_nature_remo/__init__.py", line 61, in async_unload_entry
+    coordinator = hass.data[DOMAIN][entry.entry_id]
+                  ~~~~~~~~~^^^^^^^^
+KeyError: 'hacs_nature_remo'
+DEBUG    homeassistant.core:core.py:1547 Bus:Handling <Event homeassistant_stop[L]>
+DEBUG    homeassistant.core:core.py:1547 Bus:Handling <Event homeassistant_final_write[L]>
+DEBUG    homeassistant.core:core.py:1547 Bus:Handling <Event homeassistant_close[L]>
+DEBUG    asyncio:base_events.py:743 Close <_UnixSelectorEventLoop running=False closed=False debug=True>
+_____________________________ test_switch_services _____________________________
+tests/test_switch.py:31: in test_switch_services
+    assert await async_setup_entry(hass, config_entry)
+custom_components/hacs_nature_remo/__init__.py:43: in async_setup_entry
+    coordinator: HacsNatureRemoDataUpdateCoordinator = await _common_setup_flow(
+custom_components/hacs_nature_remo/__init__.py:88: in _common_setup_flow
+    raise ConfigEntryNotReady
+E   homeassistant.exceptions.ConfigEntryNotReady: None
+---------------------------- Captured stderr setup -----------------------------
+DEBUG:asyncio:Using selector: EpollSelector
+DEBUG:homeassistant.helpers.restore_state:Not creating cache - no saved states found
+------------------------------ Captured log setup ------------------------------
+DEBUG    asyncio:selector_events.py:64 Using selector: EpollSelector
+DEBUG    homeassistant.helpers.restore_state:restore_state.py:147 Not creating cache - no saved states found
+----------------------------- Captured stderr call -----------------------------
+INFO:custom_components.hacs_nature_remo.domain:
+-------------------------------------------------------------------
+Nature Remo integration
+Version: 0.1.0
+This is a custom integration!
+If you have any issues with this you need to open an issue here:
+https://github.com/kkiyama117/hacs-nature-remo2/issues
+-------------------------------------------------------------------
+
+DEBUG:custom_components.hacs_nature_remo.domain:Try to fetch appliance and device list from API
+ERROR:custom_components.hacs_nature_remo.api:Something really wrong happened! - Task <Task pending name='Task-58' coro=<TCPConnector._resolve_host_with_throttle() running at /home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/aiohttp/connector.py:1026> created at /home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/aiohttp/connector.py:986> got Future <Future pending> attached to a different loop
+ERROR:custom_components.hacs_nature_remo.api:Json Error: Task <Task pending name='Task-58' coro=<TCPConnector._resolve_host_with_throttle() running at /home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/aiohttp/connector.py:1026> created at /home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/aiohttp/connector.py:986> got Future <Future pending> attached to a different loop
+ERROR:custom_components.hacs_nature_remo.api:Error: 
+ERROR:custom_components.hacs_nature_remo.api:Something really wrong happened! - Task <Task pending name='Task-59' coro=<TCPConnector._resolve_host_with_throttle() running at /home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/aiohttp/connector.py:1026> created at /home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/aiohttp/connector.py:986> got Future <Future pending> attached to a different loop
+ERROR:custom_components.hacs_nature_remo.api:Json Error: Task <Task pending name='Task-59' coro=<TCPConnector._resolve_host_with_throttle() running at /home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/aiohttp/connector.py:1026> created at /home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/aiohttp/connector.py:986> got Future <Future pending> attached to a different loop
+ERROR:custom_components.hacs_nature_remo.api:Error: 
+ERROR:custom_components.hacs_nature_remo.domain:Error fetching hacs_nature_remo data: 
+DEBUG:custom_components.hacs_nature_remo.domain:Finished fetching hacs_nature_remo data in 0.007 seconds (success: False)
+------------------------------ Captured log call -------------------------------
+INFO     custom_components.hacs_nature_remo.domain:__init__.py:39 
+-------------------------------------------------------------------
+Nature Remo integration
+Version: 0.1.0
+This is a custom integration!
+If you have any issues with this you need to open an issue here:
+https://github.com/kkiyama117/hacs-nature-remo2/issues
+-------------------------------------------------------------------
+
+DEBUG    custom_components.hacs_nature_remo.domain:coordinators.py:37 Try to fetch appliance and device list from API
+ERROR    custom_components.hacs_nature_remo.api:__init__.py:507 Something really wrong happened! - Task <Task pending name='Task-58' coro=<TCPConnector._resolve_host_with_throttle() running at /home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/aiohttp/connector.py:1026> created at /home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/aiohttp/connector.py:986> got Future <Future pending> attached to a different loop
+ERROR    custom_components.hacs_nature_remo.api:__init__.py:444 Json Error: Task <Task pending name='Task-58' coro=<TCPConnector._resolve_host_with_throttle() running at /home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/aiohttp/connector.py:1026> created at /home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/aiohttp/connector.py:986> got Future <Future pending> attached to a different loop
+ERROR    custom_components.hacs_nature_remo.api:__init__.py:79 Error: 
+ERROR    custom_components.hacs_nature_remo.api:__init__.py:507 Something really wrong happened! - Task <Task pending name='Task-59' coro=<TCPConnector._resolve_host_with_throttle() running at /home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/aiohttp/connector.py:1026> created at /home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/aiohttp/connector.py:986> got Future <Future pending> attached to a different loop
+ERROR    custom_components.hacs_nature_remo.api:__init__.py:444 Json Error: Task <Task pending name='Task-59' coro=<TCPConnector._resolve_host_with_throttle() running at /home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/aiohttp/connector.py:1026> created at /home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/aiohttp/connector.py:986> got Future <Future pending> attached to a different loop
+ERROR    custom_components.hacs_nature_remo.api:__init__.py:196 Error: 
+ERROR    custom_components.hacs_nature_remo.domain:update_coordinator.py:412 Error fetching hacs_nature_remo data: 
+DEBUG    custom_components.hacs_nature_remo.domain:update_coordinator.py:460 Finished fetching hacs_nature_remo data in 0.007 seconds (success: False)
+--------------------------- Captured stderr teardown ---------------------------
+DEBUG:homeassistant.core:Bus:Handling <Event homeassistant_stop[L]>
+DEBUG:homeassistant.core:Bus:Handling <Event homeassistant_final_write[L]>
+DEBUG:homeassistant.core:Bus:Handling <Event homeassistant_close[L]>
+DEBUG:asyncio:Close <_UnixSelectorEventLoop running=False closed=False debug=True>
+---------------------------- Captured log teardown -----------------------------
+DEBUG    homeassistant.core:core.py:1547 Bus:Handling <Event homeassistant_stop[L]>
+DEBUG    homeassistant.core:core.py:1547 Bus:Handling <Event homeassistant_final_write[L]>
+DEBUG    homeassistant.core:core.py:1547 Bus:Handling <Event homeassistant_close[L]>
+DEBUG    asyncio:base_events.py:743 Close <_UnixSelectorEventLoop running=False closed=False debug=True>
+=========================== short test summary info ============================
+FAILED tests/test_config_flow.py::test_successful_config_flow - AttributeErro...
+FAILED tests/test_config_flow.py::test_failed_config_flow - AttributeError: m...
+FAILED tests/test_config_flow.py::test_options_flow - AttributeError: module ...
+FAILED tests/test_switch.py::test_switch_services - homeassistant.exceptions....
+========================= 4 failed, 5 passed in 0.59s ==========================

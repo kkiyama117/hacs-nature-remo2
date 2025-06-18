@@ -149,4 +149,71 @@ tracemalloc.start()
 current, peak = tracemalloc.get_traced_memory()
 _LOGGER.debug("Current memory: %.1f MB, Peak: %.1f MB", 
               current / 10**6, peak / 10**6)
-```
+```# Debug Log
+
+## 2025-06-18: Pytest Error Resolution
+
+### Issue
+Pytest was failing with multiple errors:
+- AttributeError: `async_get_data` method not found in API client
+- Async tests being skipped due to missing configuration
+- Import errors with test fixtures
+
+### Root Cause
+1. Tests were based on a generic template and didn't match the actual Nature Remo API implementation
+2. Wrong constructor arguments for API client
+3. Missing pytest-asyncio configuration
+4. Mocking non-existent methods
+
+### Solution
+1. Updated API client instantiation to use correct constructor: `HacsNatureRemoApiClient(token, session)`
+2. Added pytest-asyncio configuration with `asyncio_mode = auto`
+3. Updated mock methods to match actual API: `get_user()`, `get_devices()`, `get_appliances()`
+4. Fixed object vs dictionary access patterns in tests
+5. Added custom integration enabler fixture
+
+### Result
+- 6 out of 9 tests now passing
+- Remaining 3 failures are due to mock data structure mismatches
+- Tests are properly executing with async support
+
+### Time Spent
+Approximately 45 minutes to diagnose and fix the core issues
+
+### Key Learning
+When working with Home Assistant custom components, tests must match the actual API implementation rather than using generic templates. The Nature Remo API returns typed objects (User, Device, Appliance) not dictionaries.# Debug Log
+
+## 2025-06-18: Complete Pytest Fix
+
+### Issue
+Multiple pytest failures after fixing async_generator error:
+- Config flow tests failing on assertions
+- Switch test failing with AttributeError
+- Init test error in teardown with ConfigEntryState
+
+### Root Causes
+1. Test assertions didn't match actual config schema defaults
+2. Switch test was mocking the wrong functions
+3. Init test wasn't properly managing config entry states
+
+### Solutions
+1. Updated config flow assertions to include default heat/cool values
+2. Rewrote switch tests to test entities directly with proper mocks
+3. Fixed async_reload_entry to use HA's built-in reload method
+4. Added proper config entry registration in tests
+
+### Result
+- All 11 tests passing
+- No more async_generator errors
+- Switch module at 95% coverage
+- Proper test isolation achieved
+
+### Time Spent
+Approximately 30 minutes using orchestrator workflow
+
+### Key Learning
+When testing Home Assistant integrations:
+- Use built-in HA methods for config operations
+- Test entities directly for better coverage
+- Ensure mock data matches actual API structure
+- State management is critical for config entry tests

@@ -1,0 +1,642 @@
+/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pytest_asyncio/plugin.py:217: PytestDeprecationWarning: The configuration option "asyncio_default_fixture_loop_scope" is unset.
+The event loop scope for asynchronous fixtures will default to the fixture caching scope. Future versions of pytest-asyncio will default the loop scope for asynchronous fixtures to function scope. Set the default fixture loop scope explicitly in order to avoid unexpected behavior in the future. Valid fixture loop scopes are: "function", "class", "module", "package", "session"
+
+  warnings.warn(PytestDeprecationWarning(_DEFAULT_FIXTURE_LOOP_SCOPE_UNSET))
+============================= test session starts ==============================
+platform linux -- Python 3.13.1, pytest-8.3.5, pluggy-1.6.0 -- /home/kiyama/programs/mine/hacs-nature-remo2/.venv/bin/python3
+cachedir: .pytest_cache
+rootdir: /home/kiyama/programs/mine/hacs-nature-remo2
+configfile: pytest.ini
+plugins: cov-6.0.0, asyncio-0.26.0, github-actions-annotate-failures-0.3.0, requests-mock-1.12.1, sugar-1.0.0, xdist-3.6.1, timeout-2.3.1, unordered-0.6.1, pytest_freezer-0.4.9, syrupy-4.8.1, picked-0.5.1, anyio-4.9.0, homeassistant-custom-component-0.13.236, socket-0.7.0, respx-0.22.0, aiohttp-1.1.0
+asyncio: mode=Mode.AUTO, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 9 items
+
+tests/test_api.py::test_api_client_initialization PASSED                 [ 11%]
+tests/test_api.py::test_api_methods_with_mocks PASSED                    [ 22%]
+tests/test_api.py::test_api_error_handling PASSED                        [ 33%]
+tests/test_config_flow.py::test_successful_config_flow FAILED            [ 44%]
+tests/test_config_flow.py::test_failed_config_flow PASSED                [ 55%]
+tests/test_config_flow.py::test_options_flow FAILED                      [ 66%]
+tests/test_init.py::test_setup_unload_and_reload_entry PASSED            [ 77%]
+tests/test_init.py::test_setup_unload_and_reload_entry ERROR             [ 77%]
+tests/test_init.py::test_setup_entry_exception PASSED                    [ 88%]
+tests/test_switch.py::test_switch_services FAILED                        [100%]
+
+==================================== ERRORS ====================================
+___________ ERROR at teardown of test_setup_unload_and_reload_entry ____________
+.venv/lib/python3.13/site-packages/pytest_asyncio/plugin.py:363: in finalizer
+    event_loop.run_until_complete(task)
+../../../.local/share/uv/python/cpython-3.13.1-linux-x86_64-gnu/lib/python3.13/asyncio/base_events.py:720: in run_until_complete
+    return future.result()
+.venv/lib/python3.13/site-packages/pytest_asyncio/plugin.py:354: in async_finalizer
+    await gen_obj.__anext__()  # type: ignore[union-attr]
+.venv/lib/python3.13/site-packages/pytest_homeassistant_custom_component/plugins.py:648: in hass
+    raise ex
+.venv/lib/python3.13/site-packages/homeassistant/config_entries.py:2574: in async_forward_entry_setups
+    raise OperationNotAllowed(
+E   homeassistant.config_entries.OperationNotAllowed: The config entry 'Mock Title' (hacs_nature_remo) with entry_id 'test' cannot forward setup for ['sensor', 'switch', 'climate'] because it is in state ConfigEntryState.NOT_LOADED, but needs to be in the ConfigEntryState.LOADED state
+---------------------------- Captured stderr setup -----------------------------
+DEBUG:asyncio:Using selector: EpollSelector
+DEBUG:homeassistant.helpers.restore_state:Not creating cache - no saved states found
+------------------------------ Captured log setup ------------------------------
+DEBUG    asyncio:selector_events.py:64 Using selector: EpollSelector
+DEBUG    homeassistant.helpers.restore_state:restore_state.py:147 Not creating cache - no saved states found
+----------------------------- Captured stderr call -----------------------------
+INFO:custom_components.hacs_nature_remo.domain:
+-------------------------------------------------------------------
+Nature Remo integration
+Version: 0.1.0
+This is a custom integration!
+If you have any issues with this you need to open an issue here:
+https://github.com/kkiyama117/hacs-nature-remo2/issues
+-------------------------------------------------------------------
+
+DEBUG:custom_components.hacs_nature_remo.domain:Try to fetch appliance and device list from API
+DEBUG:custom_components.hacs_nature_remo.domain:Finish fetching data from remote API: {'user': <Mock id='140112322623008'>, 'appliances': {}, 'devices': {'device1': <Mock id='140112322612256'>}}
+DEBUG:custom_components.hacs_nature_remo.domain:Finished fetching hacs_nature_remo data in 0.000 seconds (success: True)
+INFO:homeassistant.loader:Loaded hacs_nature_remo from custom_components.hacs_nature_remo
+WARNING:homeassistant.loader:We found a custom integration hacs_nature_remo which has not been tested by Home Assistant. This component might cause stability problems, be sure to disable it if you experience issues with Home Assistant
+DEBUG:custom_components.hacs_nature_remo.domain:Try to fetch appliance and device list from API
+DEBUG:custom_components.hacs_nature_remo.domain:Finish fetching data from remote API: {'user': <Mock id='140112322623008'>, 'appliances': {}, 'devices': {'device1': <Mock id='140112322612256'>}}
+DEBUG:custom_components.hacs_nature_remo.domain:Finished fetching hacs_nature_remo data in 0.000 seconds (success: True)
+DEBUG:homeassistant.loader:Importing platforms for hacs_nature_remo executor=['sensor', 'switch', 'climate'] loop=[] took 0.01s
+ERROR:homeassistant:Error doing job: Task exception was never retrieved (None):   File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/bin/pytest", line 10, in <module>
+    sys.exit(console_main())
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/config/__init__.py", line 201, in console_main
+    code = main()
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/config/__init__.py", line 175, in main
+    ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/main.py", line 330, in pytest_cmdline_main
+    return wrap_session(config, _main)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/main.py", line 283, in wrap_session
+    session.exitstatus = doit(config, session) or 0
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/main.py", line 337, in _main
+    config.hook.pytest_runtestloop(session=session)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/main.py", line 362, in pytest_runtestloop
+    item.config.hook.pytest_runtest_protocol(item=item, nextitem=nextitem)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/runner.py", line 113, in pytest_runtest_protocol
+    runtestprotocol(item, nextitem=nextitem)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/runner.py", line 132, in runtestprotocol
+    reports.append(call_and_report(item, "call", log))
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/runner.py", line 241, in call_and_report
+    call = CallInfo.from_call(
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/runner.py", line 341, in from_call
+    result: TResult | None = func()
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/runner.py", line 242, in <lambda>
+    lambda: runtest_hook(item=item, **kwds), when=when, reraise=reraise
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/runner.py", line 174, in pytest_runtest_call
+    item.runtest()
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pytest_asyncio/plugin.py", line 549, in runtest
+    super().runtest()
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/python.py", line 1627, in runtest
+    self.ihook.pytest_pyfunc_call(pyfuncitem=self)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/python.py", line 159, in pytest_pyfunc_call
+    result = testfunction(**testargs)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pytest_asyncio/plugin.py", line 1069, in inner
+    _loop.run_until_complete(task)
+  File "/home/kiyama/.local/share/uv/python/cpython-3.13.1-linux-x86_64-gnu/lib/python3.13/asyncio/base_events.py", line 707, in run_until_complete
+    self.run_forever()
+  File "/home/kiyama/.local/share/uv/python/cpython-3.13.1-linux-x86_64-gnu/lib/python3.13/asyncio/base_events.py", line 678, in run_forever
+    self._run_once()
+  File "/home/kiyama/.local/share/uv/python/cpython-3.13.1-linux-x86_64-gnu/lib/python3.13/asyncio/base_events.py", line 2025, in _run_once
+    handle._run()
+  File "/home/kiyama/.local/share/uv/python/cpython-3.13.1-linux-x86_64-gnu/lib/python3.13/asyncio/events.py", line 89, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/tests/test_init.py", line 36, in test_setup_unload_and_reload_entry
+    assert await async_setup_entry(hass, config_entry)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/custom_components/hacs_nature_remo/__init__.py", line 50, in async_setup_entry
+    entry.async_create_background_task(
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/homeassistant/config_entries.py", line 1320, in async_create_background_task
+    task = hass.async_create_background_task(target, name, eager_start)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/homeassistant/core.py", line 864, in async_create_background_task
+    task = create_eager_task(target, name=name, loop=self.loop)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/homeassistant/util/async_.py", line 45, in create_eager_task
+    return Task(coro, loop=loop, name=name, eager_start=True)
+Traceback (most recent call last):
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/homeassistant/config_entries.py", line 2574, in async_forward_entry_setups
+    raise OperationNotAllowed(
+    ...<4 lines>...
+    )
+homeassistant.config_entries.OperationNotAllowed: The config entry 'Mock Title' (hacs_nature_remo) with entry_id 'test' cannot forward setup for ['sensor', 'switch', 'climate'] because it is in state ConfigEntryState.NOT_LOADED, but needs to be in the ConfigEntryState.LOADED state
+ERROR:homeassistant:Error doing job: Task exception was never retrieved (None):   File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/bin/pytest", line 10, in <module>
+    sys.exit(console_main())
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/config/__init__.py", line 201, in console_main
+    code = main()
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/config/__init__.py", line 175, in main
+    ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/main.py", line 330, in pytest_cmdline_main
+    return wrap_session(config, _main)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/main.py", line 283, in wrap_session
+    session.exitstatus = doit(config, session) or 0
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/main.py", line 337, in _main
+    config.hook.pytest_runtestloop(session=session)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/main.py", line 362, in pytest_runtestloop
+    item.config.hook.pytest_runtest_protocol(item=item, nextitem=nextitem)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/runner.py", line 113, in pytest_runtest_protocol
+    runtestprotocol(item, nextitem=nextitem)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/runner.py", line 132, in runtestprotocol
+    reports.append(call_and_report(item, "call", log))
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/runner.py", line 241, in call_and_report
+    call = CallInfo.from_call(
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/runner.py", line 341, in from_call
+    result: TResult | None = func()
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/runner.py", line 242, in <lambda>
+    lambda: runtest_hook(item=item, **kwds), when=when, reraise=reraise
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/runner.py", line 174, in pytest_runtest_call
+    item.runtest()
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pytest_asyncio/plugin.py", line 549, in runtest
+    super().runtest()
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/python.py", line 1627, in runtest
+    self.ihook.pytest_pyfunc_call(pyfuncitem=self)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/python.py", line 159, in pytest_pyfunc_call
+    result = testfunction(**testargs)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pytest_asyncio/plugin.py", line 1069, in inner
+    _loop.run_until_complete(task)
+  File "/home/kiyama/.local/share/uv/python/cpython-3.13.1-linux-x86_64-gnu/lib/python3.13/asyncio/base_events.py", line 707, in run_until_complete
+    self.run_forever()
+  File "/home/kiyama/.local/share/uv/python/cpython-3.13.1-linux-x86_64-gnu/lib/python3.13/asyncio/base_events.py", line 678, in run_forever
+    self._run_once()
+  File "/home/kiyama/.local/share/uv/python/cpython-3.13.1-linux-x86_64-gnu/lib/python3.13/asyncio/base_events.py", line 2025, in _run_once
+    handle._run()
+  File "/home/kiyama/.local/share/uv/python/cpython-3.13.1-linux-x86_64-gnu/lib/python3.13/asyncio/events.py", line 89, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/tests/test_init.py", line 44, in test_setup_unload_and_reload_entry
+    assert await async_reload_entry(hass, config_entry) is None
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/custom_components/hacs_nature_remo/__init__.py", line 96, in async_reload_entry
+    await async_setup_entry(hass, entry)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/custom_components/hacs_nature_remo/__init__.py", line 50, in async_setup_entry
+    entry.async_create_background_task(
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/homeassistant/config_entries.py", line 1320, in async_create_background_task
+    task = hass.async_create_background_task(target, name, eager_start)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/homeassistant/core.py", line 864, in async_create_background_task
+    task = create_eager_task(target, name=name, loop=self.loop)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/homeassistant/util/async_.py", line 45, in create_eager_task
+    return Task(coro, loop=loop, name=name, eager_start=True)
+Traceback (most recent call last):
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/homeassistant/config_entries.py", line 2574, in async_forward_entry_setups
+    raise OperationNotAllowed(
+    ...<4 lines>...
+    )
+homeassistant.config_entries.OperationNotAllowed: The config entry 'Mock Title' (hacs_nature_remo) with entry_id 'test' cannot forward setup for ['sensor', 'switch', 'climate'] because it is in state ConfigEntryState.NOT_LOADED, but needs to be in the ConfigEntryState.LOADED state
+------------------------------ Captured log call -------------------------------
+INFO     custom_components.hacs_nature_remo.domain:__init__.py:39 
+-------------------------------------------------------------------
+Nature Remo integration
+Version: 0.1.0
+This is a custom integration!
+If you have any issues with this you need to open an issue here:
+https://github.com/kkiyama117/hacs-nature-remo2/issues
+-------------------------------------------------------------------
+
+DEBUG    custom_components.hacs_nature_remo.domain:coordinators.py:37 Try to fetch appliance and device list from API
+DEBUG    custom_components.hacs_nature_remo.domain:coordinators.py:56 Finish fetching data from remote API: {'user': <Mock id='140112322623008'>, 'appliances': {}, 'devices': {'device1': <Mock id='140112322612256'>}}
+DEBUG    custom_components.hacs_nature_remo.domain:update_coordinator.py:460 Finished fetching hacs_nature_remo data in 0.000 seconds (success: True)
+INFO     homeassistant.loader:loader.py:773 Loaded hacs_nature_remo from custom_components.hacs_nature_remo
+WARNING  homeassistant.loader:loader.py:689 We found a custom integration hacs_nature_remo which has not been tested by Home Assistant. This component might cause stability problems, be sure to disable it if you experience issues with Home Assistant
+DEBUG    custom_components.hacs_nature_remo.domain:coordinators.py:37 Try to fetch appliance and device list from API
+DEBUG    custom_components.hacs_nature_remo.domain:coordinators.py:56 Finish fetching data from remote API: {'user': <Mock id='140112322623008'>, 'appliances': {}, 'devices': {'device1': <Mock id='140112322612256'>}}
+DEBUG    custom_components.hacs_nature_remo.domain:update_coordinator.py:460 Finished fetching hacs_nature_remo data in 0.000 seconds (success: True)
+DEBUG    homeassistant.loader:loader.py:1170 Importing platforms for hacs_nature_remo executor=['sensor', 'switch', 'climate'] loop=[] took 0.01s
+ERROR    homeassistant:runner.py:103 Error doing job: Task exception was never retrieved (None):   File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/bin/pytest", line 10, in <module>
+    sys.exit(console_main())
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/config/__init__.py", line 201, in console_main
+    code = main()
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/config/__init__.py", line 175, in main
+    ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/main.py", line 330, in pytest_cmdline_main
+    return wrap_session(config, _main)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/main.py", line 283, in wrap_session
+    session.exitstatus = doit(config, session) or 0
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/main.py", line 337, in _main
+    config.hook.pytest_runtestloop(session=session)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/main.py", line 362, in pytest_runtestloop
+    item.config.hook.pytest_runtest_protocol(item=item, nextitem=nextitem)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/runner.py", line 113, in pytest_runtest_protocol
+    runtestprotocol(item, nextitem=nextitem)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/runner.py", line 132, in runtestprotocol
+    reports.append(call_and_report(item, "call", log))
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/runner.py", line 241, in call_and_report
+    call = CallInfo.from_call(
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/runner.py", line 341, in from_call
+    result: TResult | None = func()
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/runner.py", line 242, in <lambda>
+    lambda: runtest_hook(item=item, **kwds), when=when, reraise=reraise
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/runner.py", line 174, in pytest_runtest_call
+    item.runtest()
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pytest_asyncio/plugin.py", line 549, in runtest
+    super().runtest()
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/python.py", line 1627, in runtest
+    self.ihook.pytest_pyfunc_call(pyfuncitem=self)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/python.py", line 159, in pytest_pyfunc_call
+    result = testfunction(**testargs)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pytest_asyncio/plugin.py", line 1069, in inner
+    _loop.run_until_complete(task)
+  File "/home/kiyama/.local/share/uv/python/cpython-3.13.1-linux-x86_64-gnu/lib/python3.13/asyncio/base_events.py", line 707, in run_until_complete
+    self.run_forever()
+  File "/home/kiyama/.local/share/uv/python/cpython-3.13.1-linux-x86_64-gnu/lib/python3.13/asyncio/base_events.py", line 678, in run_forever
+    self._run_once()
+  File "/home/kiyama/.local/share/uv/python/cpython-3.13.1-linux-x86_64-gnu/lib/python3.13/asyncio/base_events.py", line 2025, in _run_once
+    handle._run()
+  File "/home/kiyama/.local/share/uv/python/cpython-3.13.1-linux-x86_64-gnu/lib/python3.13/asyncio/events.py", line 89, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/tests/test_init.py", line 36, in test_setup_unload_and_reload_entry
+    assert await async_setup_entry(hass, config_entry)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/custom_components/hacs_nature_remo/__init__.py", line 50, in async_setup_entry
+    entry.async_create_background_task(
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/homeassistant/config_entries.py", line 1320, in async_create_background_task
+    task = hass.async_create_background_task(target, name, eager_start)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/homeassistant/core.py", line 864, in async_create_background_task
+    task = create_eager_task(target, name=name, loop=self.loop)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/homeassistant/util/async_.py", line 45, in create_eager_task
+    return Task(coro, loop=loop, name=name, eager_start=True)
+Traceback (most recent call last):
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/homeassistant/config_entries.py", line 2574, in async_forward_entry_setups
+    raise OperationNotAllowed(
+    ...<4 lines>...
+    )
+homeassistant.config_entries.OperationNotAllowed: The config entry 'Mock Title' (hacs_nature_remo) with entry_id 'test' cannot forward setup for ['sensor', 'switch', 'climate'] because it is in state ConfigEntryState.NOT_LOADED, but needs to be in the ConfigEntryState.LOADED state
+ERROR    homeassistant:runner.py:103 Error doing job: Task exception was never retrieved (None):   File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/bin/pytest", line 10, in <module>
+    sys.exit(console_main())
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/config/__init__.py", line 201, in console_main
+    code = main()
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/config/__init__.py", line 175, in main
+    ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/main.py", line 330, in pytest_cmdline_main
+    return wrap_session(config, _main)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/main.py", line 283, in wrap_session
+    session.exitstatus = doit(config, session) or 0
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/main.py", line 337, in _main
+    config.hook.pytest_runtestloop(session=session)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/main.py", line 362, in pytest_runtestloop
+    item.config.hook.pytest_runtest_protocol(item=item, nextitem=nextitem)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/runner.py", line 113, in pytest_runtest_protocol
+    runtestprotocol(item, nextitem=nextitem)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/runner.py", line 132, in runtestprotocol
+    reports.append(call_and_report(item, "call", log))
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/runner.py", line 241, in call_and_report
+    call = CallInfo.from_call(
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/runner.py", line 341, in from_call
+    result: TResult | None = func()
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/runner.py", line 242, in <lambda>
+    lambda: runtest_hook(item=item, **kwds), when=when, reraise=reraise
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/runner.py", line 174, in pytest_runtest_call
+    item.runtest()
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pytest_asyncio/plugin.py", line 549, in runtest
+    super().runtest()
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/python.py", line 1627, in runtest
+    self.ihook.pytest_pyfunc_call(pyfuncitem=self)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pluggy/_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/python.py", line 159, in pytest_pyfunc_call
+    result = testfunction(**testargs)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pytest_asyncio/plugin.py", line 1069, in inner
+    _loop.run_until_complete(task)
+  File "/home/kiyama/.local/share/uv/python/cpython-3.13.1-linux-x86_64-gnu/lib/python3.13/asyncio/base_events.py", line 707, in run_until_complete
+    self.run_forever()
+  File "/home/kiyama/.local/share/uv/python/cpython-3.13.1-linux-x86_64-gnu/lib/python3.13/asyncio/base_events.py", line 678, in run_forever
+    self._run_once()
+  File "/home/kiyama/.local/share/uv/python/cpython-3.13.1-linux-x86_64-gnu/lib/python3.13/asyncio/base_events.py", line 2025, in _run_once
+    handle._run()
+  File "/home/kiyama/.local/share/uv/python/cpython-3.13.1-linux-x86_64-gnu/lib/python3.13/asyncio/events.py", line 89, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/tests/test_init.py", line 44, in test_setup_unload_and_reload_entry
+    assert await async_reload_entry(hass, config_entry) is None
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/custom_components/hacs_nature_remo/__init__.py", line 96, in async_reload_entry
+    await async_setup_entry(hass, entry)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/custom_components/hacs_nature_remo/__init__.py", line 50, in async_setup_entry
+    entry.async_create_background_task(
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/homeassistant/config_entries.py", line 1320, in async_create_background_task
+    task = hass.async_create_background_task(target, name, eager_start)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/homeassistant/core.py", line 864, in async_create_background_task
+    task = create_eager_task(target, name=name, loop=self.loop)
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/homeassistant/util/async_.py", line 45, in create_eager_task
+    return Task(coro, loop=loop, name=name, eager_start=True)
+Traceback (most recent call last):
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/homeassistant/config_entries.py", line 2574, in async_forward_entry_setups
+    raise OperationNotAllowed(
+    ...<4 lines>...
+    )
+homeassistant.config_entries.OperationNotAllowed: The config entry 'Mock Title' (hacs_nature_remo) with entry_id 'test' cannot forward setup for ['sensor', 'switch', 'climate'] because it is in state ConfigEntryState.NOT_LOADED, but needs to be in the ConfigEntryState.LOADED state
+--------------------------- Captured stderr teardown ---------------------------
+DEBUG:homeassistant.core:Bus:Handling <Event homeassistant_stop[L]>
+DEBUG:homeassistant.core:Bus:Handling <Event homeassistant_final_write[L]>
+DEBUG:homeassistant.core:Bus:Handling <Event homeassistant_close[L]>
+DEBUG:asyncio:Close <_UnixSelectorEventLoop running=False closed=False debug=True>
+---------------------------- Captured log teardown -----------------------------
+DEBUG    homeassistant.core:core.py:1547 Bus:Handling <Event homeassistant_stop[L]>
+DEBUG    homeassistant.core:core.py:1547 Bus:Handling <Event homeassistant_final_write[L]>
+DEBUG    homeassistant.core:core.py:1547 Bus:Handling <Event homeassistant_close[L]>
+DEBUG    asyncio:base_events.py:743 Close <_UnixSelectorEventLoop running=False closed=False debug=True>
+=================================== FAILURES ===================================
+_________________________ test_successful_config_flow __________________________
+tests/test_config_flow.py:69: in test_successful_config_flow
+    assert result["data"] == MOCK_CONFIG
+E   AssertionError: assert {'api_token':... 'heat': 23.0} == {'api_token': 'test_password'}
+E     
+E     Omitting 1 identical items, use -vv to show
+E     Left contains 2 more items:
+E     {'cool': 27.0, 'heat': 23.0}
+E     
+E     Full diff:
+E       {...
+E     
+E     ...Full output truncated (4 lines hidden), use '-vv' to show
+---------------------------- Captured stderr setup -----------------------------
+DEBUG:asyncio:Using selector: EpollSelector
+DEBUG:homeassistant.helpers.restore_state:Not creating cache - no saved states found
+------------------------------ Captured log setup ------------------------------
+DEBUG    asyncio:selector_events.py:64 Using selector: EpollSelector
+DEBUG    homeassistant.helpers.restore_state:restore_state.py:147 Not creating cache - no saved states found
+----------------------------- Captured stderr call -----------------------------
+INFO:homeassistant.loader:Loaded hacs_nature_remo from custom_components.hacs_nature_remo
+WARNING:homeassistant.loader:We found a custom integration hacs_nature_remo which has not been tested by Home Assistant. This component might cause stability problems, be sure to disable it if you experience issues with Home Assistant
+DEBUG:homeassistant.loader:Importing platforms for hacs_nature_remo executor=['config_flow'] loop=[] took 0.00s
+DEBUG:custom_components.hacs_nature_remo.domain:
+DEBUG:homeassistant.helpers.translation:Cache miss for en: {'hacs_nature_remo'}
+DEBUG:homeassistant.loader:Component hacs_nature_remo import took 0.000 seconds (loaded_executor=False)
+DEBUG:homeassistant.setup:Setting up hacs_nature_remo
+DEBUG:homeassistant.core:Bus:Handling <Event component_loaded[L]: component=hacs_nature_remo>
+------------------------------ Captured log call -------------------------------
+INFO     homeassistant.loader:loader.py:773 Loaded hacs_nature_remo from custom_components.hacs_nature_remo
+WARNING  homeassistant.loader:loader.py:689 We found a custom integration hacs_nature_remo which has not been tested by Home Assistant. This component might cause stability problems, be sure to disable it if you experience issues with Home Assistant
+DEBUG    homeassistant.loader:loader.py:1170 Importing platforms for hacs_nature_remo executor=['config_flow'] loop=[] took 0.00s
+DEBUG    custom_components.hacs_nature_remo.domain:config_flow.py:54 
+DEBUG    homeassistant.helpers.translation:translation.py:214 Cache miss for en: {'hacs_nature_remo'}
+DEBUG    homeassistant.loader:loader.py:982 Component hacs_nature_remo import took 0.000 seconds (loaded_executor=False)
+DEBUG    homeassistant.setup:setup.py:390 Setting up hacs_nature_remo
+DEBUG    homeassistant.core:core.py:1547 Bus:Handling <Event component_loaded[L]: component=hacs_nature_remo>
+--------------------------- Captured stderr teardown ---------------------------
+ERROR:homeassistant.config_entries:Error unloading entry test_password for hacs_nature_remo
+Traceback (most recent call last):
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/homeassistant/config_entries.py", line 965, in async_unload
+    result = await component.async_unload_entry(hass, self)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/custom_components/hacs_nature_remo/__init__.py", line 61, in async_unload_entry
+    coordinator = hass.data[DOMAIN][entry.entry_id]
+                  ~~~~~~~~~^^^^^^^^
+KeyError: 'hacs_nature_remo'
+DEBUG:homeassistant.core:Bus:Handling <Event homeassistant_stop[L]>
+DEBUG:homeassistant.core:Bus:Handling <Event homeassistant_final_write[L]>
+DEBUG:pytest_homeassistant_custom_component.common:Writing data to core.config_entries: {'version': 1, 'minor_version': 5, 'key': 'core.config_entries', 'data_func': <bound method ConfigEntries._data_to_save of <homeassistant.config_entries.ConfigEntries object at 0x7f6e714a5cd0>>}
+DEBUG:homeassistant.core:Bus:Handling <Event homeassistant_close[L]>
+DEBUG:asyncio:Close <_UnixSelectorEventLoop running=False closed=False debug=True>
+---------------------------- Captured log teardown -----------------------------
+ERROR    homeassistant.config_entries:config_entries.py:983 Error unloading entry test_password for hacs_nature_remo
+Traceback (most recent call last):
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/homeassistant/config_entries.py", line 965, in async_unload
+    result = await component.async_unload_entry(hass, self)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/custom_components/hacs_nature_remo/__init__.py", line 61, in async_unload_entry
+    coordinator = hass.data[DOMAIN][entry.entry_id]
+                  ~~~~~~~~~^^^^^^^^
+KeyError: 'hacs_nature_remo'
+DEBUG    homeassistant.core:core.py:1547 Bus:Handling <Event homeassistant_stop[L]>
+DEBUG    homeassistant.core:core.py:1547 Bus:Handling <Event homeassistant_final_write[L]>
+DEBUG    pytest_homeassistant_custom_component.common:common.py:1475 Writing data to core.config_entries: {'version': 1, 'minor_version': 5, 'key': 'core.config_entries', 'data_func': <bound method ConfigEntries._data_to_save of <homeassistant.config_entries.ConfigEntries object at 0x7f6e714a5cd0>>}
+DEBUG    homeassistant.core:core.py:1547 Bus:Handling <Event homeassistant_close[L]>
+DEBUG    asyncio:base_events.py:743 Close <_UnixSelectorEventLoop running=False closed=False debug=True>
+______________________________ test_options_flow _______________________________
+tests/test_config_flow.py:122: in test_options_flow
+    assert entry.options == {SENSOR: False, SWITCH: True}
+E   AssertionError: assert mappingproxy(...imate': True}) == {'sensor': Fa...switch': True}
+E     
+E     Full diff:
+E     - {
+E     + mappingproxy({
+E     +     'climate': True,
+E           'sensor': False,
+E           'switch': True,
+E     - }
+E     + })
+---------------------------- Captured stderr setup -----------------------------
+DEBUG:asyncio:Using selector: EpollSelector
+DEBUG:homeassistant.helpers.restore_state:Not creating cache - no saved states found
+------------------------------ Captured log setup ------------------------------
+DEBUG    asyncio:selector_events.py:64 Using selector: EpollSelector
+DEBUG    homeassistant.helpers.restore_state:restore_state.py:147 Not creating cache - no saved states found
+----------------------------- Captured stderr call -----------------------------
+INFO:homeassistant.loader:Loaded hacs_nature_remo from custom_components.hacs_nature_remo
+WARNING:homeassistant.loader:We found a custom integration hacs_nature_remo which has not been tested by Home Assistant. This component might cause stability problems, be sure to disable it if you experience issues with Home Assistant
+DEBUG:homeassistant.loader:Component hacs_nature_remo import took 0.000 seconds (loaded_executor=False)
+DEBUG:homeassistant.setup:Setting up hacs_nature_remo
+DEBUG:homeassistant.loader:Importing platforms for hacs_nature_remo executor=[] loop=['config_flow'] took 0.00s
+DEBUG:homeassistant.core:Bus:Handling <Event component_loaded[L]: component=hacs_nature_remo>
+WARNING:homeassistant.helpers.frame:Detected that custom integration 'hacs_nature_remo' sets option flow config_entry explicitly, which is deprecated at custom_components/hacs_nature_remo/config_flow.py, line 85: self.config_entry = config_entry. This will stop working in Home Assistant 2025.12, please create a bug report at https://github.com/kkiyama117/hacs-nature-remo2/issues
+------------------------------ Captured log call -------------------------------
+INFO     homeassistant.loader:loader.py:773 Loaded hacs_nature_remo from custom_components.hacs_nature_remo
+WARNING  homeassistant.loader:loader.py:689 We found a custom integration hacs_nature_remo which has not been tested by Home Assistant. This component might cause stability problems, be sure to disable it if you experience issues with Home Assistant
+DEBUG    homeassistant.loader:loader.py:982 Component hacs_nature_remo import took 0.000 seconds (loaded_executor=False)
+DEBUG    homeassistant.setup:setup.py:390 Setting up hacs_nature_remo
+DEBUG    homeassistant.loader:loader.py:1170 Importing platforms for hacs_nature_remo executor=[] loop=['config_flow'] took 0.00s
+DEBUG    homeassistant.core:core.py:1547 Bus:Handling <Event component_loaded[L]: component=hacs_nature_remo>
+WARNING  homeassistant.helpers.frame:frame.py:335 Detected that custom integration 'hacs_nature_remo' sets option flow config_entry explicitly, which is deprecated at custom_components/hacs_nature_remo/config_flow.py, line 85: self.config_entry = config_entry. This will stop working in Home Assistant 2025.12, please create a bug report at https://github.com/kkiyama117/hacs-nature-remo2/issues
+--------------------------- Captured stderr teardown ---------------------------
+ERROR:homeassistant.config_entries:Error unloading entry Mock Title for hacs_nature_remo
+Traceback (most recent call last):
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/homeassistant/config_entries.py", line 965, in async_unload
+    result = await component.async_unload_entry(hass, self)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/custom_components/hacs_nature_remo/__init__.py", line 61, in async_unload_entry
+    coordinator = hass.data[DOMAIN][entry.entry_id]
+                  ~~~~~~~~~^^^^^^^^
+KeyError: 'hacs_nature_remo'
+DEBUG:homeassistant.core:Bus:Handling <Event homeassistant_stop[L]>
+DEBUG:homeassistant.core:Bus:Handling <Event homeassistant_final_write[L]>
+DEBUG:pytest_homeassistant_custom_component.common:Writing data to core.config_entries: {'version': 1, 'minor_version': 5, 'key': 'core.config_entries', 'data_func': <bound method ConfigEntries._data_to_save of <homeassistant.config_entries.ConfigEntries object at 0x7f6e70b54950>>}
+DEBUG:homeassistant.core:Bus:Handling <Event homeassistant_close[L]>
+DEBUG:asyncio:Close <_UnixSelectorEventLoop running=False closed=False debug=True>
+---------------------------- Captured log teardown -----------------------------
+ERROR    homeassistant.config_entries:config_entries.py:983 Error unloading entry Mock Title for hacs_nature_remo
+Traceback (most recent call last):
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/homeassistant/config_entries.py", line 965, in async_unload
+    result = await component.async_unload_entry(hass, self)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kiyama/programs/mine/hacs-nature-remo2/custom_components/hacs_nature_remo/__init__.py", line 61, in async_unload_entry
+    coordinator = hass.data[DOMAIN][entry.entry_id]
+                  ~~~~~~~~~^^^^^^^^
+KeyError: 'hacs_nature_remo'
+DEBUG    homeassistant.core:core.py:1547 Bus:Handling <Event homeassistant_stop[L]>
+DEBUG    homeassistant.core:core.py:1547 Bus:Handling <Event homeassistant_final_write[L]>
+DEBUG    pytest_homeassistant_custom_component.common:common.py:1475 Writing data to core.config_entries: {'version': 1, 'minor_version': 5, 'key': 'core.config_entries', 'data_func': <bound method ConfigEntries._data_to_save of <homeassistant.config_entries.ConfigEntries object at 0x7f6e70b54950>>}
+DEBUG    homeassistant.core:core.py:1547 Bus:Handling <Event homeassistant_close[L]>
+DEBUG    asyncio:base_events.py:743 Close <_UnixSelectorEventLoop running=False closed=False debug=True>
+_____________________________ test_switch_services _____________________________
+tests/test_switch.py:45: in test_switch_services
+    with patch(
+../../../.local/share/uv/python/cpython-3.13.1-linux-x86_64-gnu/lib/python3.13/unittest/mock.py:1495: in __enter__
+    original, local = self.get_original()
+../../../.local/share/uv/python/cpython-3.13.1-linux-x86_64-gnu/lib/python3.13/unittest/mock.py:1465: in get_original
+    raise AttributeError(
+E   AttributeError: <class 'custom_components.hacs_nature_remo.api.HacsNatureRemoApiClient'> does not have the attribute 'send_light_turn_off_signal'
+---------------------------- Captured stderr setup -----------------------------
+DEBUG:asyncio:Using selector: EpollSelector
+DEBUG:homeassistant.helpers.restore_state:Not creating cache - no saved states found
+------------------------------ Captured log setup ------------------------------
+DEBUG    asyncio:selector_events.py:64 Using selector: EpollSelector
+DEBUG    homeassistant.helpers.restore_state:restore_state.py:147 Not creating cache - no saved states found
+----------------------------- Captured stderr call -----------------------------
+INFO:custom_components.hacs_nature_remo.domain:
+-------------------------------------------------------------------
+Nature Remo integration
+Version: 0.1.0
+This is a custom integration!
+If you have any issues with this you need to open an issue here:
+https://github.com/kkiyama117/hacs-nature-remo2/issues
+-------------------------------------------------------------------
+
+DEBUG:custom_components.hacs_nature_remo.domain:Try to fetch appliance and device list from API
+DEBUG:custom_components.hacs_nature_remo.domain:Finish fetching data from remote API: {'user': <Mock id='140112322623344'>, 'appliances': {}, 'devices': {'device1': <Mock id='140112322619312'>}}
+DEBUG:custom_components.hacs_nature_remo.domain:Finished fetching hacs_nature_remo data in 0.000 seconds (success: True)
+INFO:homeassistant.loader:Loaded hacs_nature_remo from custom_components.hacs_nature_remo
+WARNING:homeassistant.loader:We found a custom integration hacs_nature_remo which has not been tested by Home Assistant. This component might cause stability problems, be sure to disable it if you experience issues with Home Assistant
+------------------------------ Captured log call -------------------------------
+INFO     custom_components.hacs_nature_remo.domain:__init__.py:39 
+-------------------------------------------------------------------
+Nature Remo integration
+Version: 0.1.0
+This is a custom integration!
+If you have any issues with this you need to open an issue here:
+https://github.com/kkiyama117/hacs-nature-remo2/issues
+-------------------------------------------------------------------
+
+DEBUG    custom_components.hacs_nature_remo.domain:coordinators.py:37 Try to fetch appliance and device list from API
+DEBUG    custom_components.hacs_nature_remo.domain:coordinators.py:56 Finish fetching data from remote API: {'user': <Mock id='140112322623344'>, 'appliances': {}, 'devices': {'device1': <Mock id='140112322619312'>}}
+DEBUG    custom_components.hacs_nature_remo.domain:update_coordinator.py:460 Finished fetching hacs_nature_remo data in 0.000 seconds (success: True)
+INFO     homeassistant.loader:loader.py:773 Loaded hacs_nature_remo from custom_components.hacs_nature_remo
+WARNING  homeassistant.loader:loader.py:689 We found a custom integration hacs_nature_remo which has not been tested by Home Assistant. This component might cause stability problems, be sure to disable it if you experience issues with Home Assistant
+--------------------------- Captured stderr teardown ---------------------------
+DEBUG:homeassistant.loader:Importing platforms for hacs_nature_remo executor=[] loop=['sensor', 'switch', 'climate'] took 0.00s
+DEBUG:homeassistant.core:Bus:Handling <Event homeassistant_stop[L]>
+DEBUG:homeassistant.core:Bus:Handling <Event homeassistant_final_write[L]>
+DEBUG:homeassistant.core:Bus:Handling <Event homeassistant_close[L]>
+DEBUG:asyncio:Close <_UnixSelectorEventLoop running=False closed=False debug=True>
+---------------------------- Captured log teardown -----------------------------
+DEBUG    homeassistant.loader:loader.py:1170 Importing platforms for hacs_nature_remo executor=[] loop=['sensor', 'switch', 'climate'] took 0.00s
+DEBUG    homeassistant.core:core.py:1547 Bus:Handling <Event homeassistant_stop[L]>
+DEBUG    homeassistant.core:core.py:1547 Bus:Handling <Event homeassistant_final_write[L]>
+DEBUG    homeassistant.core:core.py:1547 Bus:Handling <Event homeassistant_close[L]>
+DEBUG    asyncio:base_events.py:743 Close <_UnixSelectorEventLoop running=False closed=False debug=True>
+=========================== short test summary info ============================
+FAILED tests/test_config_flow.py::test_successful_config_flow - AssertionErro...
+FAILED tests/test_config_flow.py::test_options_flow - AssertionError: assert ...
+FAILED tests/test_switch.py::test_switch_services - AttributeError: <class 'c...
+ERROR tests/test_init.py::test_setup_unload_and_reload_entry - homeassistant....
+===================== 3 failed, 6 passed, 1 error in 0.71s =====================

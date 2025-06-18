@@ -47,17 +47,18 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     coordinator.platforms = [
         platform for platform in PLATFORMS if entry.options.get(platform, True)
     ]
-    entry.async_create_background_task(
-        hass,
-        hass.config_entries.async_forward_entry_setups(entry, coordinator.platforms),
-        name=f"{DOMAIN}_entry_setup_all",
-    )
+    
+    await hass.config_entries.async_forward_entry_setups(entry, coordinator.platforms)
+    
     entry.add_update_listener(async_reload_entry)
     return True
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Handle removal of an entry."""
+    if entry.entry_id not in hass.data.get(DOMAIN, {}):
+        return True
+    
     coordinator = hass.data[DOMAIN][entry.entry_id]
     unloaded = all(
         await asyncio.gather(
@@ -92,5 +93,4 @@ async def _common_setup_flow(
 
 async def async_reload_entry(hass: HomeAssistant, entry: ConfigEntry) -> None:
     """Reload config entry."""
-    await async_unload_entry(hass, entry)
-    await async_setup_entry(hass, entry)
+    await hass.config_entries.async_reload(entry.entry_id)

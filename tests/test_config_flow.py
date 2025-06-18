@@ -4,19 +4,15 @@ from unittest.mock import patch
 
 import pytest
 from custom_components.hacs_nature_remo.domain.const import (
+    CLIMATE,
     DOMAIN,
-)
-from custom_components.hacs_nature_remo.domain.const import (
     PLATFORMS,
-)
-from custom_components.hacs_nature_remo.domain.const import (
     SENSOR,
-)
-from custom_components.hacs_nature_remo.domain.const import (
     SWITCH,
 )
 from homeassistant import config_entries
 from homeassistant import data_entry_flow
+from homeassistant.data_entry_flow import FlowResultType
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from .const import MOCK_CONFIG
@@ -52,7 +48,7 @@ async def test_successful_config_flow(hass, bypass_get_data):
     )
 
     # Check that the config flow shows the user form as the first step
-    assert result["type"] == data_entry_flow.RESULT_TYPE_FORM
+    assert result["type"] == FlowResultType.FORM
     assert result["step_id"] == "user"
 
     # If a user were to enter `test_username` for username and `test_password`
@@ -63,9 +59,12 @@ async def test_successful_config_flow(hass, bypass_get_data):
 
     # Check that the config flow is complete and a new entry is created with
     # the input data
-    assert result["type"] == data_entry_flow.RESULT_TYPE_CREATE_ENTRY
-    assert result["title"] == "test_username"
-    assert result["data"] == MOCK_CONFIG
+    assert result["type"] == FlowResultType.CREATE_ENTRY
+    assert result["title"] == "test_password"  # Title is derived from API token in MOCK_CONFIG
+    assert result["data"]["api_token"] == MOCK_CONFIG["api_token"]
+    # The config flow adds default heat and cool values from CONFIG_SCHEMA
+    assert result["data"]["heat"] == 23.0
+    assert result["data"]["cool"] == 27.0
     assert result["result"]
 
 
@@ -80,14 +79,14 @@ async def test_failed_config_flow(hass, error_on_get_data):
         DOMAIN, context={"source": config_entries.SOURCE_USER}
     )
 
-    assert result["type"] == data_entry_flow.RESULT_TYPE_FORM
+    assert result["type"] == FlowResultType.FORM
     assert result["step_id"] == "user"
 
     result = await hass.config_entries.flow.async_configure(
         result["flow_id"], user_input=MOCK_CONFIG
     )
 
-    assert result["type"] == data_entry_flow.RESULT_TYPE_FORM
+    assert result["type"] == FlowResultType.FORM
     assert result["errors"] == {"base": "auth"}
 
 
@@ -104,7 +103,7 @@ async def test_options_flow(hass):
     result = await hass.config_entries.options.async_init(entry.entry_id)
 
     # Verify that the first options step is a user form
-    assert result["type"] == data_entry_flow.RESULT_TYPE_FORM
+    assert result["type"] == FlowResultType.FORM
     assert result["step_id"] == "user"
 
     # Enter some fake data into the form
@@ -114,8 +113,8 @@ async def test_options_flow(hass):
     )
 
     # Verify that the flow finishes
-    assert result["type"] == data_entry_flow.RESULT_TYPE_CREATE_ENTRY
-    assert result["title"] == "test_username"
+    assert result["type"] == FlowResultType.CREATE_ENTRY
+    assert result["title"] == "test_password"  # Title is derived from API token in MOCK_CONFIG
 
     # Verify that the options were updated
-    assert entry.options == {SENSOR: False, SWITCH: True}
+    assert entry.options == {SENSOR: False, SWITCH: True, CLIMATE: True}

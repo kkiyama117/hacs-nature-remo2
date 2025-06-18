@@ -13,6 +13,9 @@ from .entity import HacsNatureRemoApplianceEntity
 async def async_setup_entry(hass, entry, async_add_devices):
     """Setup switch platform."""
     LOGGER.debug("Setting up IR platform")
+    if DOMAIN not in hass.data or entry.entry_id not in hass.data[DOMAIN]:
+        LOGGER.error(f"Coordinator not found for entry {entry.entry_id}")
+        return
     coordinator: HacsNatureRemoDataUpdateCoordinator = hass.data[DOMAIN][entry.entry_id]
     _data: PluginDataDict = coordinator.data
     appliances: dict[str, remo.Appliance] = _data.get(KEY_APPLIANCES)

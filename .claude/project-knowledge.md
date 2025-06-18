@@ -40,6 +40,7 @@ Updated when /init is run. Update also if new knowledge is acquired.
 - RESTful API（OAuth2認証）
 - レート制限: 30リクエスト/5分
 - カスタムフォーク使用: `nature-remo-fork-only-for-hacs-nature-remo`
+- All Endpoint can get from here `https://swagger.nature.global/`
 - エンドポイント:
   - `/appliances`: 家電一覧
   - `/devices`: センサーデバイス一覧

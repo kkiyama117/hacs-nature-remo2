@@ -105,4 +105,78 @@
 ### パフォーマンス指標
 - **API呼び出し頻度**: 30秒間隔を維持
 - **エンティティ更新遅延**: 1秒以内
-- **メモリ使用量**: Home Assistant 標準内に収める
+- **メモリ使用量**: Home Assistant 標準内に収める# Project Improvements
+
+## Test Infrastructure Updates (2025-06-18)
+
+### Improvements Made
+1. **Pytest Configuration**
+   - Added proper pytest-asyncio configuration to handle async tests
+   - Set `asyncio_mode = auto` for automatic async test detection
+   - Configured fixture loop scope for consistent test behavior
+
+2. **Test Fixtures**
+   - Updated mock fixtures to return proper Nature Remo API objects
+   - Added `auto_enable_custom_integrations` fixture for HA integration loading
+   - Fixed import paths to match actual API structure
+
+3. **API Test Coverage**
+   - Created focused tests for API client functionality
+   - Added proper error handling tests
+   - Simplified tests to avoid complex schema validation
+
+### Technical Insights
+- Nature Remo API uses marshmallow schemas to deserialize JSON into typed objects
+- Home Assistant's FlowResultType moved from constants to data_entry_flow module
+- Tests should mock at the method level rather than HTTP level for better maintainability
+
+### Future Improvements Needed
+1. Complete test coverage for config flow with proper mock data
+2. Add integration tests for switch services with mocked coordinators
+3. Create comprehensive test fixtures matching actual Nature Remo API responses
+4. Consider using pytest-homeassistant-custom-component fixtures more extensively
+
+### Lessons Learned
+- Always verify the actual API implementation before writing tests
+- Mock at the appropriate level - method mocking is often cleaner than HTTP mocking
+- Home Assistant test infrastructure requires specific fixtures for custom integrations
+- Async test configuration is critical for Home Assistant component testing# Project Improvements
+
+## Complete Test Suite Fix (2025-06-18)
+
+### Improvements Made
+1. **Config Flow Tests**
+   - Fixed assertions to match actual CONFIG_SCHEMA with default values
+   - Updated platform options to include all three platforms (sensor, switch, climate)
+
+2. **Switch Tests**
+   - Completely rewrote test file with proper entity testing approach
+   - Added comprehensive coverage including error cases
+   - Achieved 95% coverage for switch.py module
+
+3. **Init Tests**
+   - Implemented proper config entry state management
+   - Used Home Assistant's built-in reload method
+   - Added defensive checks in all platform setup functions
+
+4. **Async Reload Function**
+   - Simplified async_reload_entry to use hass.config_entries.async_reload()
+   - Removed manual unload/reload which was causing state issues
+
+### Technical Achievements
+- All 11 tests now passing
+- No more async_generator errors
+- Proper test isolation with mock coordinators
+- Clean separation between unit and integration testing
+
+### Best Practices Implemented
+1. Use HA's built-in methods for config entry operations
+2. Test entities directly rather than through full setup
+3. Mock at the appropriate level (coordinator, not HTTP)
+4. Ensure mock data structures match real API responses
+
+### Future Recommendations
+1. Increase coverage for climate.py and sensor.py modules
+2. Add more edge case testing for error scenarios
+3. Consider integration tests with real API responses
+4. Add performance benchmarks for coordinator updates

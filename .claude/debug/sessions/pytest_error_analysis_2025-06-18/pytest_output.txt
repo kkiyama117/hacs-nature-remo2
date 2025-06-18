@@ -1,0 +1,90 @@
+/home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/pytest_asyncio/plugin.py:217: PytestDeprecationWarning: The configuration option "asyncio_default_fixture_loop_scope" is unset.
+The event loop scope for asynchronous fixtures will default to the fixture caching scope. Future versions of pytest-asyncio will default the loop scope for asynchronous fixtures to function scope. Set the default fixture loop scope explicitly in order to avoid unexpected behavior in the future. Valid fixture loop scopes are: "function", "class", "module", "package", "session"
+
+  warnings.warn(PytestDeprecationWarning(_DEFAULT_FIXTURE_LOOP_SCOPE_UNSET))
+============================= test session starts ==============================
+platform linux -- Python 3.13.1, pytest-8.3.5, pluggy-1.6.0 -- /home/kiyama/programs/mine/hacs-nature-remo2/.venv/bin/python3
+cachedir: .pytest_cache
+rootdir: /home/kiyama/programs/mine/hacs-nature-remo2
+configfile: pytest.ini
+plugins: cov-6.0.0, asyncio-0.26.0, github-actions-annotate-failures-0.3.0, requests-mock-1.12.1, sugar-1.0.0, xdist-3.6.1, timeout-2.3.1, unordered-0.6.1, pytest_freezer-0.4.9, syrupy-4.8.1, picked-0.5.1, anyio-4.9.0, homeassistant-custom-component-0.13.236, socket-0.7.0, respx-0.22.0, aiohttp-1.1.0
+asyncio: mode=Mode.STRICT, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 7 items
+
+tests/test_api.py::test_api SKIPPED (async def function and no async...) [ 14%]
+tests/test_config_flow.py::test_successful_config_flow ERROR             [ 28%]
+tests/test_config_flow.py::test_failed_config_flow ERROR                 [ 42%]
+tests/test_config_flow.py::test_options_flow SKIPPED (async def func...) [ 57%]
+tests/test_init.py::test_setup_unload_and_reload_entry ERROR             [ 71%]
+tests/test_init.py::test_setup_entry_exception ERROR                     [ 85%]
+tests/test_switch.py::test_switch_services SKIPPED (async def functi...) [100%]
+
+==================================== ERRORS ====================================
+________________ ERROR at setup of test_successful_config_flow _________________
+tests/conftest.py:28: in bypass_get_data_fixture
+    with patch(
+../../../.local/share/uv/python/cpython-3.13.1-linux-x86_64-gnu/lib/python3.13/unittest/mock.py:1495: in __enter__
+    original, local = self.get_original()
+../../../.local/share/uv/python/cpython-3.13.1-linux-x86_64-gnu/lib/python3.13/unittest/mock.py:1465: in get_original
+    raise AttributeError(
+E   AttributeError: <class 'custom_components.hacs_nature_remo.api.HacsNatureRemoApiClient'> does not have the attribute 'async_get_data'
+---------------------------- Captured stderr setup -----------------------------
+DEBUG:asyncio:Using selector: EpollSelector
+------------------------------ Captured log setup ------------------------------
+DEBUG    asyncio:selector_events.py:64 Using selector: EpollSelector
+__________________ ERROR at setup of test_failed_config_flow ___________________
+tests/conftest.py:39: in error_get_data_fixture
+    with patch(
+../../../.local/share/uv/python/cpython-3.13.1-linux-x86_64-gnu/lib/python3.13/unittest/mock.py:1495: in __enter__
+    original, local = self.get_original()
+../../../.local/share/uv/python/cpython-3.13.1-linux-x86_64-gnu/lib/python3.13/unittest/mock.py:1465: in get_original
+    raise AttributeError(
+E   AttributeError: <class 'custom_components.hacs_nature_remo.api.HacsNatureRemoApiClient'> does not have the attribute 'async_get_data'
+---------------------------- Captured stderr setup -----------------------------
+DEBUG:asyncio:Using selector: EpollSelector
+------------------------------ Captured log setup ------------------------------
+DEBUG    asyncio:selector_events.py:64 Using selector: EpollSelector
+_____________ ERROR at setup of test_setup_unload_and_reload_entry _____________
+tests/conftest.py:28: in bypass_get_data_fixture
+    with patch(
+../../../.local/share/uv/python/cpython-3.13.1-linux-x86_64-gnu/lib/python3.13/unittest/mock.py:1495: in __enter__
+    original, local = self.get_original()
+../../../.local/share/uv/python/cpython-3.13.1-linux-x86_64-gnu/lib/python3.13/unittest/mock.py:1465: in get_original
+    raise AttributeError(
+E   AttributeError: <class 'custom_components.hacs_nature_remo.api.HacsNatureRemoApiClient'> does not have the attribute 'async_get_data'
+---------------------------- Captured stderr setup -----------------------------
+DEBUG:asyncio:Using selector: EpollSelector
+------------------------------ Captured log setup ------------------------------
+DEBUG    asyncio:selector_events.py:64 Using selector: EpollSelector
+_________________ ERROR at setup of test_setup_entry_exception _________________
+tests/conftest.py:39: in error_get_data_fixture
+    with patch(
+../../../.local/share/uv/python/cpython-3.13.1-linux-x86_64-gnu/lib/python3.13/unittest/mock.py:1495: in __enter__
+    original, local = self.get_original()
+../../../.local/share/uv/python/cpython-3.13.1-linux-x86_64-gnu/lib/python3.13/unittest/mock.py:1465: in get_original
+    raise AttributeError(
+E   AttributeError: <class 'custom_components.hacs_nature_remo.api.HacsNatureRemoApiClient'> does not have the attribute 'async_get_data'
+---------------------------- Captured stderr setup -----------------------------
+DEBUG:asyncio:Using selector: EpollSelector
+------------------------------ Captured log setup ------------------------------
+DEBUG    asyncio:selector_events.py:64 Using selector: EpollSelector
+=============================== warnings summary ===============================
+tests/test_api.py::test_api
+tests/test_config_flow.py::test_options_flow
+tests/test_switch.py::test_switch_services
+  /home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/_pytest/python.py:148: PytestUnhandledCoroutineWarning: async def functions are not natively supported and have been skipped.
+  You need to install a suitable plugin for your async framework, for example:
+    - anyio
+    - pytest-asyncio
+    - pytest-tornasync
+    - pytest-trio
+    - pytest-twisted
+    warnings.warn(PytestUnhandledCoroutineWarning(msg.format(nodeid)))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+ERROR tests/test_config_flow.py::test_successful_config_flow - AttributeError...
+ERROR tests/test_config_flow.py::test_failed_config_flow - AttributeError: <c...
+ERROR tests/test_init.py::test_setup_unload_and_reload_entry - AttributeError...
+ERROR tests/test_init.py::test_setup_entry_exception - AttributeError: <class...
+=================== 3 skipped, 3 warnings, 4 errors in 0.63s ===================
