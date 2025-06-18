@@ -11,7 +11,6 @@ from custom_components.hacs_nature_remo.domain.const import (
     SWITCH,
 )
 from homeassistant import config_entries
-from homeassistant import data_entry_flow
 from homeassistant.data_entry_flow import FlowResultType
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 

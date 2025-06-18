@@ -1,10 +1,7 @@
 """Tests for hacs-nature-remo api."""
 
-import asyncio
-from unittest.mock import Mock, patch
+from unittest.mock import patch
 
-import aiohttp
-import pytest
 from custom_components.hacs_nature_remo.api import (
     HacsNatureRemoApiClient,
 )

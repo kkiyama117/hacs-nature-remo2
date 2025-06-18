@@ -1,6 +1,6 @@
 """Test hacs-nature-remo switch."""
 
-from unittest.mock import AsyncMock, Mock, patch
+from unittest.mock import AsyncMock, Mock
 
 import pytest
 from custom_components.hacs_nature_remo.coordinators import HacsNatureRemoDataUpdateCoordinator
