@@ -8,9 +8,7 @@ CONF_API_TOKEN_KEY = "api_token"
 
 CONFIG_SCHEMA = vol.Schema(
     {
-        vol.Required(
-            CONF_API_TOKEN_KEY, default="Please_set_nature_remo_API"
-        ): str,
+        vol.Required(CONF_API_TOKEN_KEY, default="Please_set_nature_remo_API"): str,
         vol.Required(str(HVACMode.HEAT), default=23): vol.Coerce(float),
         vol.Required(str(HVACMode.COOL), default=27): vol.Coerce(float),
     },

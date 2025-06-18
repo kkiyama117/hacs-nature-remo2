@@ -11,7 +11,7 @@ from homeassistant.core import callback
 from homeassistant.helpers.entity import Entity
 
 from . import LOGGER
-from  .domain.const import DOMAIN
+from .domain.const import DOMAIN
 from .coordinators import HacsNatureRemoDataUpdateCoordinator
 from .domain.config_schema import KEY_DEVICES, KEY_APPLIANCES, PluginDataDict
 from .entity import HacsNatureRemoDeviceEntity, HacsNatureRemoApplianceEntity

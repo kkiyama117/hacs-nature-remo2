@@ -1,4 +1,5 @@
 """Switch platform for hacs-nature-remo."""
+
 import dataclasses
 from copy import deepcopy
 
@@ -11,11 +12,7 @@ from homeassistant.components.climate import ClimateEntity, HVACMode, HVAC_MODES
 from . import LOGGER
 from .coordinators import HacsNatureRemoDataUpdateCoordinator
 from .domain import climate as climate_const
-from .domain.config_schema import (
-    KEY_APPLIANCES,
-    KEY_DEVICES,
-    PluginDataDict
-)
+from .domain.config_schema import KEY_APPLIANCES, KEY_DEVICES, PluginDataDict
 from .domain.const import DEFAULT_NAME, DOMAIN, ICON, SWITCH
 from .entity import HacsNatureRemoApplianceEntity
 
@@ -70,7 +67,7 @@ class HacsNatureRemoAC(HacsNatureRemoApplianceEntity, ClimateEntity):
     _attr_temperature_unit = climate_const.CLIMATE_DEFAULT_TEMPERATURE_UNIT
 
     def __init__(
-            self, coordinator: HacsNatureRemoDataUpdateCoordinator, idx, entry: ConfigEntry
+        self, coordinator: HacsNatureRemoDataUpdateCoordinator, idx, entry: ConfigEntry
     ):
         super().__init__(coordinator, idx)
         ac_settings: remo.AirConParams = self.appliance.settings
@@ -101,15 +98,15 @@ class HacsNatureRemoAC(HacsNatureRemoApplianceEntity, ClimateEntity):
     # This method need to get AC params
     # https://swagger.nature.global/#/default/post_1_appliances__applianceid__aircon_settings
     def _update_data(self, ac_settings: remo.AirConParams, device=None):
-        LOGGER.debug(f"Climate data update")
+        LOGGER.debug("Climate data update")
         self._update_inner_data(ac_settings, device)
         self._update_from_inner_data()
 
     # Fetch from coordinator
     def _update_inner_data(
-            self, ac_settings: remo.AirConParams, device: remo.Device | None = None
+        self, ac_settings: remo.AirConParams, device: remo.Device | None = None
     ):
-        LOGGER.debug(f"Update climate data")
+        LOGGER.debug("Update climate data")
         LOGGER.debug(f"ac_settings: {ac_settings}")
         LOGGER.debug(f"Device: {device}")
         result = {}
@@ -134,20 +131,24 @@ class HacsNatureRemoAC(HacsNatureRemoApplianceEntity, ClimateEntity):
         if current_mode is not HVACMode.OFF and current_mode is not None:
             result.setdefault("target_temperature", target_temperature)
         else:
-            result.setdefault("target_temperature", self._inner_data.current_temperature)
+            result.setdefault(
+                "target_temperature", self._inner_data.current_temperature
+            )
         current_mode_temp_range = self._get_current_mode_temp_range(current_mode)
         result.setdefault("current_mode_temp_range", current_mode_temp_range)
         result.setdefault("last_target_temperatures", last_target_temperatures)
         result.setdefault("default_config", self._inner_data.default_config)
-        LOGGER.debug(f"climate: last temperatures:{self._inner_data.last_target_temperatures}")
+        LOGGER.debug(
+            f"climate: last temperatures:{self._inner_data.last_target_temperatures}"
+        )
         self._inner_data = HacsNatureRemoACData(**result)
-        LOGGER.debug(f"Update Climate Data from coordinator finished")
+        LOGGER.debug("Update Climate Data from coordinator finished")
         LOGGER.debug(f"{self._inner_data}")
 
     # Update attributes
     def _update_from_inner_data(self):
         """Update HA Entity value"""
-        LOGGER.debug(f"Update Climate Data for view")
+        LOGGER.debug("Update Climate Data for view")
         LOGGER.debug(f"{self._inner_data}")
         self._attr_current_temperature = self._inner_data.current_temperature
         self._attr_target_temperature = self._inner_data.target_temperature
@@ -250,7 +251,7 @@ class HacsNatureRemoAC(HacsNatureRemoApplianceEntity, ClimateEntity):
         if ap_data is not None:
             self._update_data(ap_data, device_data)
         else:
-            LOGGER.warning(f"Climate update failed")
+            LOGGER.warning("Climate update failed")
         self.async_write_ha_state()
 
     # HELPERS ----------------------------------------------------------------------------------------------------------
@@ -267,9 +268,11 @@ class HacsNatureRemoAC(HacsNatureRemoApplianceEntity, ClimateEntity):
                 ac_params = remo.AirConParams(**response)
                 self._update_data(ac_params, None)
             except ValueError:
-                LOGGER.warning(f"This is Illegal response of Nature Remo API for this plugin. "
-                               f"Please send issue to HACS NATURE REMO plugin developer"
-                               f"https://github.com/kkiyama117/hacs-nature-remo2")
+                LOGGER.warning(
+                    "This is Illegal response of Nature Remo API for this plugin. "
+                    "Please send issue to HACS NATURE REMO plugin developer"
+                    "https://github.com/kkiyama117/hacs-nature-remo2"
+                )
                 LOGGER.debug(f"{response}, {temp_unit}, {updated_at}, {dirh}")
 
         self.async_write_ha_state()
@@ -288,7 +291,7 @@ class HacsNatureRemoAC(HacsNatureRemoApplianceEntity, ClimateEntity):
 
     @staticmethod
     def _convert_to_hvac_list(
-            modes: dict[str, remo.AirConRangeMode] | None,
+        modes: dict[str, remo.AirConRangeMode] | None,
     ) -> list[HVACMode]:
         remo_modes = list(modes.keys())
         ha_modes = list(

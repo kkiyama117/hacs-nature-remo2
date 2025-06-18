@@ -1,9 +1,7 @@
-from typing import Literal, TypeAlias, TypedDict
+from typing import Literal
 
 from homeassistant.components.climate import (
     HVACMode,
-    HVAC_MODES,
-    ClimateEntity,
     ClimateEntityFeature,
 )
 from homeassistant.const import UnitOfTemperature

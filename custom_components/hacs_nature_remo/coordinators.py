@@ -9,7 +9,6 @@ from .domain.config_schema import (
     KEY_USER,
     KEY_APPLIANCES,
     KEY_DEVICES,
-    KEY_CLIMATE_CONFIGS,
     PluginDataDict,
 )
 

@@ -31,7 +31,7 @@ class NatureRemoIR(HacsNatureRemoApplianceEntity, SwitchEntity):
     _attr_assumed_state = True
 
     def __init__(
-            self, coordinator: HacsNatureRemoDataUpdateCoordinator, idx: str
+        self, coordinator: HacsNatureRemoDataUpdateCoordinator, idx: str
     ) -> None:
         super().__init__(coordinator, idx)
         self._attr_name = f"{self._base_name.strip()} {SWITCH}"
