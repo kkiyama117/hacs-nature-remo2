@@ -7,8 +7,10 @@ from homeassistant.helpers.aiohttp_client import async_create_clientsession
 
 from . import LOGGER
 from .api import HacsNatureRemoApiClient
-from .domain.const import DOMAIN, PLATFORMS
-from .domain.config_schema import CONFIG_SCHEMA, CONF_API_TOKEN_KEY
+from .domain.config_schema import CONF_API_TOKEN_KEY
+from .domain.config_schema import CONFIG_SCHEMA
+from .domain.const import DOMAIN
+from .domain.const import PLATFORMS
 
 
 class HacsNatureRemoFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):

@@ -1,9 +1,7 @@
 from typing import Literal
 
-from homeassistant.components.climate import (
-    HVACMode,
-    ClimateEntityFeature,
-)
+from homeassistant.components.climate import ClimateEntityFeature
+from homeassistant.components.climate import HVACMode
 from homeassistant.const import UnitOfTemperature
 
 CLIMATE_MODE_NATURE_REMO_AUTO = "auto"

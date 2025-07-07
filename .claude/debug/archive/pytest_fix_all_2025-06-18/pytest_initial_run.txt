@@ -239,7 +239,7 @@ Traceback (most recent call last):
     )
 homeassistant.config_entries.OperationNotAllowed: The config entry 'Mock Title' (hacs_nature_remo) with entry_id 'test' cannot forward setup for ['sensor', 'switch', 'climate'] because it is in state ConfigEntryState.NOT_LOADED, but needs to be in the ConfigEntryState.LOADED state
 ------------------------------ Captured log call -------------------------------
-INFO     custom_components.hacs_nature_remo.domain:__init__.py:39 
+INFO     custom_components.hacs_nature_remo.domain:__init__.py:39
 -------------------------------------------------------------------
 Nature Remo integration
 Version: 0.1.0
@@ -450,14 +450,14 @@ _________________________ test_successful_config_flow __________________________
 tests/test_config_flow.py:69: in test_successful_config_flow
     assert result["data"] == MOCK_CONFIG
 E   AssertionError: assert {'api_token':... 'heat': 23.0} == {'api_token': 'test_password'}
-E     
+E
 E     Omitting 1 identical items, use -vv to show
 E     Left contains 2 more items:
 E     {'cool': 27.0, 'heat': 23.0}
-E     
+E
 E     Full diff:
 E       {...
-E     
+E
 E     ...Full output truncated (4 lines hidden), use '-vv' to show
 ---------------------------- Captured stderr setup -----------------------------
 DEBUG:asyncio:Using selector: EpollSelector
@@ -478,7 +478,7 @@ DEBUG:homeassistant.core:Bus:Handling <Event component_loaded[L]: component=hacs
 INFO     homeassistant.loader:loader.py:773 Loaded hacs_nature_remo from custom_components.hacs_nature_remo
 WARNING  homeassistant.loader:loader.py:689 We found a custom integration hacs_nature_remo which has not been tested by Home Assistant. This component might cause stability problems, be sure to disable it if you experience issues with Home Assistant
 DEBUG    homeassistant.loader:loader.py:1170 Importing platforms for hacs_nature_remo executor=['config_flow'] loop=[] took 0.00s
-DEBUG    custom_components.hacs_nature_remo.domain:config_flow.py:54 
+DEBUG    custom_components.hacs_nature_remo.domain:config_flow.py:54
 DEBUG    homeassistant.helpers.translation:translation.py:214 Cache miss for en: {'hacs_nature_remo'}
 DEBUG    homeassistant.loader:loader.py:982 Component hacs_nature_remo import took 0.000 seconds (loaded_executor=False)
 DEBUG    homeassistant.setup:setup.py:390 Setting up hacs_nature_remo
@@ -517,7 +517,7 @@ ______________________________ test_options_flow _______________________________
 tests/test_config_flow.py:122: in test_options_flow
     assert entry.options == {SENSOR: False, SWITCH: True}
 E   AssertionError: assert mappingproxy(...imate': True}) == {'sensor': Fa...switch': True}
-E     
+E
 E     Full diff:
 E     - {
 E     + mappingproxy({
@@ -608,7 +608,7 @@ DEBUG:custom_components.hacs_nature_remo.domain:Finished fetching hacs_nature_re
 INFO:homeassistant.loader:Loaded hacs_nature_remo from custom_components.hacs_nature_remo
 WARNING:homeassistant.loader:We found a custom integration hacs_nature_remo which has not been tested by Home Assistant. This component might cause stability problems, be sure to disable it if you experience issues with Home Assistant
 ------------------------------ Captured log call -------------------------------
-INFO     custom_components.hacs_nature_remo.domain:__init__.py:39 
+INFO     custom_components.hacs_nature_remo.domain:__init__.py:39
 -------------------------------------------------------------------
 Nature Remo integration
 Version: 0.1.0

@@ -5,8 +5,10 @@ from homeassistant.components.switch import SwitchEntity
 
 from . import LOGGER
 from .coordinators import HacsNatureRemoDataUpdateCoordinator
-from .domain.config_schema import KEY_APPLIANCES, PluginDataDict
-from .domain.const import SWITCH, DOMAIN
+from .domain.config_schema import KEY_APPLIANCES
+from .domain.config_schema import PluginDataDict
+from .domain.const import DOMAIN
+from .domain.const import SWITCH
 from .entity import HacsNatureRemoApplianceEntity
 
 

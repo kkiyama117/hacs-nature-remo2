@@ -3,6 +3,7 @@
 ## 重要なデバッグ記録
 
 ### 記録フォーマット
+
 ```
 日付: YYYY-MM-DD HH:MM
 問題: [問題の概要]
@@ -17,86 +18,99 @@
 ---
 
 ### 2025-01-16 10:00
+
 **問題**: 初期セットアップ時の Knowledge Management System 構築
 **症状**: .claude ディレクトリの構造と内容が未定義
 **原因**: 新規プロジェクトへの導入
-**解決方法**: 
+**解決方法**:
+
 - プロジェクト分析を実施
 - Home Assistant 統合の特性に合わせた内容を作成
 - 各ファイルに適切なテンプレートと情報を配置
-**所要時間**: 30分
-**関連ファイル**: 
+  **所要時間**: 30 分
+  **関連ファイル**:
 - `.claude/context.md`
 - `.claude/project-knowledge.md`
 - `.claude/project-improvements.md`
 - `.claude/common-patterns.md`
 - `.claude/debug-log.md`
-**学び**: Home Assistant カスタムコンポーネントには特有の開発パターンがあり、これらを文書化することで効率的な開発が可能
+  **学び**: Home Assistant カスタムコンポーネントには特有の開発パターンがあり、これらを文書化することで効率的な開発が可能
 
 ---
 
 ### テンプレート: API レート制限エラー
+
 **問題**: Nature Remo API のレート制限超過
-**症状**: 
+**症状**:
+
 ```
 Error: 429 Too Many Requests
 X-Rate-Limit-Remaining: 0
 ```
-**原因**: 30リクエスト/5分の制限を超過
-**解決方法**: 
+
+**原因**: 30 リクエスト/5 分の制限を超過
+**解決方法**:
+
 - DataUpdateCoordinator の更新間隔を延長
 - 並行リクエストの削減
 - キャッシュ戦略の見直し
-**所要時間**: [時間]
-**関連ファイル**: `coordinators.py`
-**学び**: API制限は厳密に管理する必要がある
+  **所要時間**: [時間]
+  **関連ファイル**: `coordinators.py`
+  **学び**: API 制限は厳密に管理する必要がある
 
 ---
 
 ### テンプレート: エンティティ認識エラー
+
 **問題**: Home Assistant がエンティティを認識しない
 **症状**: デバイスは表示されるがエンティティが作成されない
 **原因**: [原因]
-**解決方法**: 
+**解決方法**:
+
 - unique_id の確認と修正
 - platform の async_setup_entry 実装確認
 - エンティティレジストリの手動クリア
-**所要時間**: [時間]
-**関連ファイル**: [platform].py
-**学び**: unique_id は必須で、一貫性が重要
+  **所要時間**: [時間]
+  **関連ファイル**: [platform].py
+  **学び**: unique_id は必須で、一貫性が重要
 
 ---
 
 ### テンプレート: 非同期処理エラー
+
 **問題**: 同期的なコードによるブロッキング
 **症状**: Home Assistant の UI がフリーズ
 **原因**: [原因]
-**解決方法**: 
+**解決方法**:
+
 - 同期関数を async/await に変換
 - executor を使用して同期コードをラップ
-**所要時間**: [時間]
-**関連ファイル**: [ファイル名]
-**学び**: Home Assistant では完全な非同期実装が必須
+  **所要時間**: [時間]
+  **関連ファイル**: [ファイル名]
+  **学び**: Home Assistant では完全な非同期実装が必須
 
 ---
 
 ### テンプレート: テスト環境エラー
+
 **問題**: pytest が Home Assistant のモックに失敗
 **症状**: ImportError または AttributeError
 **原因**: [原因]
-**解決方法**: 
+**解決方法**:
+
 - pytest-homeassistant-custom-component の更新
 - フィクスチャの適切な使用
 - conftest.py の設定確認
-**所要時間**: [時間]
-**関連ファイル**: tests/conftest.py
-**学び**: Home Assistant のテスト環境は特殊で、専用のツールが必要
+  **所要時間**: [時間]
+  **関連ファイル**: tests/conftest.py
+  **学び**: Home Assistant のテスト環境は特殊で、専用のツールが必要
 
 ---
 
 ## デバッグのベストプラクティス
 
 ### ログレベルの活用
+
 ```yaml
 # configuration.yaml
 logger:
@@ -110,10 +124,12 @@ logger:
 ### よくあるエラーパターン
 
 1. **KeyError in coordinator data**
+
    - 原因: API レスポンスの形式変更
    - 対策: データ取得時の get() メソッド使用とデフォルト値設定
 
 2. **Config flow timeout**
+
    - 原因: API 接続の遅延
    - 対策: タイムアウト値の調整と非同期処理の確認
 
@@ -135,7 +151,7 @@ _LOGGER.debug("API response: %s", json.dumps(response, indent=2))
 
 ### パフォーマンス問題の調査
 
-```python
+````python
 # 実行時間の計測
 import time
 start = time.time()
@@ -147,7 +163,7 @@ import tracemalloc
 tracemalloc.start()
 # 処理
 current, peak = tracemalloc.get_traced_memory()
-_LOGGER.debug("Current memory: %.1f MB, Peak: %.1f MB", 
+_LOGGER.debug("Current memory: %.1f MB, Peak: %.1f MB",
               current / 10**6, peak / 10**6)
 ```# Debug Log
 
@@ -217,3 +233,4 @@ When testing Home Assistant integrations:
 - Test entities directly for better coverage
 - Ensure mock data matches actual API structure
 - State management is critical for config entry tests
+````

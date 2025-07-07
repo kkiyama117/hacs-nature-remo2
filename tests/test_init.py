@@ -1,16 +1,14 @@
 """Test hacs-nature-remo setup process."""
 
 import pytest
-from custom_components.hacs_nature_remo import (
-    async_reload_entry,
-    HacsNatureRemoDataUpdateCoordinator,
-)
+from custom_components.hacs_nature_remo import async_reload_entry
 from custom_components.hacs_nature_remo import (
     async_setup_entry,
 )
 from custom_components.hacs_nature_remo import (
     async_unload_entry,
 )
+from custom_components.hacs_nature_remo import HacsNatureRemoDataUpdateCoordinator
 from custom_components.hacs_nature_remo.domain.const import (
     DOMAIN,
 )
@@ -37,7 +35,7 @@ async def test_setup_unload_and_reload_entry(hass, bypass_get_data):
     # call, no code from custom_components/hacs_nature_remo/api.py actually runs.
     await hass.config_entries.async_setup(config_entry.entry_id)
     await hass.async_block_till_done()
-    
+
     assert config_entry.state == ConfigEntryState.LOADED
     assert DOMAIN in hass.data and config_entry.entry_id in hass.data[DOMAIN]
     assert (

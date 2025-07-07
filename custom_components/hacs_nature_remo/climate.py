@@ -4,16 +4,23 @@ import dataclasses
 from copy import deepcopy
 
 import remo
+from homeassistant.components.climate import ClimateEntity
+from homeassistant.components.climate import HVAC_MODES
+from homeassistant.components.climate import HVACMode
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import ATTR_TEMPERATURE
 from homeassistant.core import callback
-from homeassistant.components.climate import ClimateEntity, HVACMode, HVAC_MODES
 
 from . import LOGGER
 from .coordinators import HacsNatureRemoDataUpdateCoordinator
 from .domain import climate as climate_const
-from .domain.config_schema import KEY_APPLIANCES, KEY_DEVICES, PluginDataDict
-from .domain.const import DEFAULT_NAME, DOMAIN, ICON, SWITCH
+from .domain.config_schema import KEY_APPLIANCES
+from .domain.config_schema import KEY_DEVICES
+from .domain.config_schema import PluginDataDict
+from .domain.const import DEFAULT_NAME
+from .domain.const import DOMAIN
+from .domain.const import ICON
+from .domain.const import SWITCH
 from .entity import HacsNatureRemoApplianceEntity
 
 

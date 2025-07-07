@@ -4,10 +4,13 @@ import remo
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .domain.logger import LOGGER
 from .coordinators import HacsNatureRemoDataUpdateCoordinator
-from .domain.config_schema import KEY_DEVICES, KEY_APPLIANCES
-from .domain.const import DEFAULT_MANUFACTURER, ICON, DOMAIN
+from .domain.config_schema import KEY_APPLIANCES
+from .domain.config_schema import KEY_DEVICES
+from .domain.const import DEFAULT_MANUFACTURER
+from .domain.const import DOMAIN
+from .domain.const import ICON
+from .domain.logger import LOGGER
 
 
 class HacsNatureRemoEntity(CoordinatorEntity):

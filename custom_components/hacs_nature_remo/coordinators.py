@@ -1,16 +1,16 @@
 import remo
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
+from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
+from homeassistant.helpers.update_coordinator import UpdateFailed
 
 from .api import HacsNatureRemoApiClient
 from .domain import LOGGER
-from .domain.const import DOMAIN, DEFAULT_SCAN_INTERVAL
-from .domain.config_schema import (
-    KEY_USER,
-    KEY_APPLIANCES,
-    KEY_DEVICES,
-    PluginDataDict,
-)
+from .domain.config_schema import KEY_APPLIANCES
+from .domain.config_schema import KEY_DEVICES
+from .domain.config_schema import KEY_USER
+from .domain.config_schema import PluginDataDict
+from .domain.const import DEFAULT_SCAN_INTERVAL
+from .domain.const import DOMAIN
 
 
 class HacsNatureRemoDataUpdateCoordinator(DataUpdateCoordinator):

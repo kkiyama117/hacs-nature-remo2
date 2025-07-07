@@ -165,14 +165,14 @@ https://github.com/kkiyama117/hacs-nature-remo2/issues
 DEBUG:custom_components.hacs_nature_remo.domain:Try to fetch appliance and device list from API
 ERROR:custom_components.hacs_nature_remo.api:Something really wrong happened! - Task <Task pending name='Task-58' coro=<TCPConnector._resolve_host_with_throttle() running at /home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/aiohttp/connector.py:1026> created at /home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/aiohttp/connector.py:986> got Future <Future pending> attached to a different loop
 ERROR:custom_components.hacs_nature_remo.api:Json Error: Task <Task pending name='Task-58' coro=<TCPConnector._resolve_host_with_throttle() running at /home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/aiohttp/connector.py:1026> created at /home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/aiohttp/connector.py:986> got Future <Future pending> attached to a different loop
-ERROR:custom_components.hacs_nature_remo.api:Error: 
+ERROR:custom_components.hacs_nature_remo.api:Error:
 ERROR:custom_components.hacs_nature_remo.api:Something really wrong happened! - Task <Task pending name='Task-59' coro=<TCPConnector._resolve_host_with_throttle() running at /home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/aiohttp/connector.py:1026> created at /home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/aiohttp/connector.py:986> got Future <Future pending> attached to a different loop
 ERROR:custom_components.hacs_nature_remo.api:Json Error: Task <Task pending name='Task-59' coro=<TCPConnector._resolve_host_with_throttle() running at /home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/aiohttp/connector.py:1026> created at /home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/aiohttp/connector.py:986> got Future <Future pending> attached to a different loop
-ERROR:custom_components.hacs_nature_remo.api:Error: 
-ERROR:custom_components.hacs_nature_remo.domain:Error fetching hacs_nature_remo data: 
+ERROR:custom_components.hacs_nature_remo.api:Error:
+ERROR:custom_components.hacs_nature_remo.domain:Error fetching hacs_nature_remo data:
 DEBUG:custom_components.hacs_nature_remo.domain:Finished fetching hacs_nature_remo data in 0.007 seconds (success: False)
 ------------------------------ Captured log call -------------------------------
-INFO     custom_components.hacs_nature_remo.domain:__init__.py:39 
+INFO     custom_components.hacs_nature_remo.domain:__init__.py:39
 -------------------------------------------------------------------
 Nature Remo integration
 Version: 0.1.0
@@ -184,11 +184,11 @@ https://github.com/kkiyama117/hacs-nature-remo2/issues
 DEBUG    custom_components.hacs_nature_remo.domain:coordinators.py:37 Try to fetch appliance and device list from API
 ERROR    custom_components.hacs_nature_remo.api:__init__.py:507 Something really wrong happened! - Task <Task pending name='Task-58' coro=<TCPConnector._resolve_host_with_throttle() running at /home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/aiohttp/connector.py:1026> created at /home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/aiohttp/connector.py:986> got Future <Future pending> attached to a different loop
 ERROR    custom_components.hacs_nature_remo.api:__init__.py:444 Json Error: Task <Task pending name='Task-58' coro=<TCPConnector._resolve_host_with_throttle() running at /home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/aiohttp/connector.py:1026> created at /home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/aiohttp/connector.py:986> got Future <Future pending> attached to a different loop
-ERROR    custom_components.hacs_nature_remo.api:__init__.py:79 Error: 
+ERROR    custom_components.hacs_nature_remo.api:__init__.py:79 Error:
 ERROR    custom_components.hacs_nature_remo.api:__init__.py:507 Something really wrong happened! - Task <Task pending name='Task-59' coro=<TCPConnector._resolve_host_with_throttle() running at /home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/aiohttp/connector.py:1026> created at /home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/aiohttp/connector.py:986> got Future <Future pending> attached to a different loop
 ERROR    custom_components.hacs_nature_remo.api:__init__.py:444 Json Error: Task <Task pending name='Task-59' coro=<TCPConnector._resolve_host_with_throttle() running at /home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/aiohttp/connector.py:1026> created at /home/kiyama/programs/mine/hacs-nature-remo2/.venv/lib/python3.13/site-packages/aiohttp/connector.py:986> got Future <Future pending> attached to a different loop
-ERROR    custom_components.hacs_nature_remo.api:__init__.py:196 Error: 
-ERROR    custom_components.hacs_nature_remo.domain:update_coordinator.py:412 Error fetching hacs_nature_remo data: 
+ERROR    custom_components.hacs_nature_remo.api:__init__.py:196 Error:
+ERROR    custom_components.hacs_nature_remo.domain:update_coordinator.py:412 Error fetching hacs_nature_remo data:
 DEBUG    custom_components.hacs_nature_remo.domain:update_coordinator.py:460 Finished fetching hacs_nature_remo data in 0.007 seconds (success: False)
 --------------------------- Captured stderr teardown ---------------------------
 DEBUG:homeassistant.core:Bus:Handling <Event homeassistant_stop[L]>

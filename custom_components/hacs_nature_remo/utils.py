@@ -1,6 +1,8 @@
 """Some utility functions"""
 
-from typing import Any, Iterable, TypeVar
+from typing import Any
+from typing import Iterable
+from typing import TypeVar
 
 T = TypeVar("T")
 

@@ -3,6 +3,7 @@
 ## よく使うコマンドパターン
 
 ### 開発環境セットアップ
+
 ```bash
 # 依存関係のインストール
 pip install -r requirements_dev.txt -r requirements_test.txt
@@ -15,6 +16,7 @@ pre-commit install
 ```
 
 ### テスト実行
+
 ```bash
 # 全テストを並列実行（推奨）
 pytest --timeout=9 --durations=10 -n auto -p no:sugar tests
@@ -35,6 +37,7 @@ pytest --lf
 ```
 
 ### コード品質チェック
+
 ```bash
 # すべての pre-commit フックを実行
 pre-commit run --all-files
@@ -50,6 +53,7 @@ isort custom_components/hacs_nature_remo
 ```
 
 ### Home Assistant 検証
+
 ```bash
 # manifest.json の検証
 python -m script.hassfest
@@ -62,6 +66,7 @@ python -m homeassistant --script check_config
 ```
 
 ### デバッグとログ
+
 ```bash
 # Home Assistant のログを確認
 tail -f /config/home-assistant.log | grep hacs_nature_remo
@@ -77,6 +82,7 @@ curl -H "Authorization: Bearer YOUR_TOKEN" https://api.nature.global/1/appliance
 ```
 
 ### リリース準備
+
 ```bash
 # バージョン番号の更新
 # manifest.json の version を更新
@@ -92,6 +98,7 @@ git push origin v0.1.2
 ## Claude Commands パターン
 
 ### エラー修正時のプロンプト
+
 ```
 /fix_error
 エラー: [エラーメッセージ]
@@ -100,6 +107,7 @@ git push origin v0.1.2
 ```
 
 ### 新機能追加時のプロンプト
+
 ```
 /add_feature
 機能: [追加したい機能の説明]
@@ -110,6 +118,7 @@ git push origin v0.1.2
 ```
 
 ### リファクタリング依頼
+
 ```
 /refactor
 対象: [リファクタリング対象のコード/ファイル]
@@ -120,6 +129,7 @@ git push origin v0.1.2
 ## トラブルシューティングパターン
 
 ### API エラーの調査
+
 ```bash
 # API トークンの検証
 curl -H "Authorization: Bearer YOUR_TOKEN" https://api.nature.global/1/users/me
@@ -130,6 +140,7 @@ curl -I -H "Authorization: Bearer YOUR_TOKEN" https://api.nature.global/1/applia
 ```
 
 ### エンティティが表示されない場合
+
 ```bash
 # エンティティレジストリの確認
 grep -r "hacs_nature_remo" /config/.storage/core.entity_registry
@@ -142,6 +153,7 @@ grep -r "hacs_nature_remo" /config/.storage/core.config_entries
 ```
 
 ### テスト失敗の調査
+
 ```bash
 # 詳細なテスト出力
 pytest -vvs tests/test_climate.py::test_climate_entity_setup

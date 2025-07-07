@@ -39,29 +39,29 @@ def skip_notifications_fixture():
 def bypass_get_data_fixture():
     """Mock successful API calls."""
     from unittest.mock import Mock
-    
+
     # Create mock user object
     mock_user = Mock()
     mock_user.id = "test_user_id"
     mock_user.nickname = "test_username"
-    
+
     # Create mock device object
     mock_device = Mock()
     mock_device.id = "device1"
     mock_device.name = "Test Device"
-    
+
     with (
         patch(
             "custom_components.hacs_nature_remo.api.HacsNatureRemoApiClient.get_user",
-            return_value=mock_user
+            return_value=mock_user,
         ),
         patch(
             "custom_components.hacs_nature_remo.api.HacsNatureRemoApiClient.get_devices",
-            return_value=[mock_device]
+            return_value=[mock_device],
         ),
         patch(
             "custom_components.hacs_nature_remo.api.HacsNatureRemoApiClient.get_appliances",
-            return_value=[]
+            return_value=[],
         ),
     ):
         yield

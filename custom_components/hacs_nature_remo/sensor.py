@@ -1,20 +1,24 @@
 """Sensor platform for hacs-nature-remo."""
 
 import remo
-from homeassistant.components.sensor import (
-    SensorEntity,
-    SensorDeviceClass,
-    SensorStateClass,
-)
-from homeassistant.const import UnitOfTemperature, LIGHT_LUX, PERCENTAGE, UnitOfPower
+from homeassistant.components.sensor import SensorDeviceClass
+from homeassistant.components.sensor import SensorEntity
+from homeassistant.components.sensor import SensorStateClass
+from homeassistant.const import LIGHT_LUX
+from homeassistant.const import PERCENTAGE
+from homeassistant.const import UnitOfPower
+from homeassistant.const import UnitOfTemperature
 from homeassistant.core import callback
 from homeassistant.helpers.entity import Entity
 
 from . import LOGGER
-from .domain.const import DOMAIN
 from .coordinators import HacsNatureRemoDataUpdateCoordinator
-from .domain.config_schema import KEY_DEVICES, KEY_APPLIANCES, PluginDataDict
-from .entity import HacsNatureRemoDeviceEntity, HacsNatureRemoApplianceEntity
+from .domain.config_schema import KEY_APPLIANCES
+from .domain.config_schema import KEY_DEVICES
+from .domain.config_schema import PluginDataDict
+from .domain.const import DOMAIN
+from .entity import HacsNatureRemoApplianceEntity
+from .entity import HacsNatureRemoDeviceEntity
 
 
 async def async_setup_entry(hass, entry, async_add_devices):

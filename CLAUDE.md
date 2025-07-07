@@ -7,6 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 This is a Home Assistant Custom Component (HACS) for integrating Nature Remo smart home devices with Home Assistant. Nature Remo is a device that can control air conditioners, lights, and other appliances via infrared signals and smart integrations.
 
 **Key Facts:**
+
 - Domain: `hacs_nature_remo`
 - Version: 0.1.1
 - Integration type: Cloud Polling (requires Nature Remo API token)
@@ -156,11 +157,13 @@ python -m pytest tests/test_hacs.py
 ### High-Level Architecture
 
 1. **API Layer** (`api/`):
+
    - `NatureRemoAPI` - HTTP client for Nature Remo cloud API
    - Uses custom fork: `nature-remo-fork-only-for-hacs-nature-remo`
    - Handles authentication and request formatting
 
 2. **Coordinator Pattern**:
+
    - `ApplianceCoordinator` - Manages appliance data updates
    - `DeviceCoordinator` - Manages device sensor data
    - 30-second default update interval
@@ -201,6 +204,7 @@ This repository implements a systematic knowledge management approach for Claude
 ## Development Notes
 
 When working with this repository:
+
 - Follow Home Assistant development guidelines and entity patterns
 - Maintain 100% test coverage as configured in setup.cfg
 - Use the coordinator pattern for any new data sources
@@ -223,11 +227,13 @@ This ensures that imports like `from custom_components.hacs_nature_remo` work co
 ### Integration Development Guidelines
 
 1. **Entity Development**:
+
    - Always use unique IDs based on appliance/device IDs
    - Implement proper availability checks
    - Use coordinator data, never fetch directly in entities
-   
+
 2. **API Changes**:
+
    - Maintain compatibility with the Nature Remo API
    - Handle rate limiting appropriately
    - Log API errors clearly for debugging
@@ -240,6 +246,7 @@ This ensures that imports like `from custom_components.hacs_nature_remo` work co
 ## CI/CD Pipeline
 
 GitHub Actions workflows:
+
 - **Linting**: Pre-commit hooks, flake8, black, isort
 - **HACS Validation**: Ensures compatibility with HACS
 - **Hassfest**: Validates Home Assistant integration requirements

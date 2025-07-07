@@ -7,10 +7,6 @@
   "version": "0.1.1",
   "config_flow": true,
   "single_config_entry": true,
-  "codeowners": [
-    "@kkiyama117"
-  ],
-  "requirements": [
-    "nature-remo-fork-only-for-hacs-nature-remo"
-  ]
+  "codeowners": ["@kkiyama117"],
+  "requirements": ["nature-remo-fork-only-for-hacs-nature-remo"]
 }

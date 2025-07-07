@@ -3,13 +3,11 @@
 from unittest.mock import patch
 
 import pytest
-from custom_components.hacs_nature_remo.domain.const import (
-    CLIMATE,
-    DOMAIN,
-    PLATFORMS,
-    SENSOR,
-    SWITCH,
-)
+from custom_components.hacs_nature_remo.domain.const import CLIMATE
+from custom_components.hacs_nature_remo.domain.const import DOMAIN
+from custom_components.hacs_nature_remo.domain.const import PLATFORMS
+from custom_components.hacs_nature_remo.domain.const import SENSOR
+from custom_components.hacs_nature_remo.domain.const import SWITCH
 from homeassistant import config_entries
 from homeassistant.data_entry_flow import FlowResultType
 from pytest_homeassistant_custom_component.common import MockConfigEntry
@@ -59,7 +57,9 @@ async def test_successful_config_flow(hass, bypass_get_data):
     # Check that the config flow is complete and a new entry is created with
     # the input data
     assert result["type"] == FlowResultType.CREATE_ENTRY
-    assert result["title"] == "test_password"  # Title is derived from API token in MOCK_CONFIG
+    assert (
+        result["title"] == "test_password"
+    )  # Title is derived from API token in MOCK_CONFIG
     assert result["data"]["api_token"] == MOCK_CONFIG["api_token"]
     # The config flow adds default heat and cool values from CONFIG_SCHEMA
     assert result["data"]["heat"] == 23.0
@@ -113,7 +113,9 @@ async def test_options_flow(hass):
 
     # Verify that the flow finishes
     assert result["type"] == FlowResultType.CREATE_ENTRY
-    assert result["title"] == "test_password"  # Title is derived from API token in MOCK_CONFIG
+    assert (
+        result["title"] == "test_password"
+    )  # Title is derived from API token in MOCK_CONFIG
 
     # Verify that the options were updated
     assert entry.options == {SENSOR: False, SWITCH: True, CLIMATE: True}

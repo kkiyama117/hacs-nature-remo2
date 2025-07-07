@@ -42,39 +42,46 @@ Split complex tasks into sequential steps, where each step can contain multiple 
 When given "analyze test lint and commit":
 
 **Step 1: Initial Analysis** (1 subtask)
+
 - Analyze project structure to understand test/lint setup
 
 **Step 2: Quality Checks** (parallel subtasks)
+
 - Run tests and capture results
 - Run linting and type checking
 - Check git status and changes
 
 **Step 3: Fix Issues** (parallel subtasks, using Step 2 results)
+
 - Fix linting errors found in Step 2
 - Fix type errors found in Step 2
 - Prepare a commit message based on changes
-  *Review: If no errors found in Step 2, skip fixes and proceed to commit*
+  _Review: If no errors found in Step 2, skip fixes and proceed to commit_
 
 **Step 4: Final Validation** (parallel subtasks)
+
 - Re-run tests to ensure updates is working and lint to verify all issues resolved
   - See `.claude/commands/fix_error.md` and do as it says.
 - Update documentation in `.claude` and add simple summary of change.
 - Create commit with verified changes
-  *Review: If Step 3 had no fixes, simplify to just creating commit*
+  _Review: If Step 3 had no fixes, simplify to just creating commit_
 
 ## Best Practices
 
 ### Task Decomposition
+
 - Break complex tasks into 2-4 logical sequential steps
 - Identify opportunities for parallel execution within steps
 - Maintain clear dependencies between steps
 
 ### Context Management
+
 - Use concise summaries when passing context between steps
 - Avoid context overflow by focusing on essential information
 - Re-evaluate and adapt plans after each step completion
 
 ### Execution Strategy
+
 - Start with comprehensive project/task analysis
 - Execute independent subtasks in parallel for efficiency
 - Continuously validate progress and adjust approach
@@ -83,6 +90,7 @@ When given "analyze test lint and commit":
 ## Adaptive Planning
 
 The orchestrator supports dynamic workflow adaptation:
+
 - **Progressive Understanding**: Each step builds on previous discoveries
 - **Plan Modification**: Workflow can be adjusted based on findings
 - **Error Recovery**: Automatic handling of common development issues
@@ -103,10 +111,10 @@ The orchestrator supports dynamic workflow adaptation:
 - Pass only essential findings between steps (summaries, not full output)
 - Use TodoWrite to track both steps and subtasks for visibility
 - After each step, explicitly reconsider the plan:
-    - Are the next steps still relevant?
-    - Did we discover something that requires new tasks?
-    - Can we skip or simplify upcoming steps?
-    - Should we add new validation steps?
+  - Are the next steps still relevant?
+  - Did we discover something that requires new tasks?
+  - Can we skip or simplify upcoming steps?
+  - Should we add new validation steps?
 
 ## Adaptive Planning Example
 
@@ -121,6 +129,7 @@ Adapted Plan: Step 1 → Step 2 → New Step 2.5 (analyze architecture) → Modi
 ```
 
 ### Performance Optimization
+
 - Group related operations within steps
 - Minimize file system operations across parallel tasks
 - Use efficient tool configurations
